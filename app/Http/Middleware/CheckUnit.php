@@ -1,4 +1,5 @@
 <?php
+// app/Http/Middleware/CheckUnit.php
 
 namespace App\Http\Middleware;
 
@@ -8,11 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckUnit
 {
-    public function handle(Request $request, Closure $next, $unit)
+    public function handle(Request $request, Closure $next, ...$units)
     {
-        // Memeriksa apakah pengguna yang login memiliki role yang sesuai
-        if (Auth::check() && Auth::user()->unit !== $unit) {
-            return redirect()->route('dashboard')->with('error', 'Hanya admin yang bisa mengakses halaman ini.');
+        $userUnit = Auth::user()->unit;  // Ambil unit dari user yang sedang login
+
+        if (!in_array($userUnit, $units)) {
+            abort(403, 'You do not have access to this page');  // Menampilkan pesan 403 jika unit tidak cocok
         }
 
         return $next($request);
