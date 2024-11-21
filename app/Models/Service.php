@@ -9,15 +9,19 @@ class Service extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'land_book_id', 'nomor_hp'];
+    protected $fillable = [
+        'land_book_id',
+        'nomor_hp',
+    ];
+
+    // Model Service.php
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'service_id');
+    }
 
     public function landBook()
     {
-        return $this->belongsTo(LandBook::class);
-    }
-
-    public function activities()
-    {
-        return $this->hasMany(Activity::class);
+        return $this->belongsTo(LandBook::class, 'land_book_id');
     }
 }

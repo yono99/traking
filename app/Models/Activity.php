@@ -9,15 +9,22 @@ class Activity extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['service_id', 'user_id', 'status', 'remarks'];
+    protected $fillable = [
+        'service_id',
+        'user_id',
+        'status',
+        'remarks',
+    ];
 
     public function service()
     {
         return $this->belongsTo(Service::class);
     }
 
+    // Model Activity.php
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
+    
 }
