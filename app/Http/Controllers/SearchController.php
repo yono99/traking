@@ -12,12 +12,12 @@ class SearchController extends Controller
 {
     public function search(Request $request)
     {
-        
+
         $nomorHak = $request->input('nomer_hak');
         $userUnit = Auth::user()->unit;
 
         // Tambahkan debugging
-        dd($nomorHak, $userUnit);
+        // dd($nomorHak, $userUnit);
 
         // Tentukan status berdasarkan unit user
         $statusArray = $this->getStatusByUnit($userUnit);
@@ -59,46 +59,51 @@ class SearchController extends Controller
     }
 
     public function updateStatus(Request $request)
-
     {
+        // dd($request->all());
+        try {
+            $request->validate([
+                'service_id' => 'required|integer|exists:services,id',
+            ]);
 
-        $serviceId = $request->input('service_id');
-        $userUnit = Auth::user()->unit;
+            $serviceId = $request->input('service_id');
+            $userUnit = Auth::user()->unit;
 
-        $service = Service::find($serviceId);
-        $statusUpdate = $this->getUpdateStatusByUnit($userUnit);
+            $service = Service::find($serviceId);
+            if (!$service) {
+                return response()->json(['message' => 'Service tidak ditemukan.'], 404);
+            }
 
-        if ($service && $statusUpdate) {
+            $statusUpdate = $this->getUpdateStatusByUnit($userUnit);
+            if (!$statusUpdate) {
+                return response()->json(['message' => 'Status tidak valid untuk unit pengguna.'], 400);
+            }
+
             $service->status = $statusUpdate;
             $service->save();
-        }
 
-        return response()->json(['message' => 'Status berhasil diperbarui.']);
+            return response()->json(['message' => 'Status berhasil diperbarui.']);
+        } catch (\Exception $e) {
+            Log::error('Error saat memperbarui status', ['exception' => $e]);
+            return response()->json(['message' => 'Terjadi kesalahan internal pada server.'], 500);
+        }
     }
 
     private function getUpdateStatusByUnit($unit)
     {
-        switch ($unit) {
-            case 'verifikator':
-                return 'UPDATE PROSES VERIFIKASI';
-            case 'pengukuran':
-                return 'UPDATE PROSES MEMPERBAHARUI';
-            case 'bukutanah':
-                return 'UPDATE PROSES ALIH MEDIA BTEL';
-            case 'sps':
-                return 'UPDATE PROSES SPS';
-            case 'bensus':
-                return 'UPDATE PROSES BENSUS';
-            case 'QC':
-                return 'UPDATE PROSES QC';
-            case 'pengesahan':
-                return 'UPDATE PROSES PENGESAHAN ALIH MEDIA BTEL';
-            case 'paraf':
-                return 'UPDATE PROSES PARAF';
-            case 'TTE_PRODUK_LAYANAN':
-                return 'UPDATE PROSES TTE';
-            default:
-                return null;
-        }
+        $statuses = [
+            'verifikator' => 'UPDATE PROSES VERIFIKASI',
+            'pengukuran' => 'UPDATE PROSES MEMPERBAHARUI',
+            'bukutanah' => 'UPDATE PROSES ALIH MEDIA BTEL',
+            'sps' => 'UPDATE PROSES SPS',
+            'bensus' => 'UPDATE PROSES BENSUS',
+            'QC' => 'UPDATE PROSES QC',
+            'pengesahan' => 'UPDATE PROSES PENGESAHAN ALIH MEDIA BTEL',
+            'paraf' => 'UPDATE PROSES PARAF',
+            'TTE_PRODUK_LAYANAN' => 'UPDATE PROSES TTE',
+        ];
+
+        return $statuses[$unit] ?? null;
     }
+
 }
