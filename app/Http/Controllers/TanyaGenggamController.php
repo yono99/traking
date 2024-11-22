@@ -22,9 +22,21 @@ class TanyaGenggamController extends Controller
         // Tentukan status berdasarkan unit user
         $statusArray = $this->getStatusByUnit($userUnit);
 
+        // dd($userUnit,$statusArray);
+
         // Ambil data dari tabel land_books dan services
         $landBooks = LandBook::where('nomer_hak', 'like', '%' . $nomorHak . '%')->get();
-        $services = Service::whereIn('status', $statusArray)->get();
+        // $services = Service::whereIn('status', $statusArray)->get();
+        $services = Service::when(!empty($statusArray), function ($query) use ($statusArray) {
+            return $query->whereIn('status', $statusArray);
+        })->get();
+
+        if ($landBooks->isEmpty() && $services->isEmpty()) {
+            return response()->json([
+                'message' => 'No records found.',
+            ], 404);
+        }
+        // dd($services);
 
         return response()->json([
             'landBooks' => $landBooks,

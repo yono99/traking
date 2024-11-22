@@ -57,7 +57,7 @@ Route::middleware(['auth', CheckUnit::class . ':verifikator,pengukuran,bukutanah
 
 // Rute untuk pencarian berdasarkan nomer_hak
 Route::get('/search', [TanyaGenggamController::class, 'search']);
- 
+
 
 // Rute untuk update status
-Route::post('/update-status', [SearchController::class, 'updateStatus']);
+Route::post('/update-status', [SearchController::class, 'updateStatus'])->middleware('auth');
