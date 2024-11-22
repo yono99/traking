@@ -89,7 +89,7 @@ export default {
             const statusUpdate = getUpdateStatusByUnit(userUnit);
             // console.log(statusUpdate, serviceId);
 
-            fetch(`https://traking.test/update-status`, {
+            fetch(`/update-status`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
