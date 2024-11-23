@@ -30,7 +30,7 @@ class SearchController extends Controller
         }
 
         // Query data buku tanah berdasarkan nomor hak (pencocokan tepat)
-        $landBooks = LandBook::where('nomer_hak', '=',$nomerHak)->get();
+        $landBooks = LandBook::where('nomer_hak', '==',$nomerHak)->get();
 
 
         if ($landBooks->isEmpty()) {
@@ -39,7 +39,6 @@ class SearchController extends Controller
 
         // Filter buku tanah berdasarkan layanan dengan status relevan
         $filteredLandBooks = $landBooks->filter(function ($landBook) use ($statusByUnit) {
-            // Periksa apakah buku tanah memiliki layanan dengan status yang relevan
             return Service::where('land_book_id', $landBook->id)
                 ->whereIn('status', $statusByUnit) // Hanya layanan dengan status relevan
                 ->exists(); // Cek apakah layanan relevan tersebut ada
@@ -51,16 +50,19 @@ class SearchController extends Controller
 
         // Ambil layanan relevan untuk buku tanah yang difilter
         $filteredServices = Service::whereIn('land_book_id', $filteredLandBooks->pluck('id')->toArray())
-            ->whereIn('status', $statusByUnit) // Filter layanan berdasarkan status relevan
-            ->get();
+        ->whereIn('status', $statusByUnit) // Filter layanan berdasarkan status relevan
+        ->get();
+
 
         // Return response
         return response()->json([
             'land_books' => $filteredLandBooks->values(), // Reset key indexing
-            'services' => $filteredServices, // Kirim layanan yang sudah difilter
+            'services' => $filteredServices,
             'total_services' => $filteredServices->count(),
         ]);
     }
+
+
 
     private function getStatusByUnit($unit)
     {
