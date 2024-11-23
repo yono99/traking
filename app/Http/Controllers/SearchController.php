@@ -62,16 +62,14 @@ class SearchController extends Controller
         ]);
     }
 
-
-
     private function getStatusByUnit($unit)
     {
         return [
             'verifikator' => ['FORWARD VERIFIKATOR', 'FORWARD VERIFIKATOR CEK SYARAT'],
             'pengukuran' => ['FORWARD PENGUKURAN REVISI', 'FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL'],
-            'bukutanah' => ['FORWARD CARI BT', 'FORWARD ALIH MEDIA BTEL'],
+            'bukutanah' => ['FORWARD CARI BT', 'FORWARD ALIH MEDIA BTEL','FORWARD ALIH MEDIA REVISI'],
             'sps' => ['FORWARD SPS'],
-            'bensus' => ['FORWARD BENSUS'],
+            'bensus' => ['FORWARD BENSUS, FORWARD BENSUS DISPOSISI'],
             'QC' => ['FORWARD QC SELESAI ALIH MEDIA'],
             'pengesahan' => ['FORWARD PENGESAHAN ALIH MEDIA BTEL'],
             'paraf' => ['FORWARD PARAF'],
