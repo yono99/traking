@@ -25,23 +25,43 @@ class SearchController extends Controller
         // Mapping status yang sesuai untuk unit
         $statusByUnit = $this->getStatusByUnit($unit);
 
-        // Query data berdasarkan nomor hak dan status
-        $landBooks = LandBook::where('nomer_hak', $nomerHak)->first();
+        if (empty($statusByUnit)) {
+            return response()->json(['message' => 'Unit Anda tidak memiliki status yang relevan.'], 400);
+        }
 
-        if (!$landBooks) {
+        // Query data buku tanah berdasarkan nomor hak
+        $landBooks = LandBook::where('nomer_hak', $nomerHak)->get();
+
+        if ($landBooks->isEmpty()) {
             return response()->json(['message' => 'Data tidak ditemukan.'], 404);
         }
 
-        $services = Service::where('land_book_id', $landBooks->id)
-            ->whereIn('status', $statusByUnit) // Hanya status yang belum diperbarui
-            ->get();
+        // Filter buku tanah berdasarkan layanan dengan status relevan
+        $filteredLandBooks = $landBooks->filter(function ($landBook) use ($statusByUnit) {
+            return Service::where('land_book_id', $landBook->id)
+                ->whereIn('status', $statusByUnit) // Hanya layanan dengan status relevan
+                ->exists(); // Cek apakah layanan relevan tersebut ada
+        });
 
+        if ($filteredLandBooks->isEmpty()) {
+            return response()->json(['message' => 'Tidak ada layanan relevan untuk buku tanah ini.'], 404);
+        }
+
+        // Ambil layanan relevan untuk buku tanah yang difilter
+        $filteredServices = Service::whereIn('land_book_id', $filteredLandBooks->pluck('id')->toArray())
+        ->whereIn('status', $statusByUnit) // Filter layanan berdasarkan status relevan
+        ->get();
+
+
+        // Return response
         return response()->json([
-            'land_book' => $landBooks,
-            'services' => $services,
-            'total_services' => $services->count(),
+            'land_books' => $filteredLandBooks->values(), // Reset key indexing
+            'services' => $filteredServices,
+            'total_services' => $filteredServices->count(),
         ]);
     }
+
+
 
     private function getStatusByUnit($unit)
     {
