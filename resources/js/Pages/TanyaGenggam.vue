@@ -101,10 +101,13 @@ export default {
     };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const getService = (landBookId) => {
       return services.value.find((service) => service.land_book_id === landBookId);
     };
 =======
+=======
+>>>>>>> parent of b8f48d4 (Update TanyaGenggam.vue)
             fetch(`https://traking.test/update-status`, {
                 method: "POST",
                 headers: {
