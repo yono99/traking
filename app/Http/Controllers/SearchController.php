@@ -20,7 +20,7 @@ class SearchController extends Controller
             return response()->json(['message' => 'Nomer hak harus berupa angka.'], 400);
         }
 
-        // Ambil data LandBook berdasarkan nomer_hak
+        // Ambil data LandBook berdasarkan nomer_hak            
         $landBooks = LandBook::where('nomer_hak', $nomorHak)->get();
 
         // Ambil data Services yang berhubungan
@@ -33,8 +33,7 @@ class SearchController extends Controller
         ]);
     }
 
-    
-   
+     
 
     private function getStatusByUnit($unit)
     {

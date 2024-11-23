@@ -6,32 +6,36 @@
 
     <!-- Tabel hasil pencarian -->
     <table v-if="landBooks.length" class="result-table">
-      <thead>
-        <tr>
-          <th>Nomer Hak</th>
-          <th>Desa/Kecamatan</th>
-          <th>Nama Service</th>
-          <th>Keterangan</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="landBook in landBooks" :key="landBook.id">
-          <td>{{ landBook.nomer_hak }}</td>
-          <td>{{ landBook.desa_kecamatan }}</td>
-          <td>{{ getService(landBook.id)?.name || "N/A" }}</td>
-          <td>{{ getService(landBook.id)?.remarks || "N/A" }}</td>
-          <td>
-            <button
-              @click="updateStatus(getService(landBook.id)?.id)"
-              :disabled="!getService(landBook.id)?.id"
-            >
-              Update Status
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <thead>
+    <tr>
+      <th>Nomer Hak</th>
+      <th>Jenis Hak</th>
+      <th>Desa/Kecamatan</th>
+      <th>Nama Service</th>
+      <th>Keterangan</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="landBook in landBooks" :key="landBook.id">
+      <td>{{ landBook.nomer_hak }}</td>
+      <td>{{ landBook.jenis_hak }}</td>
+      <td>{{ landBook.desa_kecamatan }}</td>
+      <td>{{ getService(landBook.id)?.name || "N/A" }}</td>
+      <td>{{ getService(landBook.id)?.remarks || "N/A" }}</td>
+      <td>
+        <button
+          @click="updateStatus(getService(landBook.id)?.id)"
+          :disabled="!getService(landBook.id)?.id"
+          class="btn-update"
+        >
+          Update Status
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 
     <div v-if="errorMessage" class="error-message">
       {{ errorMessage }}
@@ -105,28 +109,50 @@ export default {
 };
 </script>
 <style scoped>
-.search-container {
-  padding: 20px;
-}
-
 .result-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-}
-
-.result-table th,
-.result-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  font-family: Arial, sans-serif;
 }
 
 .result-table th {
-  background-color: #f4f4f4;
+  background-color: #007BFF;
+  color: white;
+  padding: 10px;
+  text-align: left;
 }
 
-.error-message {
-  color: red;
-  margin-top: 10px;
+.result-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
 }
+
+.result-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.result-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.btn-update {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.btn-update:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-update:hover:not(:disabled) {
+  background-color: #218838;
+}
+
 </style>
