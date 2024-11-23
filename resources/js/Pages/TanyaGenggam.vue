@@ -100,9 +100,38 @@ export default {
         });
     };
 
+<<<<<<< HEAD
     const getService = (landBookId) => {
       return services.value.find((service) => service.land_book_id === landBookId);
     };
+=======
+            fetch(`https://traking.test/update-status`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: JSON.stringify({ service_id: serviceId, status: statusUpdate }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        return response.text().then((text) => {
+                            console.error("Backend response:", text);
+                            throw new Error(`Error: ${response.status}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    alert(data.message);
+                    search(); // Refresh data
+                })
+                .catch((error) => {
+                    console.error("Error saat memperbarui status:", error);
+                    errorMessage.value = error.message || "Terjadi kesalahan saat memperbarui status.";
+                });
+        };
+>>>>>>> parent of b8f48d4 (Update TanyaGenggam.vue)
 
     return { nomorHak, landBooks, services, errorMessage, search, updateStatus, getService };
   },
