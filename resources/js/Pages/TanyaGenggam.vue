@@ -10,33 +10,30 @@
         <button @click="search">Cari</button>
 
         <!-- Tabel hasil pencarian -->
-        <table v-if="landBooks.length" class="result-table">
+        <table v-if="services.length" class="result-table">
             <thead>
                 <tr>
                     <th>Nomer Hak</th>
                     <th>Jenis Hak</th>
                     <th>Desa/Kecamatan</th>
-                    <th>Nama Service</th>
-                    <th>Keterangan</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="landBook in landBooks" :key="landBook.id">
-                    <td>{{ landBook.nomer_hak }}</td>
-                    <td>{{ landBook.jenis_hak }}</td>
-                    <td>{{ landBook.desa_kecamatan }}</td>
-                    <td>{{ getService(landBook.id)?.name || "N/A" }}</td>
-                    <td>{{ getService(landBook.id)?.remarks || "N/A" }}</td>
-                    <td>
+                <tr v-for="service in services" :key="service.id">
+                    <!-- <td>{{ service.id }}</td> -->
+                    <td>{{ service.land_book?.nomer_hak || 'N/A' }}</td>
+                    <td>{{ service.land_book?.jenis_hak || 'N/A' }}</td>
+                    <td>{{ service.land_book?.desa_kecamatan || 'N/A' }}</td>
+                    <!-- <td>{{ service.land_book?.status_alih_media === 0 ? 'Belum Alih Media' : 'Sudah Alih Media' }}</td>
+                    <td>{{ service.PNBP || 'N/A' }}</td> -->
+                    <td> <!-- Tombol Update -->
                         <button
-                            @click="updateStatus(getService(landBook.id)?.id)"
-                            :disabled="!getService(landBook.id)?.id"
+                            @click="updateStatus(service.id)"
                             class="btn-update"
                         >
                             Update Status
-                        </button>
-                    </td>
+                        </button></td>
                 </tr>
             </tbody>
         </table>
@@ -46,18 +43,17 @@
         </div>
     </div>
 </template>
+
 <script>
 import { ref } from "vue";
 
 export default {
     setup() {
         const nomorHak = ref("");
-        const landBooks = ref([]);
         const services = ref([]);
         const errorMessage = ref("");
 
         const search = () => {
-            landBooks.value = [];
             services.value = [];
             errorMessage.value = "";
 
@@ -70,7 +66,7 @@ export default {
                     return response.json();
                 })
                 .then((data) => {
-                    landBooks.value = data.landBooks || [];
+                    console.log("Data diterima:", data); // Debugging
                     services.value = data.services || [];
                 })
                 .catch((error) => {
@@ -115,24 +111,17 @@ export default {
                 });
         };
 
-        const getService = (landBookId) => {
-            return services.value.find(
-                (service) => service.land_book_id === landBookId
-            );
-        };
-
         return {
             nomorHak,
-            landBooks,
             services,
             errorMessage,
             search,
             updateStatus,
-            getService,
         };
     },
 };
 </script>
+
 <style scoped>
 .result-table {
     width: 100%;

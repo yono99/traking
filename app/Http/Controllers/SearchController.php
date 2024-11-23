@@ -30,7 +30,7 @@ class SearchController extends Controller
         }
 
         // Query data buku tanah berdasarkan nomor hak (pencocokan tepat)
-        $landBooks = LandBook::where('nomer_hak', '==',$nomerHak)->get();
+        $landBooks = LandBook::where('nomer_hak', '=',$nomerHak)->get();
 
 
         if ($landBooks->isEmpty()) {
@@ -76,7 +76,6 @@ class SearchController extends Controller
             'TTE_PRODUK_LAYANAN' => ['FORWARD TTE PRODUK LAYANAN'],
         ][$unit] ?? [];
     }
-
 
     public function updateStatus(Request $request)
     {
