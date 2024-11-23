@@ -39,7 +39,7 @@ export default {
             <div>
                 <label for="unit">Unit:</label>
                 <select v-model="form.unit" id="unit" required>
-                    <option value="loket">Survei dan Pemetaan</option>
+                    <option value="loket">loket</option>
                     <option value="verifikator">verifikator</option>
                     <option value="bukutanah">Buku tanah</option>
                     <option value="sps">SPS</option>
@@ -48,9 +48,7 @@ export default {
                     <option value="pengesahan">Pengesahan</option>
                     <option value="bensus">bensus</option>
                     <option value="paraf">Pemeriksaan Berkas/paraf</option>
-                    <option value="TTE_PRODUK_LAYANAN">
-                        TTE Produk Layanan
-                    </option>
+                    <option value="TTE_PRODUK_LAYANAN"> TTE Produk Layanan</option>
                 </select>
             </div>
 

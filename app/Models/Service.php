@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     use HasFactory;
+    protected $table = 'services';
 
     protected $fillable = [
         'land_book_id',
@@ -24,4 +25,5 @@ class Service extends Model
     {
         return $this->belongsTo(LandBook::class, 'land_book_id');
     }
+
 }
