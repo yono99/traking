@@ -4,7 +4,7 @@
     <input type="text" v-model="nomorHak" placeholder="Masukkan Nomer Hak" @keyup.enter="search" />
     <button @click="search">Cari</button>
 
-    <!-- Tabel hasil pencarian -->
+<!-- Tabel hasil pencarian -->
     <table v-if="landBooks.length" class="result-table">
   <thead>
     <tr>
@@ -35,6 +35,7 @@
     </tr>
   </tbody>
 </table>
+
 
 
     <div v-if="errorMessage" class="error-message">
@@ -109,6 +110,10 @@ export default {
 };
 </script>
 <style scoped>
+
+
+
+
 .result-table {
   width: 100%;
   border-collapse: collapse;
@@ -123,6 +128,7 @@ export default {
   text-align: left;
 }
 
+
 .result-table td {
   border: 1px solid #ddd;
   padding: 10px;
@@ -134,6 +140,7 @@ export default {
 
 .result-table tr:hover {
   background-color: #f1f1f1;
+
 }
 
 .btn-update {
