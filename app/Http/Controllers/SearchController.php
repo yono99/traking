@@ -7,30 +7,34 @@ use Illuminate\Http\Request;
 use App\Models\LandBook;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class SearchController extends Controller
 {
     public function search(Request $request)
     {
-
         $nomorHak = $request->input('nomer_hak');
-        $userUnit = Auth::user()->unit;
 
-        // Tambahkan debugging
-        // dd($nomorHak, $userUnit);
+        // Validasi input
+        if (!is_numeric($nomorHak)) {
+            return response()->json(['message' => 'Nomer hak harus berupa angka.'], 400);
+        }
 
-        // Tentukan status berdasarkan unit user
-        $statusArray = $this->getStatusByUnit($userUnit);
+        // Ambil data LandBook berdasarkan nomer_hak
+        $landBooks = LandBook::where('nomer_hak', $nomorHak)->get();
 
-        // Ambil data dari tabel land_books dan services
-        $landBooks = LandBook::where('nomer_hak', 'like', '%' . $nomorHak . '%')->get();
-        $services = Service::whereIn('status', $statusArray)->get();
+        // Ambil data Services yang berhubungan
+        $services = Service::whereIn('land_book_id', $landBooks->pluck('id'))->get();
 
         return response()->json([
             'landBooks' => $landBooks,
             'services' => $services,
+            'totalItems' => $landBooks->count(),
         ]);
     }
+
+    
+   
 
     private function getStatusByUnit($unit)
     {
@@ -60,33 +64,16 @@ class SearchController extends Controller
 
     public function updateStatus(Request $request)
     {
-        // dd($request->all());
-        try {
-            $request->validate([
-                'service_id' => 'required|integer|exists:services,id',
-            ]);
+        $validatedData = $request->validate([
+            'service_id' => 'required|exists:services,id',
+            'status' => 'required|string',
+        ]);
 
-            $serviceId = $request->input('service_id');
-            $userUnit = Auth::user()->unit;
+        $service = Service::findOrFail($validatedData['service_id']);
+        $service->remarks = $validatedData['status'];
+        $service->save();
 
-            $service = Service::find($serviceId);
-            if (!$service) {
-                return response()->json(['message' => 'Service tidak ditemukan.'], 404);
-            }
-
-            $statusUpdate = $this->getUpdateStatusByUnit($userUnit);
-            if (!$statusUpdate) {
-                return response()->json(['message' => 'Status tidak valid untuk unit pengguna.'], 400);
-            }
-
-            $service->status = $statusUpdate;
-            $service->save();
-
-            return response()->json(['message' => 'Status berhasil diperbarui.']);
-        } catch (\Exception $e) {
-            Log::error('Error saat memperbarui status', ['exception' => $e]);
-            return response()->json(['message' => 'Terjadi kesalahan internal pada server.'], 500);
-        }
+        return response()->json(['message' => 'Status berhasil diperbarui!']);
     }
 
     private function getUpdateStatusByUnit($unit)
@@ -105,5 +92,4 @@ class SearchController extends Controller
 
         return $statuses[$unit] ?? null;
     }
-
 }
