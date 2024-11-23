@@ -21,7 +21,6 @@
       <td>{{ landBook.nomer_hak }}</td>
       <td>{{ landBook.jenis_hak }}</td>
       <td>{{ landBook.desa_kecamatan }}</td>
-      <td>{{ getService(landBook.id)?.name || "N/A" }}</td>
       <td>{{ getService(landBook.id)?.remarks || "N/A" }}</td>
       <td>
         <button
