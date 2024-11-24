@@ -32,7 +32,6 @@ class SearchController extends Controller
         // Query data buku tanah berdasarkan nomor hak (pencocokan tepat)
         $landBooks = LandBook::where('nomer_hak', '==',$nomerHak)->get();
 
-
         if ($landBooks->isEmpty()) {
             return response()->json(['message' => 'Data tidak ditemukan.'], 404);
         }
@@ -66,15 +65,15 @@ class SearchController extends Controller
     {
         return [
             'verifikator' => ['FORWARD VERIFIKATOR', 'FORWARD VERIFIKATOR CEK SYARAT'],
-            'pengukuran' => ['FORWARD PENGUKURAN REVISI', 'FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL'],
+            'pengukuran' => ['FORWARD PENGUKURAN REVISI', 'FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL',],
             'bukutanah' => ['FORWARD CARI BT', 'FORWARD ALIH MEDIA BTEL','FORWARD ALIH MEDIA REVISI'],
             'sps' => ['FORWARD SPS'],
             'bensus' => ['FORWARD BENSUS, FORWARD BENSUS DISPOSISI'],
-            'QC' => ['FORWARD QC SELESAI ALIH MEDIA'],
+            'QC' => ['FORWARD QC SELESAI ALIH MEDIA', 'FORWARD QC, FORWARD SELESAI REVISI', 'FORWARD QC, FORWARD SELESAI REVISI'],
             'pengesahan' => ['FORWARD PENGESAHAN ALIH MEDIA BTEL'],
             'paraf' => ['FORWARD PARAF'],
             'TTE_PRODUK_LAYANAN' => ['FORWARD TTE PRODUK LAYANAN'],
-        ][$unit] ?? [];
+        ][$unit] ?? []; 
     }
 
     public function updateStatus(Request $request)
@@ -131,6 +130,7 @@ class SearchController extends Controller
             ],
             'QC' => [
                 'FORWARD QC SELESAI ALIH MEDIA' => 'PROSES QC',
+                'FORWARD SELESAI REVISI ' => 'PROSES QC'
             ],
             'pengesahan' => [
                 'FORWARD PENGESAHAN ALIH MEDIA BTEL' => 'PROSES PENGESAHAN ALIH MEDIA BTEL',
