@@ -45,31 +45,22 @@ Route::middleware(['auth', LoketMiddleware::class . ':loket' ])->group(function 
 
 });
 
-// Rute untuk TanyaGenggam
-Route::middleware(['auth', CheckUnit::class . ':verifikator,pengukuran,bukutanah,sps,QC,pengesahan,paraf,TTE_PRODUK_LAYANAN'])->group(function () {
+// Rute untuk TanyaGenggam dan Inventory
+Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
 
     // Rute untuk menampilkan halaman TanyaGenggam
     Route::get('/tanya-genggam', [TanyaGenggamController::class, 'index'])->name('tanya-genggam.index');
 
     // Rute untuk menyimpan data dengan metode POST
     Route::post('/tanya-genggam', [TanyaGenggamController::class, 'store'])->name('tanya-genggam.store');
+    // Rute untuk pencarian berdasarkan nomer_hak
+    Route::get('/search', [TanyaGenggamController::class, 'search']);
+    // Rute untuk update status
+    Route::post('/update-status', [SearchController::class, 'updateStatus']);
+    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
 
+    route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])->name('inventory.updateStatus');
 });
-
-// Rute untuk pencarian berdasarkan nomer_hak
-Route::get('/search', [TanyaGenggamController::class, 'search']);
-// Rute untuk update status
-Route::post('/update-status', [SearchController::class, 'updateStatus'])->middleware('auth');
-
-
-Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
- 
-Route::middleware(['auth:sanctum', 'verified'])
-    ->post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
-    ->name('inventory.updateStatus');
-
-
-
  
 // Tambahkan route ini di web.php
 Route::get('/activities/fetch', [ActivityController::class, 'fetch']);

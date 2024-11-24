@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Menambahkan middleware untuk web
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
-            \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,                        
+            \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
@@ -28,4 +28,6 @@ $app->routeMiddleware([
     'role' => \App\Http\Middleware\CheckRole::class, // Menggunakan namespace lengkap
     'loket' => \App\Http\Middleware\LoketMiddleware::class,
     'checkUnit' => \App\Http\Middleware\CheckUnit::class,
+    'main' => \App\Http\Middleware\CheckUnit::class,
+    
 ]);
