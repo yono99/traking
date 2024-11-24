@@ -5,15 +5,13 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 export default {
     layout: AppLayout,
 
-    // Definisikan props yang diterima dari backend
     props: {
-        services: Array, // Data layanan yang diterima dari backend
-        user: Object,    // Data user yang diterima dari backend
+        services: Array,
+        user: Object,
     },
 
     data() {
         return {
-            // Tombol aksi berdasarkan unit pengguna
             buttons: {
                 verifikator: [
                     "FORWARD PENGUKURAN",
@@ -50,7 +48,7 @@ export default {
     },
 
     methods: {
-        // Fungsi untuk memperbarui status layanan
+        // Fungsi untuk memperbarui status layanan dan memuat ulang data
         async updateStatus(serviceId, newStatus) {
             try {
                 const response = await axios.post(
@@ -60,14 +58,31 @@ export default {
                 alert(response.data.message); // Tampilkan pesan sukses
 
                 // Perbarui status layanan secara reaktif
-                const service = this.services.find(s => s.id === serviceId);
+                const service = this.services.find((s) => s.id === serviceId);
                 if (service) {
                     service.status = newStatus;
                 }
+
+                // Panggil API untuk memuat ulang data setelah pembaruan status
+                await this.loadServices();
             } catch (error) {
                 console.error(error);
-                const errorMessage = error.response?.data?.message || "Terjadi kesalahan saat memperbarui status";
+                const errorMessage =
+                    error.response?.data?.message ||
+                    "Terjadi kesalahan saat memperbarui status";
                 alert(errorMessage);
+            }
+        },
+
+        // Fungsi untuk memuat ulang data layanan dari backend
+        async loadServices() {
+            try {
+                // Mengubah URL ke /inventory
+                const response = await axios.get("/inventory");
+                this.services = response.data.services; // Memperbarui data layanan
+            } catch (error) {
+                console.error(error);
+                alert("Terjadi kesalahan saat memuat data layanan");
             }
         },
     },
@@ -115,7 +130,9 @@ export default {
                             </button>
                         </div>
                         <div v-else>
-                            <span class="text-gray-500">No actions available</span>
+                            <span class="text-gray-500"
+                                >No actions available</span
+                            >
                         </div>
                     </td>
                 </tr>
