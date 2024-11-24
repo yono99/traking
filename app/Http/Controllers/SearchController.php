@@ -73,7 +73,7 @@ class SearchController extends Controller
             'pengesahan' => ['FORWARD PENGESAHAN ALIH MEDIA BTEL'],
             'paraf' => ['FORWARD PARAF'],
             'TTE_PRODUK_LAYANAN' => ['FORWARD TTE PRODUK LAYANAN'],
-        ][$unit] ?? []; 
+        ][$unit] ?? [];
     }
 
     public function updateStatus(Request $request)
@@ -82,15 +82,31 @@ class SearchController extends Controller
             'service_id' => 'required|exists:services,id',
         ]);
 
+        try {
         $user = Auth::user(); // Data pengguna yang login
         $unit = $user->unit; // Unit pengguna (e.g., verifikator, pengukuran, dll.)
 
         $service = Service::findOrFail($validatedData['service_id']);
+            $statusUpdate = $this->getUpdateStatusByUnit($userUnit);
+            if (!$statusUpdate) {
+                return response()->json(['message' => 'Status tidak valid untuk unit pengguna.'], 400);
+            }
 
-        // Cek apakah status yang sekarang sesuai dengan unit pengguna
-        $statusMapping = $this->getUpdateStatusByUnit($unit);
-        if (!isset($statusMapping[$service->status])) {
-            return response()->json(['message' => 'Status tidak valid untuk unit Anda.'], 400);
+            $service->status = $statusUpdate;
+            $service->save();
+
+            $activity = Activity::create([
+                'user_id' => Auth::user()->id,
+                'service_id' => $serviceId,
+                'status' => $statusUpdate,
+                'remarks' => $service->remarks
+            ]);
+            $activity->save();
+
+            return response()->json(['message' => 'Status berhasil diperbarui.']);
+        } catch (\Exception $e) {
+            Log::error('Error saat memperbarui status', ['exception' => $e]);
+            return response()->json(['message' => 'Terjadi kesalahan internal pada server.'], 500);
         }
 
         // Simpan status lama sebelum diupdate
