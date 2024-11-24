@@ -82,6 +82,14 @@ class SearchController extends Controller
             $service->status = $statusUpdate;
             $service->save();
 
+            $activity = Activity::create([
+                'user_id' => Auth::user()->id,
+                'service_id' => $serviceId,
+                'status' => $statusUpdate,
+                'remarks' => $service->remarks
+            ]);
+            $activity->save();
+
             return response()->json(['message' => 'Status berhasil diperbarui.']);
         } catch (\Exception $e) {
             Log::error('Error saat memperbarui status', ['exception' => $e]);
