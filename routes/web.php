@@ -7,6 +7,7 @@ use App\Http\Middleware\LoketMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TanyaGenggamController;
 use App\Http\Controllers\InventoryController;
@@ -66,3 +67,10 @@ Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory
 Route::middleware(['auth:sanctum', 'verified'])
     ->post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
     ->name('inventory.updateStatus');
+
+
+
+ 
+// Tambahkan route ini di web.php
+Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
+
