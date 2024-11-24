@@ -12,6 +12,9 @@ export default {
 
     data() {
         return {
+            // Salinan lokal dari prop 'services' untuk diubah
+            localServices: [...this.services],
+
             buttons: {
                 verifikator: [
                     "FORWARD PENGUKURAN",
@@ -57,19 +60,18 @@ export default {
                 );
                 alert(response.data.message); // Tampilkan pesan sukses
 
-                // Perbarui status layanan secara reaktif
-                const service = this.services.find((s) => s.id === serviceId);
+                // Perbarui status layanan di salinan lokal
+                const service = this.localServices.find(s => s.id === serviceId);
                 if (service) {
                     service.status = newStatus;
                 }
 
                 // Panggil API untuk memuat ulang data setelah pembaruan status
                 await this.loadServices();
+
             } catch (error) {
                 console.error(error);
-                const errorMessage =
-                    error.response?.data?.message ||
-                    "Terjadi kesalahan saat memperbarui status";
+                const errorMessage = error.response?.data?.message || "Terjadi kesalahan saat memperbarui status";
                 alert(errorMessage);
             }
         },
@@ -77,9 +79,9 @@ export default {
         // Fungsi untuk memuat ulang data layanan dari backend
         async loadServices() {
             try {
-                // Mengubah URL ke /inventory
                 const response = await axios.get("/inventory");
-                this.services = response.data.services; // Memperbarui data layanan
+                // Update salinan lokal dari 'services' dengan data terbaru
+                this.localServices = response.data.services;
             } catch (error) {
                 console.error(error);
                 alert("Terjadi kesalahan saat memuat data layanan");
@@ -87,6 +89,7 @@ export default {
         },
     },
 };
+    
 </script>
 
 <template>
