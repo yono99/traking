@@ -114,7 +114,7 @@ class SearchController extends Controller
                 'FORWARD VERIFIKATOR CEK SYARAT' => 'PROSES VERIFIKASI',
             ],
             'pengukuran' => [
-                'FORWARD PENGUKURAN REVISI' => 'PROSES MEMPERBAHARUI',
+                'FORWARD PENGUKURAN REVISI' => 'PROSES MEMPERBAHARUI REVISI',
                 'FORWARD PENGUKURAN' => 'PROSES MEMPERBAHARUI',
                 'FORWARD ALIH MEDIA SUEL' => 'PROSES ALIH MEDIA SUEL',
             ],

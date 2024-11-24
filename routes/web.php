@@ -57,7 +57,12 @@ Route::middleware(['auth', CheckUnit::class . ':verifikator,pengukuran,bukutanah
 
 // Rute untuk pencarian berdasarkan nomer_hak
 Route::get('/search', [TanyaGenggamController::class, 'search']);
-
-
 // Rute untuk update status
 Route::post('/update-status', [SearchController::class, 'updateStatus'])->middleware('auth');
+
+
+Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+ 
+Route::middleware(['auth:sanctum', 'verified'])
+    ->post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
+    ->name('inventory.updateStatus');

@@ -13,7 +13,9 @@ class Service extends Model
     protected $fillable = [
         'land_book_id',
         'nomor_hp',
+        'status',
     ];
+ 
 
     // Model Service.php
     public function activities()
@@ -24,6 +26,11 @@ class Service extends Model
     public function landBook()
     {
         return $this->belongsTo(LandBook::class, 'land_book_id');
+    }
+    // App\Models\Service.php
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
 }
