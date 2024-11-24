@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class LandBook extends Model
 {
     use HasFactory;
+    protected $table = 'land_books';
 
     protected $fillable = [
         'nomer_hak',
@@ -17,12 +18,11 @@ class LandBook extends Model
     ];
 
     // Model LandBook.php
-    public function service()
+    public function services()
     {
-        return $this->hasOne(Service::class, 'land_book_id');
+        return $this->hasMany(Service::class, 'land_book_id');
+
     }
-    public function landBook()
-    {
-        return $this->belongsTo(LandBook::class, 'land_book_id');
-    }
+
+ 
 }
