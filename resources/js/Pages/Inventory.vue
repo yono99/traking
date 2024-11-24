@@ -1,56 +1,10 @@
-<template>
-    <div>
-        <h1 class="text-2xl font-bold mb-4">Inventory</h1>
-        <table class="table-auto w-full border-collapse border border-gray-200">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="border px-4 py-2">No</th>
-                    <th class="border px-4 py-2">Nomer hak</th>
-                    <th class="border px-4 py-2">Jenis Hak</th>
-                    <th class="border px-4 py-2">Desa - Kecamatan</th>
-                    <th class="border px-4 py-2">Status</th>
-                    <th class="border px-4 py-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(activity, index) in activities" :key="activity.id">
-                    <td class="border px-4 py-2">{{ index + 1 }}</td>
-                    <td class="border px-4 py-2">
-                        {{ activity.service.land_book?.nomer_hak || "-" }}
-                    </td>
-                    <td class="border px-4 py-2">
-                        {{ activity.service.land_book?.jenis_hak || "-" }}
-                    </td>
-                    <td class="border px-4 py-2">
-                        {{ activity.service.land_book?.desa_kecamatan || "-" }}
-                    </td>
-                    <td class="border px-4 py-2">
-                        {{ activity.service.status }}
-                    </td>
-                    <td class="border px-4 py-2">
-                        <div v-if="buttons[activity.user.unit]">
-                            <button
-                                v-for="button in buttons[activity.user.unit]"
-                                :key="button"
-                                class="bg-blue-500 text-white px-2 py-1 rounded mr-2"
-                                @click="
-                                    updateStatus(activity.service.id, button)
-                                "
-                            >
-                                {{ button }}
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</template>
-
 <script>
 import axios from "axios";
+import AppLayout from "@/Layouts/AppLayout.vue";
 
 export default {
+        layout: AppLayout,
+
     props: {
         activities: Array,
     },
@@ -110,3 +64,53 @@ export default {
     },
 };
 </script>
+
+<template>
+    <div>
+        <h1 class="text-2xl font-bold mb-4">Inventory</h1>
+        <table class="table-auto w-full border-collapse border border-gray-200">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="border px-4 py-2">No</th>
+                    <th class="border px-4 py-2">Nomer hak</th>
+                    <th class="border px-4 py-2">Jenis Hak</th>
+                    <th class="border px-4 py-2">Desa - Kecamatan</th>
+                    <th class="border px-4 py-2">Status</th>
+                    <th class="border px-4 py-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(activity, index) in activities" :key="activity.id">
+                    <td class="border px-4 py-2">{{ index + 1 }}</td>
+                    <td class="border px-4 py-2">
+                        {{ activity.service.land_book?.nomer_hak || "-" }}
+                    </td>
+                    <td class="border px-4 py-2">
+                        {{ activity.service.land_book?.jenis_hak || "-" }}
+                    </td>
+                    <td class="border px-4 py-2">
+                        {{ activity.service.land_book?.desa_kecamatan || "-" }}
+                    </td>
+                    <td class="border px-4 py-2">
+                        {{ activity.service.status }}
+                    </td>
+                    <td class="border px-4 py-2">
+                        <div v-if="buttons[activity.user.unit]">
+                            <button
+                                v-for="button in buttons[activity.user.unit]"
+                                :key="button"
+                                class="bg-blue-500 text-white px-2 py-1 rounded mr-2"
+                                @click="
+                                    updateStatus(activity.service.id, button)
+                                "
+                            >
+                                {{ button }}
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</template>
+
