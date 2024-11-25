@@ -8,11 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     use HasFactory;
+    protected $table = 'services';
 
     protected $fillable = [
+        'name',
         'land_book_id',
-        'nomor_hp',
+        'status',
+        'PNBP',
+        'nomor_hp'
     ];
+
 
     // Model Service.php
     public function activities()
@@ -23,5 +28,10 @@ class Service extends Model
     public function landBook()
     {
         return $this->belongsTo(LandBook::class, 'land_book_id');
+    }
+    // App\Models\Service.php
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
