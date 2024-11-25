@@ -33,7 +33,7 @@ class InventoryController extends Controller
 
         // Ambil data aktivitas berdasarkan user ID dan status yang sesuai
         $activities = Activity::whereHas('user', function ($query) use ($userId) {
-            $query->where('id', $userId); // Filter berdasarkan kolom 'id' di tabel 'users'
+            $query->where('user_id', $userId); // Filter berdasarkan kolom 'id' di tabel 'users'
         })
             ->whereHas('service', function ($query) use ($statuses, $user) {
                 $unitStatuses = $statuses[$user->unit] ?? []; // Ambil status berdasarkan unit
@@ -41,7 +41,7 @@ class InventoryController extends Controller
             })
             ->with(['service.landBook', 'user']) // Lazy load relasi jika diperlukan
             ->get();
-
+        // dd($activities);
         // Kirim data ke Inertia
         return inertia('Inventory', [
             'activities' => $activities,
@@ -62,7 +62,7 @@ class InventoryController extends Controller
                 $query->where('id', $userId); // Pastikan layanan terkait dengan pengguna ini
             })
             ->firstOrFail(); // Jika tidak ditemukan, lempar 404
-
+        dd($service);
         $oldStatus = $service->status; // Simpan status lama
 
         // Ambil status baru dari request
