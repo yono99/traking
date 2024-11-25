@@ -34,7 +34,7 @@ class InventoryController extends Controller
         $services = Service::whereIn('status', $statuses[$userUnit] ?? [])
             ->with(['landBook']) // Lazy load relasi jika diperlukan
             ->get();
-
+        // dd($activities);
         // Kirim data ke Inertia
         return inertia('Inventory', [
             'services' => $services,
