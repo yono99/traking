@@ -46,8 +46,9 @@
 
 <script>
 import { ref } from "vue";
-
+import AppLayout from "@/Layouts/AppLayout.vue";
 export default {
+layout : AppLayout,
     setup() {
         const nomorHak = ref("");
         const services = ref([]);

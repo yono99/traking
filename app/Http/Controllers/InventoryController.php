@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Activity;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,11 +11,11 @@ class InventoryController extends Controller
     public function index()
     {
         $user = Auth::user(); // Mengambil user yang login
-        $userId = $user->id; // Menggunakan kolom 'id' dari tabel 'users'
+        $userUnit = $user->unit; // Unit pengguna
 
         // Kategori dan status berdasarkan unit
         $statuses = [
-            'verifikator' => ['PROSES VERIFIKASI', 'PROSES VERIFIKASI'],
+            'verifikator' => ['PROSES VERIFIKASI'],
             'pengukuran' => [
                 'PROSES MEMPERBAHARUI REVISI',
                 'PROSES MEMPERBAHARUI',
@@ -31,57 +30,42 @@ class InventoryController extends Controller
             'TTE_PRODUK_LAYANAN' => ['PROSES TTE'],
         ];
 
-        // Ambil data aktivitas berdasarkan user ID dan status yang sesuai
-        $activities = Activity::whereHas('user', function ($query) use ($userId) {
-            $query->where('user_id', $userId); // Filter berdasarkan kolom 'id' di tabel 'users'
-        })
-            ->whereHas('service', function ($query) use ($statuses, $user) {
-                $unitStatuses = $statuses[$user->unit] ?? []; // Ambil status berdasarkan unit
-                $query->whereIn('status', $unitStatuses); // Filter berdasarkan status di tabel 'services'
-            })
-            ->with(['service.landBook', 'user']) // Lazy load relasi jika diperlukan
+        // Ambil layanan berdasarkan status dan unit pengguna
+        $services = Service::whereIn('status', $statuses[$userUnit] ?? [])
+            ->with(['landBook']) // Lazy load relasi jika diperlukan
             ->get();
         // dd($activities);
         // Kirim data ke Inertia
         return inertia('Inventory', [
-            'activities' => $activities,
+            'services' => $services,
+            'user' => $user,
         ]);
     }
 
-    /**
-     * Perbarui status dan catat aktivitas.
-     */
     public function updateStatus(Request $request, $serviceId)
     {
-        $user = Auth::user(); // Data pengguna yang login
-        $userId = $user->id; // ID pengguna
+        $user = Auth::user(); // Pengguna yang login
+        $userUnit = $user->unit; // Unit pengguna
 
-        // Cari layanan berdasarkan ID dan pastikan terkait dengan pengguna yang login
-        $service = Service::where('id', $serviceId)
-            ->whereHas('activities.user', function ($query) use ($userId) {
-                $query->where('id', $userId); // Pastikan layanan terkait dengan pengguna ini
-            })
-            ->firstOrFail(); // Jika tidak ditemukan, lempar 404
-        dd($service);
+        // Cari layanan berdasarkan ID
+        $service = Service::findOrFail($serviceId); // Lempar 404 jika tidak ditemukan
         $oldStatus = $service->status; // Simpan status lama
 
         // Ambil status baru dari request
         $newStatus = $request->input('status');
 
         // Validasi apakah status baru valid untuk unit pengguna
-        $allowedStatuses = $this->getAllowedStatusesByUnit($user->unit);
+        $allowedStatuses = $this->getAllowedStatusesByUnit($userUnit);
 
         if (!in_array($newStatus, $allowedStatuses)) {
             return response()->json(['message' => 'Status tidak valid untuk unit Anda.'], 400);
         }
 
         // Update status pada tabel services
-        $service->update([
-            'status' => $newStatus,
-        ]);
+        $service->update(['status' => $newStatus]);
 
-        // Catat aktivitas ke tabel activities
-        $this->logActivity($serviceId, $userId, $oldStatus, $newStatus);
+        // Log aktivitas ke tabel activities
+        $this->logActivity($service->id, $user->id, $oldStatus, $newStatus);
 
         return response()->json([
             'message' => 'Status berhasil diperbarui',
@@ -89,21 +73,16 @@ class InventoryController extends Controller
         ]);
     }
 
-
     private function getAllowedStatusesByUnit($unit)
     {
-        // Mapping tombol yang diizinkan untuk setiap unit
         return [
             'verifikator' => [
                 'FORWARD PENGUKURAN',
                 'FORWARD CARI BT',
                 'FORWARD BENSUS DISPOSISI',
                 'FORWARD SPS',
-                'FORWARD BENSUS',
             ],
-            'sps' => [
-                'FORWARD BENSUS',
-            ],
+            'sps' => ['FORWARD BENSUS'],
             'bensus' => [
                 'FORWARD ALIH MEDIA SUEL',
                 'FORWARD BENSUS DISPOSISI UPDATE SELESAI',
@@ -123,24 +102,15 @@ class InventoryController extends Controller
                 'FORWARD QC SELESAI ALIH MEDIA',
                 'FORWARD SELESAI REVISI',
             ],
-            'pengesahan' => [
-                'FORWARD PARAF',
-            ],
-            'paraf' => [
-                'FORWARD TTE PRODUK LAYANAN',
-            ],
-            'TTE_PRODUK_LAYANAN' => [
-                'SELESAI TTE',
-            ],
+            'pengesahan' => ['FORWARD PARAF'],
+            'paraf' => ['FORWARD TTE PRODUK LAYANAN'],
+            'TTE_PRODUK_LAYANAN' => ['SELESAI TTE'],
         ][$unit] ?? [];
     }
 
-    /**
-     * Log aktivitas ke tabel activities.
-     */
     private function logActivity($serviceId, $userId, $oldStatus, $newStatus)
     {
-        Activity::create([
+        \App\Models\Activity::create([
             'service_id' => $serviceId,
             'user_id' => $userId,
             'status' => $newStatus,

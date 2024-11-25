@@ -33,11 +33,7 @@ const logout = () => {
 
 <template>
     <div>
-        <Head :title="title">
-        
-@vite(['resources/js/app.js'])
-
-        </Head>
+        <Head :title="title"> @vite(['resources/js/app.js']) </Head>
 
         <Banner />
 
@@ -86,12 +82,25 @@ const logout = () => {
                                 </NavLink>
                                 <NavLink
                                     v-if="
-                                        $page.props.auth?.user?.unit === 'verifikator,pengukuran,bukutanah,sps,QC,pengesahan,paraf,TTE_PRODUK_LAYANAN'
+                                        ['verifikator', 'pengukuran', 'bukutanah', 'sps', 'QC', 'pengesahan', 'paraf', 'TTE_PRODUK_LAYANAN'].includes($page.props.auth?.user?.unit)
+
                                     "
                                     :href="route('tanya-genggam.index')"
-                                    :active="route().current('tanya-genggam.index')"
+                                    :active="
+                                        route().current('tanya-genggam.index')
+                                    "
                                 >
                                     Tanya Genggam
+                                </NavLink>
+                                <NavLink
+                                    v-if="
+                                       ['verifikator', 'pengukuran', 'bukutanah', 'sps', 'QC', 'pengesahan', 'paraf', 'TTE_PRODUK_LAYANAN'].includes($page.props.auth?.user?.unit)
+
+                                    "
+                                    :href="route('inventory.index')"
+                                    :active="route().current('inventory.index')"
+                                >
+                                    Inventory
                                 </NavLink>
                             </div>
                         </div>
@@ -416,15 +425,12 @@ const logout = () => {
                                 Profile
                             </ResponsiveNavLink>
 
-                          
-
                             <!-- Authentication -->
                             <form method="POST" @submit.prevent="logout">
                                 <ResponsiveNavLink as="button">
                                     Log Out
                                 </ResponsiveNavLink>
                             </form>
-    
                         </div>
                     </div>
                 </div>

@@ -11,11 +11,13 @@ class Service extends Model
     protected $table = 'services';
 
     protected $fillable = [
+        'name',
         'land_book_id',
-        'nomor_hp',
         'status',
+        'PNBP',
+        'nomor_hp'
     ];
- 
+
 
     // Model Service.php
     public function activities()
@@ -32,5 +34,4 @@ class Service extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }

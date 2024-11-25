@@ -3,20 +3,24 @@ import axios from "axios";
 import AppLayout from "@/Layouts/AppLayout.vue";
 
 export default {
-        layout: AppLayout,
+    layout: AppLayout,
 
     props: {
-        activities: Array,
+        services: Array,
+        user: Object,
     },
+
     data() {
         return {
+            // Salinan lokal dari prop 'services' untuk diubah
+            localServices: [...this.services],
+
             buttons: {
                 verifikator: [
                     "FORWARD PENGUKURAN",
                     "FORWARD CARI BT",
                     "FORWARD BENSUS DISPOSISI",
                     "FORWARD SPS",
-                   
                 ],
                 sps: ["FORWARD BENSUS"],
                 bensus: [
@@ -31,7 +35,7 @@ export default {
                 ],
                 pengukuran: [
                     "FORWARD VERIFIKATOR",
-                    "FORWARD ALIH MEDIA BTEL",      
+                    "FORWARD ALIH MEDIA BTEL",
                     "FORWARD SELESAI REVISI",
                 ],
                 bukutanah: [
@@ -45,24 +49,47 @@ export default {
             },
         };
     },
+
     methods: {
+        // Fungsi untuk memperbarui status layanan dan memuat ulang data
         async updateStatus(serviceId, newStatus) {
             try {
                 const response = await axios.post(
                     `/inventory/update-status/${serviceId}`,
-                    {
-                        status: newStatus,
-                    }
+                    { status: newStatus }
                 );
                 alert(response.data.message); // Tampilkan pesan sukses
-                location.reload(); // Refresh data di halaman
+
+                // Perbarui status layanan di salinan lokal
+                const service = this.localServices.find(s => s.id === serviceId);
+                if (service) {
+                    service.status = newStatus;
+                }
+
+                // Panggil API untuk memuat ulang data setelah pembaruan status
+                await this.loadServices();
+
             } catch (error) {
                 console.error(error);
-                alert("Terjadi kesalahan saat memperbarui status");
+                const errorMessage = error.response?.data?.message || "Terjadi kesalahan saat memperbarui status";
+                alert(errorMessage);
+            }
+        },
+
+        // Fungsi untuk memuat ulang data layanan dari backend
+        async loadServices() {
+            try {
+                const response = await axios.get("/inventory");
+                // Update salinan lokal dari 'services' dengan data terbaru
+                this.localServices = response.data.services;
+            } catch (error) {
+                console.error(error);
+                alert("Terjadi kesalahan saat memuat data layanan");
             }
         },
     },
 };
+    
 </script>
 
 <template>
@@ -80,32 +107,35 @@ export default {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(activity, index) in activities" :key="activity.id">
+                <tr v-for="(service, index) in services" :key="service.id">
                     <td class="border px-4 py-2">{{ index + 1 }}</td>
                     <td class="border px-4 py-2">
-                        {{ activity.service.land_book?.nomer_hak || "-" }}
+                        {{ service.land_book?.nomer_hak || "-" }}
                     </td>
                     <td class="border px-4 py-2">
-                        {{ activity.service.land_book?.jenis_hak || "-" }}
+                        {{ service.land_book?.jenis_hak || "-" }}
                     </td>
                     <td class="border px-4 py-2">
-                        {{ activity.service.land_book?.desa_kecamatan || "-" }}
+                        {{ service.land_book?.desa_kecamatan || "-" }}
                     </td>
                     <td class="border px-4 py-2">
-                        {{ activity.service.status }}
+                        {{ service.status }}
                     </td>
                     <td class="border px-4 py-2">
-                        <div v-if="buttons[activity.user.unit]">
+                        <div v-if="buttons[user.unit]">
                             <button
-                                v-for="button in buttons[activity.user.unit]"
+                                v-for="button in buttons[user.unit]"
                                 :key="button"
                                 class="bg-blue-500 text-white px-2 py-1 rounded mr-2"
-                                @click="
-                                    updateStatus(activity.service.id, button)
-                                "
+                                @click="updateStatus(service.id, button)"
                             >
                                 {{ button }}
                             </button>
+                        </div>
+                        <div v-else>
+                            <span class="text-gray-500"
+                                >No actions available</span
+                            >
                         </div>
                     </td>
                 </tr>
@@ -113,4 +143,3 @@ export default {
         </table>
     </div>
 </template>
-
