@@ -26,7 +26,6 @@ export default {
             desa_kecamatan: "",
             jenis_hak: "",
             nomer_hak: "",
-          
         });
 
         const resultData = ref([]);
@@ -313,32 +312,32 @@ export default {
             }
         };
 
-     const submitForm = async () => {
-    errorMessage.value = "";
-    loading.value = true;
+        const submitForm = async () => {
+            errorMessage.value = "";
+            loading.value = true;
 
-    // Menghilangkan leading zeros pada 'nomer_hak'
-    form.nomer_hak = form.nomer_hak.replace(/^0+/, ''); // Menghapus semua nol di depan
+            // Menghilangkan leading zeros pada 'nomer_hak'
+            form.nomer_hak = form.nomer_hak.replace(/^0+/, ""); // Menghapus semua nol di depan
 
-    try {
-        const response = await axios.get("/activities/fetch", {
-            params: {
-                desa_kecamatan: form.desa_kecamatan,
-                jenis_hak: form.jenis_hak,
-                nomer_hak: form.nomer_hak, // Sudah dimodifikasi tanpa leading zeros
-            },
-        });
+            try {
+                const response = await axios.get("/activities/fetch", {
+                    params: {
+                        desa_kecamatan: form.desa_kecamatan,
+                        jenis_hak: form.jenis_hak,
+                        nomer_hak: form.nomer_hak, // Sudah dimodifikasi tanpa leading zeros
+                    },
+                });
 
-        resultData.value = parseFlatArrayToObjects(response.data);
-        showResult.value = true;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        errorMessage.value = "Data tidak dapat diambil. Silakan coba lagi.";
-    } finally {
-        loading.value = false;
-    }
-};
-
+                resultData.value = parseFlatArrayToObjects(response.data);
+                showResult.value = true;
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                errorMessage.value =
+                    "Data tidak dapat diambil. Silakan coba lagi.";
+            } finally {
+                loading.value = false;
+            }
+        };
 
         return {
             form,
@@ -375,7 +374,7 @@ export default {
                     for="desa_kecamatan"
                     class="block text-sm font-medium text-gray-900 dark:text-white"
                 >
-                    Desa/Kecamatan
+                    Desa - Kecamatan
                 </label>
                 <input
                     type="text"
@@ -383,14 +382,14 @@ export default {
                     v-model="searchQuery"
                     @input="handleInput"
                     @keydown="handleKeydown"
-                    placeholder="Masukkan Desa/Kecamatan..."
+                    placeholder="Masukkan Desa - Kecamatan..."
                     class="mt-1 block w-full border border-gray-300 rounded p-2"
                     required
                 />
                 <!-- Dropdown -->
                 <div
-                    v-if="showDropdown"
-                    class="absolute bg-white border mt-1 rounded shadow"
+                    v-if="showDropdown "
+                    class="absolute bg-white border mt-1 rounded shadow "
                 >
                     <ul>
                         <li
@@ -443,7 +442,11 @@ export default {
                     placeholder="Masukkan Nomer Hak..."
                     class="mt-1 block w-full border border-gray-300 rounded p-2"
                     required
-                    @input="form.nomer_hak = form.nomer_hak.replace(/\D/g, '').slice(0, 5)"
+                    @input="
+                        form.nomer_hak = form.nomer_hak
+                            .replace(/\D/g, '')
+                            .slice(0, 5)
+                    "
                 />
             </div>
 
@@ -464,7 +467,7 @@ export default {
         <!-- Result Table -->
         <div v-if="showResult" class="mt-6 bg-gray-100 p-4 rounded shadow-md">
             <h2 class="text-xl font-medium text-gray-800 mb-4">
-             History Aktivitas
+                History Aktivitas
             </h2>
 
             <div
@@ -515,7 +518,7 @@ export default {
                             >
                                 Kontak
                             </th>
-                                 <th
+                            <th
                                 class="border border-gray-300 px-4 py-2 text-left"
                             >
                                 Waktu
@@ -547,7 +550,7 @@ export default {
                                 {{ activity.service_name }}
                             </td>
                             <td class="border border-gray-300 px-4 py-2">
-                                {{ activity.service_contact }}
+                                0{{ activity.service_contact }}
                             </td>
                             <td class="border border-gray-300 px-4 py-2">
                                 {{ activity.update_at }}

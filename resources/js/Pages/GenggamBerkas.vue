@@ -485,6 +485,7 @@ export default {
                 <input
                     type="text"
                     id="nomer_hak"
+                    @input="form.nomer_hak = form.nomer_hak.replace(/\D/g, '').slice(0, 5)"
                     v-model="form.nomer_hak"
                     maxlength="5"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
