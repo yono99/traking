@@ -342,7 +342,14 @@ export default {
             // Jika ada error, jangan kirim form
             if (hasError) return;
 
+            // Hapus awalan nol sebelum mengirim ke server
+            const nomerHakWithoutLeadingZero = form.nomer_hak.replace(
+                /^0+/,
+                ""
+            );
+
             // Kirim form jika tidak ada error
+            form.nomer_hak = nomerHakWithoutLeadingZero; // Update nomer_hak dengan nilai tanpa nol
             form.post("/genggam-berkas", {
                 onSuccess: () => {
                     form.reset();
@@ -467,7 +474,7 @@ export default {
                     {{ errors.jenis_hak }}
                 </p>
             </div>
-
+ 
             <!-- Input Nomer Hak -->
             <div class="mb-4">
                 <label
@@ -480,11 +487,6 @@ export default {
                     id="nomer_hak"
                     v-model="form.nomer_hak"
                     maxlength="5"
-                    @input="
-                        form.nomer_hak = form.nomer_hak
-                            .replace(/\D/g, '')
-                            .slice(0, 5)
-                    "
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                     required
                 />

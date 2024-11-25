@@ -94,21 +94,23 @@ class ActivityController extends Controller
             ->get();
 
         // Format data menjadi array of objects
-        $formattedActivities = $activities->flatMap(function ($landBook) {
-            return $landBook->services->flatMap(function ($service) {
-                return $service->activities->map(function ($activity) use ($service) {
-                    return [
-                        'nomer_hak' => $service->landBook->nomer_hak ?? null,
-                        'jenis_hak' => $service->landBook->jenis_hak ?? null,
-                        'desa_kecamatan' => $service->landBook->desa_kecamatan ?? null,
-                        'user_name' => $activity->user->name ?? 'Unknown',
-                        'activity_status' => $activity->status,
-                        'service_name' => $service->name,
-                        'service_contact' => $service->nomor_hp,
-                    ];
-                });
-            });
+ $formattedActivities = $activities->flatMap(function ($landBook) {
+    return $landBook->services->flatMap(function ($service) {
+        return $service->activities->map(function ($activity) use ($service) {
+            return [
+                'nomer_hak' => $service->landBook->nomer_hak ?? null,
+                'jenis_hak' => $service->landBook->jenis_hak ?? null,
+                'desa_kecamatan' => $service->landBook->desa_kecamatan ?? null,
+                'user_name' => $activity->user->name ?? 'Unknown',
+                'activity_status' => $activity->status,
+                'service_name' => $service->name,
+                'service_contact' => $service->nomor_hp,
+                'created_at' => $activity->created_at->format('Y-m-d H:i:s'), // Format waktu
+            ];
         });
+    });
+});
+
 
         return response()->json($formattedActivities->flatten());
     }

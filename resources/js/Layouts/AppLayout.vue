@@ -78,11 +78,11 @@ const logout = () => {
                                     :href="route('genggam.berkas')"
                                     :active="route().current('genggam.berkas')"
                                 >
-                                    Genggam Berkas
+                                    Input data
                                 </NavLink>
                                 <NavLink
                                     v-if="
-                                        ['verifikator', 'pengukuran', 'bukutanah', 'sps', 'QC', 'pengesahan', 'paraf', 'TTE_PRODUK_LAYANAN'].includes($page.props.auth?.user?.unit)
+                                        ['verifikator', 'pengukuran','bensus','bukutanah', 'sps', 'QC', 'pengesahan', 'paraf', 'TTE_PRODUK_LAYANAN'].includes($page.props.auth?.user?.unit)
 
                                     "
                                     :href="route('tanya-genggam.index')"
@@ -90,11 +90,11 @@ const logout = () => {
                                         route().current('tanya-genggam.index')
                                     "
                                 >
-                                    Tanya Genggam
+                                    Cari Berkas
                                 </NavLink>
                                 <NavLink
                                     v-if="
-                                       ['verifikator', 'pengukuran', 'bukutanah', 'sps', 'QC', 'pengesahan', 'paraf', 'TTE_PRODUK_LAYANAN'].includes($page.props.auth?.user?.unit)
+                                       ['verifikator','bensus', 'pengukuran', 'bukutanah', 'sps', 'QC', 'pengesahan', 'paraf', 'TTE_PRODUK_LAYANAN'].includes($page.props.auth?.user?.unit)
 
                                     "
                                     :href="route('inventory.index')"

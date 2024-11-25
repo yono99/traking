@@ -14,6 +14,7 @@ class Activity extends Model
         'user_id',
         'status',
         'remarks',
+        'create_at',
     ];
 
     public function service()
