@@ -13,6 +13,7 @@ use App\Http\Controllers\TanyaGenggamController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Middleware\CheckUnit;
+use App\Http\Controllers\TeamsController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -36,6 +37,14 @@ Route::middleware([
 Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
     Route::get('/management-akun', [ManagementAkunController::class, 'index'])->name('management.akun');
     Route::post('/management-akun/update', [ManagementAkunController::class, 'update'])->name('management.akun.update');
+
+    Route::get('/teams', [TeamsController::class, 'index'])->name('teams.index');
+    Route::post('/teams', [TeamsController::class, 'store'])->name('teams.store');
+    Route::post('/teams/{team}/add-member', [TeamsController::class, 'addMember'])->name('teams.addMember');
+    Route::delete('/teams/{team}/remove-member/{user}', [TeamsController::class, 'removeMember'])->name('teams.removeMember');
+    Route::post('/users/{user}/move-team', [TeamsController::class, 'moveMember'])->name('users.moveTeam');
+    Route::delete('/teams/{team}', [TeamsController::class, 'destroy'])->name('teams.destroy');
+
 });
 
 Route::middleware(['auth', LoketMiddleware::class . ':loket' ])->group(function () {
@@ -61,7 +70,6 @@ Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
 
     route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])->name('inventory.updateStatus');
 });
- 
+
 // Tambahkan route ini di web.php
 Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
-
