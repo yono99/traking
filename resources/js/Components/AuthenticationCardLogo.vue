@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-     
+      <Link :href="'/'">
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
@@ -283,5 +283,5 @@ m-510 -20 c-3 -9 -11 -13 -16 -10 -8 5 -7 11 1 21 14 18 24 11 15 -11z m100
 39z"/>
 </g>
 </svg>
-
+</Link>
 </template>
