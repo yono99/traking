@@ -1,4 +1,5 @@
 <script>
+
 import { ref } from "vue";
 import axios from "axios";
 import { useForm } from "@inertiajs/inertia-vue3";
@@ -355,15 +356,20 @@ export default {
             handleKeydown,
         };
     },
+  
+ 
 };
 </script>
-
+ 
 <template>
+    
+                                                         
+
     <div
         class="p-6 lg:p-9 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"
     >
         <h1 class="text-2xl font-medium text-gray-900 dark:text-white mb-6">
-            Selamat Datang di Aplikasi Genggamtanahku!
+            Ada yang ingin dicari ? 
         </h1>
 
         <!-- Form -->
@@ -562,3 +568,41 @@ export default {
         </div>
     </div>
 </template>
+
+
+<style>
+/* Box container styling untuk grid */
+.box-container {
+  display: grid; /* Menggunakan grid */
+  grid-template-columns: repeat(2, 1fr); /* Membuat 2 kolom dengan lebar yang sama */
+  gap: 1rem; /* Jarak antar kotak */
+  justify-items: center; /* Menempatkan item di tengah secara horizontal */
+  align-items: center; /* Menempatkan item di tengah secara vertikal */
+  padding: 2rem; /* Padding untuk seluruh container */
+}
+
+/* Styling untuk setiap box */
+.box {
+  background-color: #f0f0f0; /* Warna latar belakang kotak */
+  border: 1px solid #ddd; /* Border abu-abu untuk kotak */
+  padding: 1rem; /* Padding di dalam kotak */
+  border-radius: 8px; /* Sudut kotak yang membulat */
+  display: flex; /* Flexbox untuk konten di dalam box */
+  justify-content: space-between; /* Memisahkan label dan count */
+  align-items: center; /* Vertikal align */
+  width: 200px; /* Menentukan lebar kotak */
+}
+
+/* Styling untuk label di dalam box */
+.label {
+  font-weight: bold;
+  color: #333; /* Warna teks label */
+}
+
+/* Styling untuk count di dalam box */
+.count {
+  font-size: 1.25rem;
+  color: #007BFF; /* Warna teks untuk count */
+}
+
+</style>
