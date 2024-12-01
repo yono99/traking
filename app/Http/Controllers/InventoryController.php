@@ -13,7 +13,7 @@ class InventoryController extends Controller
         $user = Auth::user(); // Mengambil user yang login
         $userUnit = $user->unit; // Unit pengguna
 
-        // Kategori dan status berdasarkan unit
+        // status berdasarkan unit
         $statuses = [
             'verifikator' => ['PROSES VERIFIKASI'],
             'pengukuran' => [
@@ -24,6 +24,11 @@ class InventoryController extends Controller
             'bukutanah' => ['PROSES CARI BT', 'PROSES ALIH MEDIA BTEL'],
             'sps' => ['PROSES SPS'],
             'bensus' => ['PROSES BENSUS'],
+            'pelaksana_bn',
+            'pelaksana_ph',
+            'pelaksana_roya',
+            'pelaksana_ph_ruko',
+            'pelaksana_sk' => ['PROSES STAGING'],
             'QC' => ['PROSES QC'],
             'pengesahan' => ['PROSES PENGESAHAN ALIH MEDIA BTEL'],
             'paraf' => ['PROSES PARAF'],
@@ -84,10 +89,20 @@ class InventoryController extends Controller
             ],
             'sps' => ['FORWARD BENSUS'],
             'bensus' => [
-                'FORWARD ALIH MEDIA SUEL',
+                'FORWARD PELAKSANA ',
                 'FORWARD BENSUS DISPOSISI UPDATE SELESAI',
             ],
-            'QC' => [
+            'pelaksana_bn',
+            'pelaksana_ph',
+            'pelaksana_roya',
+            'pelaksana_ph_ruko',
+            'pelaksana_sk' => ['FORWARD ALIH MEDIA SUEL'],
+            'QC',
+            'QC_bn',
+            'QC_ph',
+            'QC_roya',
+            'QC_ph_ruko',
+            'QC_sk' => [
                 'FORWARD PENGESAHAN ALIH MEDIA BTEL',
                 'FORWARD BUKU TANAH REVISI',
                 'FORWARD PENGUKURAN REVISI',

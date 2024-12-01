@@ -56,6 +56,7 @@ class ServiceController extends Controller
                 'FORWARD PENGUKURAN REVISI',
                 'FORWARD VERIFIKATOR CEK SYARAT',
                 'FORWARD VERIFIKATOR'
+                
             ])->count();
 
             // Kirimkan data sebagai JSON response

@@ -67,7 +67,18 @@ class TanyaGenggamController extends Controller
                 return ['FORWARD SPS'];
             case 'bensus':
                 return ['FORWARD BENSUS'];
+            case 'pelaksana_bn':
+            case 'pelaksana_ph':
+            case 'pelaksana_roya':
+            case 'pelaksana_ph_ruko':
+            case 'pelaksana_sk':
+                return ['FORWARD PELAKSANA'];
             case 'QC':
+            case 'QC_bn':
+            case 'QC_ph':
+            case 'QC_roya':
+            case 'QC_ph_ruko':
+            case 'QC_sk':
                 return ['FORWARD QC SELESAI ALIH MEDIA'];
             case 'pengesahan':
                 return ['FORWARD PENGESAHAN ALIH MEDIA BTEL'];
