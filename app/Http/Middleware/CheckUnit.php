@@ -29,6 +29,7 @@ class CheckUnit
             'pengesahan',
             'paraf',
             'TTE_PRODUK_LAYANAN',
+            'bensus',
         ];
 
         // Ambil unit dari pengguna yang sedang login
