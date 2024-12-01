@@ -24,6 +24,7 @@ class CheckUnit
             'pengukuran',
             'bukutanah',
             'sps',
+	    'bensus',
             'QC',
             'pengesahan',
             'paraf',
