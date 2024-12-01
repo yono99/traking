@@ -579,7 +579,7 @@ export default {
                             <th
                                 class="border border-gray-300 px-4 py-2 text-left"
                             >
-                                Nama Layanan
+                                Jenis Layanan
                             </th>
                             <th
                                 class="border border-gray-300 px-4 py-2 text-left"

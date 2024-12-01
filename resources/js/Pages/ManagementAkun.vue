@@ -44,11 +44,23 @@ export default {
                     <option value="bukutanah">Buku tanah</option>
                     <option value="sps">SPS</option>
                     <option value="pengukuran">pengukuran</option>
+                    <option value="pelaksana">pelaksana - BN</option>
+                    <option value="pelaksana">pelaksana - PH</option>
+                    <option value="pelaksana">pelaksana - ROYA</option>
+                    <option value="pelaksana">pelaksana - PH_RUKO</option>
+                    <option value="pelaksana">pelaksana - SK</option>
                     <option value="QC">QC</option>
+                    <option value="QC">QC - BN</option>
+                    <option value="QC">QC - PH</option>
+                    <option value="QC">QC - ROYA</option>
+                    <option value="QC">QC - PH_RUKO</option>
+                    <option value="QC">QC - SK</option>
                     <option value="pengesahan">Pengesahan</option>
                     <option value="bensus">bensus</option>
                     <option value="paraf">Pemeriksaan Berkas/paraf</option>
-                    <option value="TTE_PRODUK_LAYANAN"> TTE Produk Layanan</option>
+                    <option value="TTE_PRODUK_LAYANAN">
+                        TTE Produk Layanan
+                    </option>
                 </select>
             </div>
 

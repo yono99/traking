@@ -351,6 +351,7 @@ export default {
                             : filteredLocations.value.length - 1;
                     break;
                 case "Enter":
+                case "Tab":    
                     e.preventDefault();
                     // Jika ada item yang dipilih, pilih item tersebut
                     if (selectedIndex.value > -1) {
@@ -451,18 +452,19 @@ export default {
                 <label
                     for="nomor_hp"
                     class="block text-sm font-medium text-gray-700"
-                    >Nomor HP</label
+                    >Nomor HP whatsapp</label
                 >
                 <p class="text-gray-500 text-sm">8xxxx tanpa +62/0</p>
                 <input
                     type="text"
-                    placeholder="8xxxx"
+                    placeholder="contoh : 8288xxxxxx"
                     id="nomor_hp"
                     v-model="form.nomor_hp"
                     maxlength="12"
                     @input="
                         form.nomor_hp = form.nomor_hp
-                            .replace(/\D/g, '')
+                            .replace(/\D/g, '') // Hanya angka
+                            .replace(/^0+/, '') // Menghapus angka 0 di awal
                             .slice(0, 12)
                     "
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
