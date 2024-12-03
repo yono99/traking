@@ -82,8 +82,28 @@ const logout = () => {
                                 </NavLink>
                                 <NavLink
                                     v-if="
-                                        ['verifikator', 'pengukuran','bensus','bukutanah', 'sps', 'QC', 'pengesahan', 'paraf', 'TTE_PRODUK_LAYANAN'].includes($page.props.auth?.user?.unit)
-
+                                        [
+                                            'verifikator',
+                                            'pengukuran',
+                                            'bensus',
+                                            'bukutanah',
+                                            'sps',
+                                            'QC',
+                                            'QC',
+                                            'QC_bn',
+                                            'QC_ph',
+                                            'QC_roya',
+                                            'QC_ph_ruko',
+                                            'QC_sk',
+                                            'pelaksana_bn',
+                                            'pelaksana_ph',
+                                            'pelaksana_roya',
+                                            'pelaksana_ph_ruko',
+                                            'pelaksana_sk',
+                                            'pengesahan',
+                                            'paraf',
+                                            'TTE_PRODUK_LAYANAN',
+                                        ].includes($page.props.auth?.user?.unit)
                                     "
                                     :href="route('tanya-genggam.index')"
                                     :active="
@@ -94,8 +114,28 @@ const logout = () => {
                                 </NavLink>
                                 <NavLink
                                     v-if="
-                                       ['verifikator','bensus', 'pengukuran', 'bukutanah', 'sps', 'QC', 'pengesahan', 'paraf', 'TTE_PRODUK_LAYANAN'].includes($page.props.auth?.user?.unit)
-
+                                        [
+                                           'verifikator',
+                                            'pengukuran',
+                                            'bensus',
+                                            'bukutanah',
+                                            'sps',
+                                            'QC',
+                                            'QC',
+                                            'QC_bn',
+                                            'QC_ph',
+                                            'QC_roya',
+                                            'QC_ph_ruko',
+                                            'QC_sk',
+                                            'pelaksana_bn',
+                                            'pelaksana_ph',
+                                            'pelaksana_roya',
+                                            'pelaksana_ph_ruko',
+                                            'pelaksana_sk',
+                                            'pengesahan',
+                                            'paraf',
+                                            'TTE_PRODUK_LAYANAN',
+                                        ].includes($page.props.auth?.user?.unit)
                                     "
                                     :href="route('inventory.index')"
                                     :active="route().current('inventory.index')"
