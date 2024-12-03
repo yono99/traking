@@ -47,7 +47,7 @@ export default {
                     <option value="pelaksana_bn">pelaksana - BN</option>
                     <option value="pelaksana_ph">pelaksana - PH</option>
                     <option value="pelaksana_roya">pelaksana - ROYA</option>
-                    <option value="pelaksana_ph_ruko">pelaksana - PH_RUKO</option>
+                    <option value="pelaksana_ph_ruko">pelaksana - PH RUKO</option>
                     <option value="pelaksana_sk">pelaksana - SK</option>
                     <option value="QC">QC</option>
                     <option value="QC_bn">QC - BN</option>
@@ -60,6 +60,9 @@ export default {
                     <option value="paraf">Pemeriksaan Berkas/paraf</option>
                     <option value="TTE_PRODUK_LAYANAN">
                         TTE Produk Layanan
+                    </option>
+                     <option value="loket_penyerahan">
+                        loket penyerahan
                     </option>
                 </select>
             </div>

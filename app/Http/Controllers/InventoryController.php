@@ -28,7 +28,7 @@ class InventoryController extends Controller
             'pelaksana_ph',
             'pelaksana_roya',
             'pelaksana_ph_ruko',
-            'pelaksana_sk' => ['PROSES STAGING'],
+            'pelaksana_sk' => ['PROSES STAGING', 'PROSES CATATAN PELAKSANA', 'PROSES STAGING AKHIR'],
             'QC',
             'QC_bn',
             'QC_ph',
@@ -101,7 +101,7 @@ class InventoryController extends Controller
             'pelaksana_ph',
             'pelaksana_roya',
             'pelaksana_ph_ruko',
-            'pelaksana_sk' => ['FORWARD ALIH MEDIA SUEL'],
+            'pelaksana_sk' => ['FORWARD ALIH MEDIA SUEL', 'FORWARD PARAF', 'FORWARD LOKET PENYERAHAN'],
             'QC',
             'QC_bn',
             'QC_ph',
@@ -122,9 +122,10 @@ class InventoryController extends Controller
                 'FORWARD QC SELESAI ALIH MEDIA',
                 'FORWARD SELESAI REVISI',
             ],
-            'pengesahan' => ['FORWARD PARAF'],
+            'pengesahan' => ['FORWARD CATATAN PELAKSANA'],
             'paraf' => ['FORWARD TTE PRODUK LAYANAN'],
             'TTE_PRODUK_LAYANAN' => ['SELESAI TTE'],
+            'loket_penyerahan' => ['BERHASIL DI SERAHKAN KE PPAT ATAU PEMOHON'],
         ][$unit] ?? [];
     }
 

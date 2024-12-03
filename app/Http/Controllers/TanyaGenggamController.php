@@ -72,20 +72,22 @@ class TanyaGenggamController extends Controller
             case 'pelaksana_roya':
             case 'pelaksana_ph_ruko':
             case 'pelaksana_sk':
-                return ['FORWARD PELAKSANA'];
+                return ['FORWARD PELAKSANA', 'FORWARD CATATAN PELAKSANA', 'SELESAI TTE'];
             case 'QC':
             case 'QC_bn':
             case 'QC_ph':
             case 'QC_roya':
             case 'QC_ph_ruko':
             case 'QC_sk':
-                return ['FORWARD QC SELESAI ALIH MEDIA'];
+                return ['FORWARD QC SELESAI ALIH MEDIA', 'FORWARD SELESAI REVISI'];
             case 'pengesahan':
                 return ['FORWARD PENGESAHAN ALIH MEDIA BTEL'];
             case 'paraf':
                 return ['FORWARD PARAF'];
             case 'TTE_PRODUK_LAYANAN':
                 return ['FORWARD TTE PRODUK LAYANAN'];
+            case 'loket_penyerahan':
+                return ['FORWARD LOKET PENYERAHAN'];
             default:
                 return [];
         }

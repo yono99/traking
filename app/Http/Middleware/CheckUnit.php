@@ -24,7 +24,7 @@ class CheckUnit
             'pengukuran',
             'bukutanah',
             'sps',
-	    'bensus',
+            'bensus',
             'QC',
             'QC_bn',
             'QC_ph',
@@ -40,6 +40,7 @@ class CheckUnit
             'paraf',
             'TTE_PRODUK_LAYANAN',
             'bensus',
+            'loket_penyerahan',
         ];
 
         // Ambil unit dari pengguna yang sedang login
