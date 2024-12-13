@@ -104,7 +104,6 @@ class InventoryController extends Controller
             ],
             'bukutanah' => [
                 'FORWARD VERIFIKATOR CEK SYARAT',
-                'FORWARD QC SELESAI ALIH MEDIA',
                 'FORWARD SELESAI REVISI',
             ],
             'pengesahan' => ['FORWARD CATATAN PELAKSANA'],
