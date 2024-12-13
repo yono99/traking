@@ -13,14 +13,12 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->default('none'); // Jenis layanan
+            $table->string('name')->default('none'); // Nama layanan
             $table->foreignId('land_book_id')->constrained('land_books')->onDelete('cascade'); // Relasi ke LandBook
             $table->timestamps();
             $table->string('status')->default('FORWARD VERIFIKATOR'); // Default status awal
             $table->text('remarks')->nullable(); // Catatan tambahan
             $table->string('PNBP')->default('belum bayar');
-            $table->string('nomer_berkas')->default('null');
-            
         });
     }
 

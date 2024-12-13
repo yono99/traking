@@ -15,8 +15,7 @@ class Service extends Model
         'land_book_id',
         'status',
         'PNBP',
-        'nomor_hp',
-        'nomer_berkas'
+        'nomor_hp'
     ];
 
 

@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\URL;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
@@ -23,8 +21,5 @@ class AppServiceProvider extends ServiceProvider
                     : null,
             ],
         ]);
-        if (config('app.env') === 'production') {
-            URL::forceScheme('https');
-        }
     }
 }
