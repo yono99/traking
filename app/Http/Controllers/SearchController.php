@@ -65,14 +65,20 @@ class SearchController extends Controller
     {
         return [
             'verifikator' => ['FORWARD VERIFIKATOR', 'FORWARD VERIFIKATOR CEK SYARAT'],
-            'pengukuran' => ['FORWARD PENGUKURAN REVISI', 'FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL',],
-            'bukutanah' => ['FORWARD CARI BT', 'FORWARD ALIH MEDIA BTEL','FORWARD ALIH MEDIA REVISI'],
+            'pengukuran' => ['FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL',],
+            'bukutanah' => ['FORWARD CARI BT', 'FORWARD ALIH MEDIA BTEL'],
             'sps' => ['FORWARD SPS'],
             'bensus' => ['FORWARD BENSUS, FORWARD BENSUS DISPOSISI'],
-            'QC' => ['FORWARD QC SELESAI ALIH MEDIA', 'FORWARD QC, FORWARD SELESAI REVISI', 'FORWARD QC, FORWARD SELESAI REVISI'],
+            'pelaksana',
+            'pelaksana_bn',
+            'pelaksana_ph',
+            'pelaksana_roya',
+            'pelaksana_ph_ruko',
+            'pelaksana_sk' => ['FORWARD PELAKSANA', 'FORWARD CATATAN PELAKSANA', 'SELESAI TTE'],
             'pengesahan' => ['FORWARD PENGESAHAN ALIH MEDIA BTEL'],
             'paraf' => ['FORWARD PARAF'],
             'TTE_PRODUK_LAYANAN' => ['FORWARD TTE PRODUK LAYANAN'],
+            'loket_penyerahan' => ['FORWARD LOKET PENYERAHAN'],
         ][$unit] ?? []; 
     }
 
@@ -127,10 +133,6 @@ class SearchController extends Controller
             ],
             'bensus' => [
                 'FORWARD BENSUS' => 'PROSES BENSUS',
-            ],
-            'QC' => [
-                'FORWARD QC SELESAI ALIH MEDIA' => 'PROSES QC',
-                'FORWARD SELESAI REVISI ' => 'PROSES QC'
             ],
             'pengesahan' => [
                 'FORWARD PENGESAHAN ALIH MEDIA BTEL' => 'PROSES PENGESAHAN ALIH MEDIA BTEL',

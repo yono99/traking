@@ -38,7 +38,6 @@ class ServiceController extends Controller
                 'PROSES ALIH MEDIA BTEL',
                 'PROSES SPS',
                 'PROSES BENSUS',
-                'PROSES QC',
                 'PROSES PENGESAHAN ALIH MEDIA BTEL',
                 'PROSES PARAF',
                 'PROSES TTE',
@@ -55,7 +54,7 @@ class ServiceController extends Controller
                 'FORWARD PENGUKURAN',
                 'FORWARD PENGUKURAN REVISI',
                 'FORWARD VERIFIKATOR CEK SYARAT',
-                'FORWARD VERIFIKATOR'
+                'FORWARD VERIFIKATOR',
                 
             ])->count();
 

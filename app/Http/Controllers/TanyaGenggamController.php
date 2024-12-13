@@ -58,34 +58,31 @@ class TanyaGenggamController extends Controller
     {
         switch ($unit) {
             case 'verifikator':
-                return ['FORWARD VERIFIKATOR', 'FORWARD VERIFIKATOR CEK SYARAT'];
+                return ['FORWARD PENGUKURAN',
+                'FORWARD CARI BT',
+                'FORWARD BENSUS DISPOSISI',
+                'FORWARD SPS'];
             case 'pengukuran':
-                return ['FORWARD PENGUKURAN REVISI', 'FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL'];
+                return ['FORWARD VERIFIKATOR','FORWARD ALIH MEDIA BTEL'];
             case 'bukutanah':
-                return ['FORWARD CARI BT', 'FORWARD ALIH MEDIA BTEL'];
+                return ['FORWARD VERIFIKATOR CEK SYARAT','FORWARD SELESAI REVISI',];
             case 'sps':
-                return ['FORWARD SPS'];
-            case 'bensus':
                 return ['FORWARD BENSUS'];
+            case 'bensus':
+                return ['FORWARD PELAKSANA ',
+                'FORWARD BENSUS DISPOSISI UPDATE SELESAI'];
             case 'pelaksana_bn':
             case 'pelaksana_ph':
             case 'pelaksana_roya':
             case 'pelaksana_ph_ruko':
             case 'pelaksana_sk':
-                return ['FORWARD PELAKSANA', 'FORWARD CATATAN PELAKSANA', 'SELESAI TTE'];
-            case 'QC':
-            case 'QC_bn':
-            case 'QC_ph':
-            case 'QC_roya':
-            case 'QC_ph_ruko':
-            case 'QC_sk':
-                return ['FORWARD QC SELESAI ALIH MEDIA', 'FORWARD SELESAI REVISI'];
+                return ['FORWARD ALIH MEDIA SUEL', 'FORWARD PARAF', 'FORWARD LOKET PENYERAHAN','FORWARD PENGESAHAN ALIH MEDIA BTEL'];
             case 'pengesahan':
-                return ['FORWARD PENGESAHAN ALIH MEDIA BTEL'];
+                return ['FORWARD CATATAN PELAKSANA'];
             case 'paraf':
-                return ['FORWARD PARAF'];
-            case 'TTE_PRODUK_LAYANAN':
                 return ['FORWARD TTE PRODUK LAYANAN'];
+            case 'TTE_PRODUK_LAYANAN':
+                return ['SELESAI TTE'];
             case 'loket_penyerahan':
                 return ['FORWARD LOKET PENYERAHAN'];
             default:

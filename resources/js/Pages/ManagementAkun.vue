@@ -56,7 +56,7 @@ export default {
                     <option value="TTE_PRODUK_LAYANAN">
                         TTE Produk Layanan
                     </option>
-                     <option value="loket_penyerahan">
+                    <option value="loket_penyerahan">
                         loket penyerahan
                     </option>
                 </select>

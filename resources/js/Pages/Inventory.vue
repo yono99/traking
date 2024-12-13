@@ -28,11 +28,6 @@ export default {
                     "FORWARD BENSUS DISPOSISI",
                     "UPDATE SELESAI",
                 ],
-                QC: [
-                    "FORWARD PENGESAHAN ALIH MEDIA BTEL",
-                    "FORWARD BUKU TANAH REVISI",
-                    "FORWARD PENGUKURAN REVISI",
-                ],
                 pengukuran: [
                     "FORWARD VERIFIKATOR",
                     "FORWARD ALIH MEDIA BTEL",
