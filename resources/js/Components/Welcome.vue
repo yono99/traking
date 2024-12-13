@@ -507,7 +507,7 @@ export default {
                             <th
                                 class="border border-gray-300 px-4 py-2 text-left"
                             >
-                                Nama Petugas
+                                Nama Pengguna
                             </th>
                             <th
                                 class="border border-gray-300 px-4 py-2 text-left"
