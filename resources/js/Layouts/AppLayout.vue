@@ -74,33 +74,6 @@ const logout = () => {
                                 >
                                     Management Akun
                                 </NavLink>
-                                <NavLink
-                                v-if="
-                                        [
-                                            'verifikator',
-                                            'pengukuran',
-                                            'bensus',
-                                            'bukutanah',
-                                            'sps',
-                                            'pelaksana',
-                                            'pelaksana_bn',
-                                            'pelaksana_ph',
-                                            'pelaksana_roya',
-                                            'pelaksana_ph_ruko',
-                                            'pelaksana_sk',
-                                            'pengesahan',
-                                            'paraf',
-                                            'TTE_PRODUK_LAYANAN',
-                                            'loket_penyerahan',
-                                        ].includes($page.props.auth?.user?.unit)
-                                    "
-                                    :href="route('tanya-genggam.index')"
-                                    :active="
-                                        route().current('tanya-genggam.index')
-                                    "
-                                >
-                                    Cari Berkas
-                                </NavLink>
                                
                                 <NavLink
                                     v-if="
