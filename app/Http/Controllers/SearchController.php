@@ -11,70 +11,70 @@ use Illuminate\Support\Facades\Log;
 
 class SearchController extends Controller
 {
-    public function search(Request $request)
-    {
-        $user = Auth::user(); // Data pengguna yang login
-        $unit = $user->unit; // Unit pengguna (e.g., verifikator, pengukuran, dll.)
-        $nomerHak = $request->input('nomer_hak'); // Nomor Hak yang dicari
+    // public function search(Request $request)
+    // {
+    //     $user = Auth::user(); // Data pengguna yang login
+    //     $unit = $user->unit; // Unit pengguna (e.g., verifikator, pengukuran, dll.)
+    //     $nomerHak = $request->input('nomer_hak'); // Nomor Hak yang dicari
 
-        // Validasi input
-        if (!$nomerHak || !is_numeric($nomerHak)) {
-            return response()->json(['message' => 'Nomor hak harus berupa angka.'], 400);
-        }
+    //     // Validasi input
+    //     if (!$nomerHak || !is_numeric($nomerHak)) {
+    //         return response()->json(['message' => 'Nomor hak harus berupa angka.'], 400);
+    //     }
 
-        // Mapping status yang sesuai untuk unit
-        $statusByUnit = $this->getStatusByUnit($unit);
+    //     // Mapping status yang sesuai untuk unit
+    //     $statusByUnit = $this->getStatusByUnit($unit);
 
-        if (empty($statusByUnit)) {
-            return response()->json(['message' => 'Unit Anda tidak memiliki status yang relevan.'], 400);
-        }
+    //     if (empty($statusByUnit)) {
+    //         return response()->json(['message' => 'Unit Anda tidak memiliki status yang relevan.'], 400);
+    //     }
 
-        // Query data buku tanah berdasarkan nomor hak (pencocokan tepat)
-        $landBooks = LandBook::where('nomer_hak', '==',$nomerHak)->get();
+    //     // Query data buku tanah berdasarkan nomor hak (pencocokan tepat)
+    //     $landBooks = LandBook::where('nomer_hak', '==',$nomerHak)->get();
 
-        if ($landBooks->isEmpty()) {
-            return response()->json(['message' => 'Data tidak ditemukan.'], 404);
-        }
+    //     if ($landBooks->isEmpty()) {
+    //         return response()->json(['message' => 'Data tidak ditemukan.'], 404);
+    //     }
 
-        // Filter buku tanah berdasarkan layanan dengan status relevan
-        $filteredLandBooks = $landBooks->filter(function ($landBook) use ($statusByUnit) {
-            return Service::where('land_book_id', $landBook->id)
-                ->whereIn('status', $statusByUnit) // Hanya layanan dengan status relevan
-                ->exists(); // Cek apakah layanan relevan tersebut ada
-        });
+    //     // Filter buku tanah berdasarkan layanan dengan status relevan
+    //     $filteredLandBooks = $landBooks->filter(function ($landBook) use ($statusByUnit) {
+    //         return Service::where('land_book_id', $landBook->id)
+    //             ->whereIn('status', $statusByUnit) // Hanya layanan dengan status relevan
+    //             ->exists(); // Cek apakah layanan relevan tersebut ada
+    //     });
 
-        if ($filteredLandBooks->isEmpty()) {
-            return response()->json(['message' => 'Tidak ada layanan relevan untuk buku tanah ini.'], 404);
-        }
+    //     if ($filteredLandBooks->isEmpty()) {
+    //         return response()->json(['message' => 'Tidak ada layanan relevan untuk buku tanah ini.'], 404);
+    //     }
 
-        // Ambil layanan relevan untuk buku tanah yang difilter
-        $filteredServices = Service::whereIn('land_book_id', $filteredLandBooks->pluck('id')->toArray())
-        ->whereIn('status', $statusByUnit) // Filter layanan berdasarkan status relevan
-        ->get();
+    //     // Ambil layanan relevan untuk buku tanah yang difilter
+    //     $filteredServices = Service::whereIn('land_book_id', $filteredLandBooks->pluck('id')->toArray())
+    //     ->whereIn('status', $statusByUnit) // Filter layanan berdasarkan status relevan
+    //     ->get();
 
 
-        // Return response
-        return response()->json([
-            'land_books' => $filteredLandBooks->values(), // Reset key indexing
-            'services' => $filteredServices,
-            'total_services' => $filteredServices->count(),
-        ]);
-    }
+    //     // Return response
+    //     return response()->json([
+    //         'land_books' => $filteredLandBooks->values(), // Reset key indexing
+    //         'services' => $filteredServices,
+    //         'total_services' => $filteredServices->count(),
+    //     ]);
+    // }
 
-    private function getStatusByUnit($unit)
-    {
-        return [
-            'verifikator' => ['FORWARD VERIFIKATOR', 'FORWARD VERIFIKATOR CEK SYARAT'],
-            'pengukuran' => ['FORWARD PENGUKURAN REVISI', 'FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL',],
-            'bukutanah' => ['FORWARD CARI BT', 'FORWARD ALIH MEDIA BTEL','FORWARD ALIH MEDIA REVISI'],
-            'sps' => ['FORWARD SPS'],
-            'bensus' => ['FORWARD BENSUS, FORWARD BENSUS DISPOSISI'],
-            'QC' => ['FORWARD QC SELESAI ALIH MEDIA', 'FORWARD QC, FORWARD SELESAI REVISI', 'FORWARD QC, FORWARD SELESAI REVISI'],
-            'pengesahan' => ['FORWARD PENGESAHAN ALIH MEDIA BTEL'],
-            'paraf' => ['FORWARD PARAF'],
-            'TTE_PRODUK_LAYANAN' => ['FORWARD TTE PRODUK LAYANAN'],
-        ][$unit] ?? []; 
-    }
+    // private function getStatusByUnit($unit)
+    // {
+    //     return [
+    //         'verifikator' => ['FORWARD VERIFIKATOR', 'FORWARD VERIFIKATOR CEK SYARAT'],
+    //         'pengukuran' => ['FORWARD PENGUKURAN REVISI', 'FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL',],
+    //         'bukutanah' => ['FORWARD CARI BT', 'FORWARD ALIH MEDIA BTEL','FORWARD ALIH MEDIA REVISI'],
+    //         'sps' => ['FORWARD SPS'],
+    //         'bensus' => ['FORWARD BENSUS, FORWARD BENSUS DISPOSISI'],
+    //         'QC' => ['FORWARD QC SELESAI ALIH MEDIA', 'FORWARD QC, FORWARD SELESAI REVISI', 'FORWARD QC, FORWARD SELESAI REVISI'],
+    //         'pengesahan' => ['FORWARD PENGESAHAN ALIH MEDIA BTEL'],
+    //         'paraf' => ['FORWARD PARAF'],
+    //         'TTE_PRODUK_LAYANAN' => ['FORWARD TTE PRODUK LAYANAN'],
+    //     ][$unit] ?? []; 
+    // }
 
     public function updateStatus(Request $request)
     {
