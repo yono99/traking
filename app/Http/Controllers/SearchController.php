@@ -128,10 +128,6 @@ class SearchController extends Controller
             'bensus' => [
                 'FORWARD BENSUS' => 'PROSES BENSUS',
             ],
-            'QC' => [
-                'FORWARD QC SELESAI ALIH MEDIA' => 'PROSES QC',
-                'FORWARD SELESAI REVISI ' => 'PROSES QC'
-            ],
             'pengesahan' => [
                 'FORWARD PENGESAHAN ALIH MEDIA BTEL' => 'PROSES PENGESAHAN ALIH MEDIA BTEL',
             ],

@@ -22,20 +22,18 @@
             <tbody>
                 <tr v-for="service in services" :key="service.id">
                     <!-- <td>{{ service.id }}</td> -->
-                    <td>{{ service.land_book?.nomer_hak || "N/A" }}</td>
-                    <td>{{ service.land_book?.jenis_hak || "N/A" }}</td>
-                    <td>{{ service.land_book?.desa_kecamatan || "N/A" }}</td>
+                    <td>{{ service.land_book?.nomer_hak || 'N/A' }}</td>
+                    <td>{{ service.land_book?.jenis_hak || 'N/A' }}</td>
+                    <td>{{ service.land_book?.desa_kecamatan || 'N/A' }}</td>
                     <!-- <td>{{ service.land_book?.status_alih_media === 0 ? 'Belum Alih Media' : 'Sudah Alih Media' }}</td>
                     <td>{{ service.PNBP || 'N/A' }}</td> -->
-                    <td>
-                        <!-- Tombol Update -->
+                    <td> <!-- Tombol Update -->
                         <button
                             @click="updateStatus(service.id)"
                             class="btn-update"
                         >
                             Update Status
-                        </button>
-                    </td>
+                        </button></td>
                 </tr>
             </tbody>
         </table>
@@ -50,7 +48,7 @@
 import { ref } from "vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 export default {
-    layout: AppLayout,
+layout : AppLayout,
     setup() {
         const nomorHak = ref("");
         const services = ref([]);
@@ -69,7 +67,7 @@ export default {
                     return response.json();
                 })
                 .then((data) => {
-                    //    console.log("Data diterima:", data); // Debugging
+                //    console.log("Data diterima:", data); // Debugging
                     services.value = data.services || [];
                 })
                 .catch((error) => {
@@ -79,49 +77,39 @@ export default {
                 });
         };
 
-        const updateStatus = async (serviceId) => {
+        const updateStatus = (serviceId) => {
             if (!serviceId) {
                 errorMessage.value = "Service ID tidak valid.";
                 return;
             }
 
-            try {
-                const csrfToken = document
-                    .querySelector('meta[name="csrf-token"]')
-                    ?.getAttribute("content");
-
-                if (!csrfToken) {
-                    throw new Error("CSRF token tidak ditemukan.");
-                }
-
-                const response = await fetch(`/update-status`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": csrfToken,
-                    },
-                    body: JSON.stringify({
-                        service_id: serviceId,
-                        status: "UPDATED",
-                    }),
+            fetch(`/update-status`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute("content"),
+                },
+                body: JSON.stringify({
+                    service_id: serviceId,
+                    status: "UPDATED",
+                }),
+            })
+                .then((response) => {
+                    if (!response.ok)
+                        throw new Error("Gagal memperbarui status.");
+                    return response.json();
+                })
+                .then((data) => {
+                    alert(data.message);
+                    search(); // Refresh data
+                })
+                .catch((error) => {
+                    console.error("Error saat memperbarui status:", error);
+                    errorMessage.value =
+                        "Terjadi kesalahan saat memperbarui status.";
                 });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(
-                        errorData.message || "Gagal memperbarui status."
-                    );
-                }
-
-                const data = await response.json();
-                alert(data.message || "Status berhasil diperbarui.");
-                search(); // Refresh data
-            } catch (error) {
-                console.error("Error saat memperbarui status:", error);
-                errorMessage.value =
-                    error.message ||
-                    "Terjadi kesalahan saat memperbarui status.";
-            }
         };
 
         return {
