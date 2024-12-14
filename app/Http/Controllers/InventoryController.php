@@ -24,19 +24,40 @@ class InventoryController extends Controller
             'bukutanah' => ['PROSES CARI BT', 'PROSES ALIH MEDIA BTEL'],
             'sps' => ['PROSES SPS'],
             'bensus' => ['PROSES BENSUS'],
-            'pelaksana',
-            'pelaksana_bn',
-            'pelaksana_ph',
-            'pelaksana_roya',
-            'pelaksana_ph_ruko',
+            'pelaksana' => [
+                'PROSES PELAKSANA',
+                'PROSES PELAKSANA BUAT CATATAN',
+                'PROSES CETAK SERTEL'
+            ],
+            'pelaksana_bn' => [
+                'PROSES PELAKSANA',
+                'PROSES PELAKSANA BUAT CATATAN',
+                'PROSES CETAK SERTEL'
+            ],
+            'pelaksana_ph' => [
+                'PROSES PELAKSANA',
+                'PROSES PELAKSANA BUAT CATATAN',
+                'PROSES CETAK SERTEL'
+            ],
+            'pelaksana_roya' => [
+                'PROSES PELAKSANA',
+                'PROSES PELAKSANA BUAT CATATAN',
+                'PROSES CETAK SERTEL'
+            ],
+            'pelaksana_ph_ruko' => [
+                'PROSES PELAKSANA',
+                'PROSES PELAKSANA BUAT CATATAN',
+                'PROSES CETAK SERTEL'
+            ],
             'pelaksana_sk' => [
                 'PROSES PELAKSANA',
                 'PROSES PELAKSANA BUAT CATATAN',
-                'PROSES PELAKSANA PENCETAKAN SERTEL'
+                'PROSES CETAK SERTEL'
             ],
             'pengesahan' => ['PROSES PENGESAHAN ALIH MEDIA BTEL'],
             'paraf' => ['PROSES PARAF'],
             'TTE_PRODUK_LAYANAN' => ['PROSES TTE'],
+            'LOKET_PENYERAHAN' => ['DI PROSES'],
         ];
 
         // Ambil layanan berdasarkan status dan unit pengguna
@@ -93,18 +114,38 @@ class InventoryController extends Controller
             ],
             'sps' => ['FORWARD BENSUS'],
             'bensus' => [
-                'FORWARD ALIH MEDIA SUEL',
-                'FORWARD BENSUS DISPOSISI UPDATE SELESAI',
+                'FORWARD PELAKSANA',
+                'SELESAI INFO DISPOSISI',
             ],
-            'pelaksana',
-            'pelaksana_bn',
-            'pelaksana_ph',
-            'pelaksana_roya',
-            'pelaksana_ph_ruko',
+            'pelaksana' => [
+                "FORWARD PARAF",
+                "FORWARD ALIH MEDIA SUEL",
+                "FORWARD LOKET PENYERAHAN",
+            ],
+            'pelaksana_bn' => [
+                "FORWARD PARAF",
+                "FORWARD ALIH MEDIA SUEL",
+                "FORWARD LOKET PENYERAHAN",
+            ],
+            'pelaksana_ph' => [
+                "FORWARD PARAF",
+                "FORWARD ALIH MEDIA SUEL",
+                "FORWARD LOKET PENYERAHAN",
+            ],
+            'pelaksana_roya' => [
+                "FORWARD PARAF",
+                "FORWARD ALIH MEDIA SUEL",
+                "FORWARD LOKET PENYERAHAN",
+            ],
+            'pelaksana_ph_ruko' => [
+                "FORWARD PARAF",
+                "FORWARD ALIH MEDIA SUEL",
+                "FORWARD LOKET PENYERAHAN",
+            ],
             'pelaksana_sk' => [
-                'FORWARD ALIH MEDIA SUEL',
-                'FORWARD PARAF',
-                'FORWARD LOKET PENYERAHAN',
+                "FORWARD PARAF",
+                "FORWARD ALIH MEDIA SUEL",
+                "FORWARD LOKET PENYERAHAN",
             ],
             'pengukuran' => [
                 'FORWARD VERIFIKATOR',
@@ -113,12 +154,12 @@ class InventoryController extends Controller
             ],
             'bukutanah' => [
                 'FORWARD VERIFIKATOR CEK SYARAT',
-                'FORWARD QC SELESAI ALIH MEDIA',
-                'FORWARD SELESAI REVISI',
+                'FORWARD PENGESAHAN ALIH MEDIA BTEL',
+                
             ],
             'pengesahan' => ['FORWARD PARAF'],
             'paraf' => ['FORWARD TTE PRODUK LAYANAN'],
-            'TTE_PRODUK_LAYANAN' => ['FORWARD PELAKSANA CEKTAK SERTEL'],
+            'TTE_PRODUK_LAYANAN' => ['FORWARD PELAKSANA CETAK SERTEL'],
             'LOKET_PENYERAHAN' => ['SELESAI DISERAHKAN'],
         ][$unit] ?? [];
     }

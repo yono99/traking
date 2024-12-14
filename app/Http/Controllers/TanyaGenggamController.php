@@ -66,16 +66,37 @@ class TanyaGenggamController extends Controller
             'bensus' => [
                 'FORWARD BENSUS' => 'PROSES BENSUS',
             ],
-            'pelaksana',
-            'pelaksana_bn',
-            'pelaksana_ph',
-            'pelaksana_roya',
-            'pelaksana_ph_ruko',
+            'pelaksana'=> [
+                'FORWARD PELAKSANA' => 'PROSES PELAKSANA',
+                'FORWARD PELAKSANA BUAT CATATAN' => 'PROSES PELAKSANA BUAT CATATAN',
+                'FORWARD PELAKSANA CETAK SERTEL' => "PROSES CETAK SERTEL",
+            ],
+            'pelaksana_bn' => [
+                'FORWARD PELAKSANA' => 'PROSES PELAKSANA',
+                'FORWARD PELAKSANA BUAT CATATAN' => 'PROSES PELAKSANA BUAT CATATAN',
+                'FORWARD PELAKSANA CETAK SERTEL' => "PROSES CETAK SERTEL",
+            ],
+            'pelaksana_ph' => [
+                'FORWARD PELAKSANA' => 'PROSES PELAKSANA',
+                'FORWARD PELAKSANA BUAT CATATAN' => 'PROSES PELAKSANA BUAT CATATAN',
+                'FORWARD PELAKSANA CETAK SERTEL' => "PROSES CETAK SERTEL",
+            ],
+            'pelaksana_roya' => [
+                'FORWARD PELAKSANA' => 'PROSES PELAKSANA',
+                'FORWARD PELAKSANA BUAT CATATAN' => 'PROSES PELAKSANA BUAT CATATAN',
+                'FORWARD PELAKSANA CETAK SERTEL' => "PROSES CETAK SERTEL",
+            ],
+            'pelaksana_ph_ruko' => [
+                'FORWARD PELAKSANA' => 'PROSES PELAKSANA',
+                'FORWARD PELAKSANA BUAT CATATAN' => 'PROSES PELAKSANA BUAT CATATAN',
+                'FORWARD PELAKSANA CETAK SERTEL' => "PROSES CETAK SERTEL",
+            ],
             'pelaksana_sk' => [
                 'FORWARD PELAKSANA' => 'PROSES PELAKSANA',
                 'FORWARD PELAKSANA BUAT CATATAN' => 'PROSES PELAKSANA BUAT CATATAN',
-                'FORWARD PELAKSANA PENCETAKAN SERTEL' => "PROSES CETAK SERTEL",
+                'FORWARD PELAKSANA CETAK SERTEL' => "PROSES CETAK SERTEL",
             ],
+            
             'pengesahan' => [
                 'FORWARD PENGESAHAN ALIH MEDIA BTEL' => 'PROSES PENGESAHAN ALIH MEDIA BTEL',
             ],

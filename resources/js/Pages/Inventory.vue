@@ -24,9 +24,39 @@ export default {
                 ],
                 sps: ["FORWARD BENSUS"],
                 bensus: [
+                    "FORWARD PELAKSANA",
+                    "SELESAI INFO DISPOSISI",
+                    
+                ],
+                 pelaksana: [
+                    "FORWARD PARAF",
                     "FORWARD ALIH MEDIA SUEL",
-                    "FORWARD BENSUS DISPOSISI",
-                    "UPDATE SELESAI",
+                    "FORWARD LOKET PENYERAHAN",
+                ],
+                pelaksana_bn: [
+                    "FORWARD PARAF",
+                    "FORWARD ALIH MEDIA SUEL",
+                    "FORWARD LOKET PENYERAHAN",
+                ],
+                pelaksana_ph: [
+                    "FORWARD PARAF",
+                    "FORWARD ALIH MEDIA SUEL",
+                    "FORWARD LOKET PENYERAHAN",
+                ],
+                pelaksana_roya: [
+                    "FORWARD PARAF",
+                    "FORWARD ALIH MEDIA SUEL",
+                    "FORWARD LOKET PENYERAHAN",
+                ],
+                pelaksana_ph_ruko: [
+                    "FORWARD PARAF",
+                    "FORWARD ALIH MEDIA SUEL",
+                    "FORWARD LOKET PENYERAHAN",
+                ],
+                pelaksana_sk: [
+                    "FORWARD PARAF",
+                    "FORWARD ALIH MEDIA SUEL",
+                    "FORWARD LOKET PENYERAHAN",
                 ],
                 QC: [
                     "FORWARD PENGESAHAN ALIH MEDIA BTEL",
@@ -36,16 +66,17 @@ export default {
                 pengukuran: [
                     "FORWARD VERIFIKATOR",
                     "FORWARD ALIH MEDIA BTEL",
-                    "FORWARD SELESAI REVISI",
+                    
                 ],
                 bukutanah: [
                     "FORWARD VERIFIKATOR CEK SYARAT",
-                    "FORWARD QC SELESAI ALIH MEDIA",
-                    "FORWARD SELESAI REVISI",
+                    "FORWARD PENGESAHAN ALIH MEDIA BTEL",
+                   
                 ],
                 pengesahan: ["FORWARD PARAF"],
                 paraf: ["FORWARD TTE PRODUK LAYANAN"],
-                TTE_PRODUK_LAYANAN: ["SELESAI TTE"],
+                TTE_PRODUK_LAYANAN: ["FORWARD PELAKSANA CEKTAK SERTEL"],
+                LOKET_PENYERAHAN: ["SELESAI DISERAHKAN"],
             },
         };
     },

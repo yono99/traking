@@ -47,8 +47,15 @@ export default {
                     <option value="QC">QC</option>
                     <option value="pengesahan">Pengesahan</option>
                     <option value="bensus">bensus</option>
+                    <option value="pelaksana">pelaksana</option>
+                    <option value="pelaksana_bn">pelaksana bn</option>
+                    <option value="pelaksana_ph">pelaksana ph</option>
+                    <option value="pelaksana_roya">pelaksana roya</option>
+                    <option value="pelaksana_ph_ruko">pelaksana ph ruko</option>
+                    <option value="pelaksana_sk">pelaksana sk</option>
                     <option value="paraf">Pemeriksaan Berkas/paraf</option>
                     <option value="TTE_PRODUK_LAYANAN"> TTE Produk Layanan</option>
+                    <option value="LOKET_PENYERAHAN"> Loket Penyerahan</option>
                 </select>
             </div>
 

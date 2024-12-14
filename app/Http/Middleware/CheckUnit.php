@@ -34,7 +34,7 @@ class CheckUnit
             'pengesahan',
             'paraf',
             'TTE_PRODUK_LAYANAN',
-            'loketpenyerahan',
+            'LOKET_PENYERAHAN',
         ];
 
         // Ambil unit dari pengguna yang sedang login
