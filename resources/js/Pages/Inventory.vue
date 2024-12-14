@@ -27,6 +27,7 @@ export default {
                     "FORWARD PELAKSANA",
                     "SELESAI INFO DISPOSISI",
                     
+                    
                 ],
                  pelaksana: [
                     "FORWARD PARAF",
@@ -60,7 +61,7 @@ export default {
                 ],
                 
                 pengukuran: [
-                    "FORWARD VERIFIKATOR",
+                    "FORWARD VERIFIKASI LANJUTAN",
                     "FORWARD ALIH MEDIA BTEL",
                     
                 ],

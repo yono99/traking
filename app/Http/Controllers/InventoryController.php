@@ -15,7 +15,7 @@ class InventoryController extends Controller
 
         // Kategori dan status berdasarkan unit
         $statuses = [
-            'verifikator' => ['PROSES VERIFIKASI', 'PROSES VERIFIKASI LANJUTAN'],
+            'verifikator' => ['PROSES VERIFIKASI', 'PROSES VERIFIKASI LANJUTAN', 'PROSES VERIFIKASI CROSSCHECK'],
             'pengukuran' => [
 
                 'PROSES MEMPERBAHARUI',
@@ -23,7 +23,7 @@ class InventoryController extends Controller
             ],
             'bukutanah' => ['PROSES CARI BT', 'PROSES ALIH MEDIA BTEL'],
             'sps' => ['PROSES SPS'],
-            'bensus' => ['PROSES BENSUS'],
+            'bensus' => ['PROSES BENSUS', 'PROSES INFO'],
             'pelaksana' => [
                 'PROSES PELAKSANA',
                 'PROSES PELAKSANA BUAT CATATAN',
@@ -148,9 +148,9 @@ class InventoryController extends Controller
                 "FORWARD LOKET PENYERAHAN",
             ],
             'pengukuran' => [
-                'FORWARD VERIFIKATOR',
+                'FORWARD VERIFIKASI LANJUTAN',
                 'FORWARD ALIH MEDIA BTEL',
-                'FORWARD SELESAI REVISI',
+                
             ],
             'bukutanah' => [
                 'FORWARD VERIFIKATOR CEK SYARAT',

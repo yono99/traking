@@ -50,7 +50,8 @@ class TanyaGenggamController extends Controller
         return [
             'verifikator' => [
                 'FORWARD VERIFIKATOR' => 'PROSES VERIFIKASI',
-                'FORWARD VERIFIKATOR CEK SYARAT' => 'PROSES VERIFIKASI LANJUTAN',
+                'FORWARD VERIFIKATOR CEK SYARAT' => 'PROSES VERIFIKASI CROSSCHECK',
+                'FORWARD VERIFIKASI LANJUTAN' => 'PROSES VERIFIKASI LANJUTAN'
             ],
             'pengukuran' => [
                 'FORWARD PENGUKURAN' => 'PROSES MEMPERBAHARUI',
@@ -65,6 +66,7 @@ class TanyaGenggamController extends Controller
             ],
             'bensus' => [
                 'FORWARD BENSUS' => 'PROSES BENSUS',
+                'FORWARD BENSUS DISPOSISI' => 'PROSES INFO',
             ],
             'pelaksana'=> [
                 'FORWARD PELAKSANA' => 'PROSES PELAKSANA',

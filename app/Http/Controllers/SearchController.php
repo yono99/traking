@@ -41,7 +41,7 @@ class SearchController extends Controller
     {
         switch ($unit) {
             case 'verifikator':
-                return ['FORWARD VERIFIKATOR', 'FORWARD VERIFIKATOR CEK SYARAT', 'PROSES VERIFIKASI LANJUTAN'];
+                return ['FORWARD VERIFIKATOR', 'FORWARD VERIFIKATOR CEK SYARAT', 'FORWARD VERIFIKASI LANJUTAN'];
             case 'pengukuran':
                 return ['FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL'];
             case 'bukutanah':
@@ -49,7 +49,7 @@ class SearchController extends Controller
             case 'sps':
                 return ['FORWARD SPS'];
             case 'bensus':
-                return ['FORWARD BENSUS'];
+                return ['FORWARD BENSUS', 'FORWARD BENSUS DISPOSISI'];
             case 'pelaksana':
             case 'pelaksana':
             case 'pelaksana_bn':
