@@ -15,16 +15,25 @@ class InventoryController extends Controller
 
         // Kategori dan status berdasarkan unit
         $statuses = [
-            'verifikator' => ['PROSES VERIFIKASI'],
+            'verifikator' => ['PROSES VERIFIKASI', 'PROSES VERIFIKASI LANJUTAN'],
             'pengukuran' => [
-                'PROSES MEMPERBAHARUI REVISI',
+
                 'PROSES MEMPERBAHARUI',
                 'PROSES ALIH MEDIA SUEL',
             ],
             'bukutanah' => ['PROSES CARI BT', 'PROSES ALIH MEDIA BTEL'],
             'sps' => ['PROSES SPS'],
             'bensus' => ['PROSES BENSUS'],
-            'QC' => ['PROSES QC'],
+            'pelaksana',
+            'pelaksana_bn',
+            'pelaksana_ph',
+            'pelaksana_roya',
+            'pelaksana_ph_ruko',
+            'pelaksana_sk' => [
+                'PROSES PELAKSANA',
+                'PROSES PELAKSANA BUAT CATATAN',
+                'PROSES PELAKSANA PENCETAKAN SERTEL'
+            ],
             'pengesahan' => ['PROSES PENGESAHAN ALIH MEDIA BTEL'],
             'paraf' => ['PROSES PARAF'],
             'TTE_PRODUK_LAYANAN' => ['PROSES TTE'],
@@ -87,10 +96,15 @@ class InventoryController extends Controller
                 'FORWARD ALIH MEDIA SUEL',
                 'FORWARD BENSUS DISPOSISI UPDATE SELESAI',
             ],
-            'QC' => [
-                'FORWARD PENGESAHAN ALIH MEDIA BTEL',
-                'FORWARD BUKU TANAH REVISI',
-                'FORWARD PENGUKURAN REVISI',
+            'pelaksana',
+            'pelaksana_bn',
+            'pelaksana_ph',
+            'pelaksana_roya',
+            'pelaksana_ph_ruko',
+            'pelaksana_sk' => [
+                'FORWARD ALIH MEDIA SUEL',
+                'FORWARD PARAF',
+                'FORWARD LOKET PENYERAHAN',
             ],
             'pengukuran' => [
                 'FORWARD VERIFIKATOR',
@@ -104,7 +118,8 @@ class InventoryController extends Controller
             ],
             'pengesahan' => ['FORWARD PARAF'],
             'paraf' => ['FORWARD TTE PRODUK LAYANAN'],
-            'TTE_PRODUK_LAYANAN' => ['SELESAI TTE'],
+            'TTE_PRODUK_LAYANAN' => ['FORWARD PELAKSANA CEKTAK SERTEL'],
+            'LOKET_PENYERAHAN' => ['SELESAI DISERAHKAN'],
         ][$unit] ?? [];
     }
 

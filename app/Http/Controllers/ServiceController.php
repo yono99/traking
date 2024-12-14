@@ -38,6 +38,7 @@ class ServiceController extends Controller
                 'PROSES ALIH MEDIA BTEL',
                 'PROSES SPS',
                 'PROSES BENSUS',
+                'PROSES VERIFIKASI LANJUTAN',
                 'PROSES QC',
                 'PROSES PENGESAHAN ALIH MEDIA BTEL',
                 'PROSES PARAF',

@@ -63,9 +63,9 @@ Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
     // Rute untuk menyimpan data dengan metode POST
     Route::post('/tanya-genggam', [TanyaGenggamController::class, 'store'])->name('tanya-genggam.store');
     // Rute untuk pencarian berdasarkan nomer_hak
-    Route::get('/search', [TanyaGenggamController::class, 'search']);
+    Route::get('/search', [SearchController::class, 'search']);
     // Rute untuk update status
-    Route::post('/update-status', [SearchController::class, 'updateStatus']);
+    Route::post('/update-status', [TanyaGenggamController::class, 'updateStatus']);
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
 
     route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])->name('inventory.updateStatus');

@@ -7,76 +7,100 @@ use App\Models\LandBook;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-
+use App\Models\Activity;
+use Illuminate\Support\Facades\Log;
 class TanyaGenggamController extends Controller
 {
     public function index()
     {
         return Inertia::render('TanyaGenggam');
     }
-    public function search(Request $request)
+    public function updateStatus(Request $request)
     {
-        $nomerHak = $request->input('nomer_hak');
-        $userUnit = Auth::user()->unit;
-
-        // Tentukan status berdasarkan unit user
-        $statusArray = $this->getStatusByUnit($userUnit);
-
-        $services = Service::when(!empty($statusArray), function ($query) use ($statusArray) {
-            return $query->whereIn('status', $statusArray);
-        })
-            ->with('landBook')
-            ->when(!empty($nomerHak), function ($query) use ($nomerHak) {
-                return $query->whereHas('LandBook', function ($subQuery) use ($nomerHak) {
-                    $subQuery->where('nomer_hak', $nomerHak);
-                });
-            })
-            ->get();
-
-
-        // Ambil data dari tabel land_books dan services
-        // $landBooks = LandBook::where('nomer_hak','=', $nomorHak)->get();
-        // $services = Service::whereIn('status', $statusArray)->get();
-        // $services = Service::when(!empty($statusArray), function ($query) use ($statusArray) {
-        //     return $query->whereIn('status', $statusArray);
-        // })->get();
-
-        // if ($landBooks->isEmpty() && $services->isEmpty()) {
-        //     return response()->json([
-        //         'message' => 'No records found.',
-        //     ], 404);
-        // }
-        //  dd($services);
-
-        return response()->json([
-            // 'landBooks' => $landBooks,
-            'services' => $services,
+        $validatedData = $request->validate([
+            'service_id' => 'required|exists:services,id',
         ]);
+
+        $user = Auth::user(); // Data pengguna yang login
+        $unit = $user->unit; // Unit pengguna (e.g., verifikator, pengukuran, dll.)
+
+        $service = Service::findOrFail($validatedData['service_id']);
+
+        // Cek apakah status yang sekarang sesuai dengan unit pengguna
+        $statusMapping = $this->getUpdateStatusByUnit($unit);
+        if (!isset($statusMapping[$service->status])) {
+            return response()->json(['message' => 'Status tidak valid untuk unit Anda.'], 400);
+        }
+
+        // Simpan status lama sebelum diupdate
+        $oldStatus = $service->status;
+
+        // Perbarui status
+        $service->status = $statusMapping[$service->status];
+        $service->save();
+
+        // Catat aktivitas ke tabel activities
+        $this->logActivity($service->id, $user->id, $oldStatus, $service->status);
+
+        return response()->json(['message' => 'Status berhasil diperbarui dan aktivitas dicatat!']);
     }
 
-    private function getStatusByUnit($unit)
+    private function getUpdateStatusByUnit($unit)
     {
-        switch ($unit) {
-            case 'verifikator':
-                return ['FORWARD VERIFIKATOR', 'FORWARD VERIFIKATOR CEK SYARAT'];
-            case 'pengukuran':
-                return ['FORWARD PENGUKURAN REVISI', 'FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL'];
-            case 'bukutanah':
-                return ['FORWARD CARI BT', 'FORWARD ALIH MEDIA BTEL'];
-            case 'sps':
-                return ['FORWARD SPS'];
-            case 'bensus':
-                return ['FORWARD BENSUS'];
-            case 'QC':
-                return ['FORWARD QC SELESAI ALIH MEDIA'];
-            case 'pengesahan':
-                return ['FORWARD PENGESAHAN ALIH MEDIA BTEL'];
-            case 'paraf':
-                return ['FORWARD PARAF'];
-            case 'TTE_PRODUK_LAYANAN':
-                return ['FORWARD TTE PRODUK LAYANAN'];
-            default:
-                return [];
-        }
+        return [
+            'verifikator' => [
+                'FORWARD VERIFIKATOR' => 'PROSES VERIFIKASI',
+                'FORWARD VERIFIKATOR CEK SYARAT' => 'PROSES VERIFIKASI LANJUTAN',
+            ],
+            'pengukuran' => [
+                'FORWARD PENGUKURAN' => 'PROSES MEMPERBAHARUI',
+                'FORWARD ALIH MEDIA SUEL' => 'PROSES ALIH MEDIA SUEL',
+            ],
+            'bukutanah' => [
+                'FORWARD CARI BT' => 'PROSES CARI BT',
+                'FORWARD ALIH MEDIA BTEL' => 'PROSES ALIH MEDIA BTEL',
+            ],
+            'sps' => [
+                'FORWARD SPS' => 'PROSES SPS',
+            ],
+            'bensus' => [
+                'FORWARD BENSUS' => 'PROSES BENSUS',
+            ],
+            'pelaksana',
+            'pelaksana_bn',
+            'pelaksana_ph',
+            'pelaksana_roya',
+            'pelaksana_ph_ruko',
+            'pelaksana_sk' => [
+                'FORWARD PELAKSANA' => 'PROSES PELAKSANA',
+                'FORWARD PELAKSANA BUAT CATATAN' => 'PROSES PELAKSANA BUAT CATATAN',
+                'FORWARD PELAKSANA PENCETAKAN SERTEL' => "PROSES CETAK SERTEL",
+            ],
+            'pengesahan' => [
+                'FORWARD PENGESAHAN ALIH MEDIA BTEL' => 'PROSES PENGESAHAN ALIH MEDIA BTEL',
+            ],
+            'paraf' => [
+                'FORWARD PARAF' => 'PROSES PARAF',
+            ],
+            'TTE_PRODUK_LAYANAN' => [
+                'FORWARD TTE PRODUK LAYANAN' => 'PROSES TTE',
+            ],
+            'LOKET_PENYERAHAN' => [
+                'FORWARD LOKET PENYERAHAN' => 'DI PROSES',
+            ],
+        ][$unit] ?? [];
+    }
+
+    /**
+     * Log aktivitas ke tabel activities.
+     */
+    private function logActivity($serviceId, $userId, $oldStatus, $newStatus)
+    {
+        Activity::create([
+            'service_id' => $serviceId,
+            'user_id' => $userId,
+            'status' => $newStatus,
+            'remarks' => "Status berubah dari '$oldStatus' menjadi '$newStatus'",
+        ]);
     }
 }
