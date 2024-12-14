@@ -8,7 +8,7 @@ const parseFlatArrayToObjects = (flatArray) => {
     const result = [];
     for (let i = 0; i < flatArray.length; i += 8) {
         result.push({
-            nomer_hak: flatArray[i],
+              nomer_hak: flatArray[i],
             jenis_hak: flatArray[i + 1],
             desa_kecamatan: flatArray[i + 2],
             user_name: flatArray[i + 3],
@@ -16,6 +16,7 @@ const parseFlatArrayToObjects = (flatArray) => {
             service_name: flatArray[i + 5],
             service_contact: flatArray[i + 6],
             update_at: flatArray[i + 7],
+            unit: flatArray[i + 8], // Menambahkan unit di sini
         });
     }
     return result;
@@ -575,8 +576,9 @@ export default {
                             <th
                                 class="border border-gray-300 px-4 py-2 text-left"
                             >
-                                Nama Petugas
+                                Nama Petugas - unit
                             </th>
+                             
                             <th
                                 class="border border-gray-300 px-4 py-2 text-left"
                             >
@@ -617,6 +619,7 @@ export default {
                             <td class="border border-gray-300 px-4 py-2">
                                 {{ activity.user_name }}
                             </td>
+                             
                             <td class="border border-gray-300 px-4 py-2">
                                 {{ activity.activity_status }}
                             </td>

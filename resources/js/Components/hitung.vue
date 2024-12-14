@@ -3,11 +3,11 @@
     <!-- Bagian Status Layanan -->
     <div class="box-container">
        <div class="box">
-        <span class="label">Proses:</span>
+        <span class="label">Total Proses:</span>
         <span class="count">{{ countProses }}</span>
       </div>
       <div class="box">
-        <span class="label">Selesai TTE:</span>
+        <span class="label">Total Selesai TTE:</span>
         <span class="count">{{ countSelesaiTTE }}</span>
       </div>
       

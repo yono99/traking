@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nomer_hak'); // Nomor hak
             $table->string('jenis_hak');
             $table->string('desa_kecamatan');
-            $table->boolean('status_alih_media')->default(false); // Status alih media
+            $table->string('status_alih_media')->default('null');
             $table->timestamps();
         });
     }

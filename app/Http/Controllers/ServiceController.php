@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
+ 
+use App\Models\LandBook;
+ 
+use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
@@ -73,5 +78,39 @@ class ServiceController extends Controller
             // Jika terjadi error, kembalikan error
             return response()->json(['error' => 'Failed to fetch counts.'], 500);
         }
+    }
+
+    public function update(Request $request, Service $service)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'status' => 'required|string',
+            'remarks' => 'nullable|string',
+            'PNBP' => 'required|string',
+            'nomor_hp' => 'required|string',
+            'land_book.nomer_hak' => 'required|string',
+            'land_book.jenis_hak' => 'required|string',
+            'land_book.desa_kecamatan' => 'required|string',
+        ]);
+
+        DB::transaction(function () use ($request, $service) {
+            // Update land book data
+            $service->landBook->update([
+                'nomer_hak' => $request->input('land_book.nomer_hak'),
+                'jenis_hak' => $request->input('land_book.jenis_hak'),
+                'desa_kecamatan' => $request->input('land_book.desa_kecamatan'),
+            ]);
+
+            // Update service data
+            $service->update([
+                'name' => $request->name,
+                'status' => $request->status,
+                'remarks' => $request->remarks,
+                'PNBP' => $request->PNBP,
+                'nomor_hp' => $request->nomor_hp,
+            ]);
+        });
+
+        return redirect()->back()->with('message', 'Data updated successfully');
     }
 }
