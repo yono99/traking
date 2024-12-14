@@ -13,7 +13,7 @@ class InventoryController extends Controller
         $user = Auth::user(); // Mengambil user yang login
         $userUnit = $user->unit; // Unit pengguna
 
-        // status berdasarkan unit
+        // Kategori dan status berdasarkan unit
         $statuses = [
             'verifikator' => ['PROSES VERIFIKASI'],
             'pengukuran' => [
@@ -24,11 +24,7 @@ class InventoryController extends Controller
             'bukutanah' => ['PROSES CARI BT', 'PROSES ALIH MEDIA BTEL'],
             'sps' => ['PROSES SPS'],
             'bensus' => ['PROSES BENSUS'],
-            'pelaksana_bn',
-            'pelaksana_ph',
-            'pelaksana_roya',
-            'pelaksana_ph_ruko',
-            'pelaksana_sk' => ['PROSES STAGING', 'PROSES CATATAN PELAKSANA', 'PROSES STAGING AKHIR'],
+            'QC' => ['PROSES QC'],
             'pengesahan' => ['PROSES PENGESAHAN ALIH MEDIA BTEL'],
             'paraf' => ['PROSES PARAF'],
             'TTE_PRODUK_LAYANAN' => ['PROSES TTE'],
@@ -88,28 +84,27 @@ class InventoryController extends Controller
             ],
             'sps' => ['FORWARD BENSUS'],
             'bensus' => [
-                'FORWARD PELAKSANA ',
+                'FORWARD ALIH MEDIA SUEL',
                 'FORWARD BENSUS DISPOSISI UPDATE SELESAI',
             ],
-            'pelaksana',
-            'pelaksana_bn',
-            'pelaksana_ph',
-            'pelaksana_roya',
-            'pelaksana_ph_ruko',
-            'pelaksana_sk' => ['FORWARD ALIH MEDIA SUEL', 'FORWARD PARAF', 'FORWARD LOKET PENYERAHAN','FORWARD PENGESAHAN ALIH MEDIA BTEL'],
+            'QC' => [
+                'FORWARD PENGESAHAN ALIH MEDIA BTEL',
+                'FORWARD BUKU TANAH REVISI',
+                'FORWARD PENGUKURAN REVISI',
+            ],
             'pengukuran' => [
                 'FORWARD VERIFIKATOR',
                 'FORWARD ALIH MEDIA BTEL',
-                
+                'FORWARD SELESAI REVISI',
             ],
             'bukutanah' => [
                 'FORWARD VERIFIKATOR CEK SYARAT',
+                'FORWARD QC SELESAI ALIH MEDIA',
                 'FORWARD SELESAI REVISI',
             ],
-            'pengesahan' => ['FORWARD CATATAN PELAKSANA'],
+            'pengesahan' => ['FORWARD PARAF'],
             'paraf' => ['FORWARD TTE PRODUK LAYANAN'],
             'TTE_PRODUK_LAYANAN' => ['SELESAI TTE'],
-            'loket_penyerahan' => ['BERHASIL DI SERAHKAN KE PPAT ATAU PEMOHON'],
         ][$unit] ?? [];
     }
 

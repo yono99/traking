@@ -67,7 +67,7 @@ layout : AppLayout,
                     return response.json();
                 })
                 .then((data) => {
-                //    console.log("Data diterima:", data); // Debugging
+                    console.log("Data diterima:", data); // Debugging
                     services.value = data.services || [];
                 })
                 .catch((error) => {

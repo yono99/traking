@@ -58,33 +58,23 @@ class TanyaGenggamController extends Controller
     {
         switch ($unit) {
             case 'verifikator':
-                return ['FORWARD PENGUKURAN',
-                'FORWARD CARI BT',
-                'FORWARD BENSUS DISPOSISI',
-                'FORWARD SPS'];
+                return ['FORWARD VERIFIKATOR', 'FORWARD VERIFIKATOR CEK SYARAT'];
             case 'pengukuran':
-                return ['FORWARD VERIFIKATOR','FORWARD ALIH MEDIA BTEL'];
+                return ['FORWARD PENGUKURAN REVISI', 'FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL'];
             case 'bukutanah':
-                return ['FORWARD VERIFIKATOR CEK SYARAT','FORWARD SELESAI REVISI',];
+                return ['FORWARD CARI BT', 'FORWARD ALIH MEDIA BTEL'];
             case 'sps':
-                return ['FORWARD BENSUS'];
+                return ['FORWARD SPS'];
             case 'bensus':
-                return ['FORWARD PELAKSANA ',
-                'FORWARD BENSUS DISPOSISI UPDATE SELESAI'];
-            case 'pelaksana_bn':
-            case 'pelaksana_ph':
-            case 'pelaksana_roya':
-            case 'pelaksana_ph_ruko':
-            case 'pelaksana_sk':
-                return ['FORWARD ALIH MEDIA SUEL', 'FORWARD PARAF', 'FORWARD LOKET PENYERAHAN','FORWARD PENGESAHAN ALIH MEDIA BTEL'];
+                return ['FORWARD BENSUS'];
+            case 'QC':
+                return ['FORWARD QC SELESAI ALIH MEDIA'];
             case 'pengesahan':
-                return ['FORWARD CATATAN PELAKSANA'];
+                return ['FORWARD PENGESAHAN ALIH MEDIA BTEL'];
             case 'paraf':
-                return ['FORWARD TTE PRODUK LAYANAN'];
+                return ['FORWARD PARAF'];
             case 'TTE_PRODUK_LAYANAN':
-                return ['SELESAI TTE'];
-            case 'loket_penyerahan':
-                return ['FORWARD LOKET PENYERAHAN'];
+                return ['FORWARD TTE PRODUK LAYANAN'];
             default:
                 return [];
         }

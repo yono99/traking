@@ -7,6 +7,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+ 
 
 defineProps({
     title: String,
@@ -64,17 +65,13 @@ const logout = () => {
                                 </NavLink>
                                 <NavLink
                                     v-if="
-                                        [
-                                           'admin',
-                                             
-                                        ].includes($page.props.auth?.user?.role)
+                                        $page.props.auth?.user?.role === 'admin'
                                     "
                                     :href="route('management.akun')"
                                     :active="route().current('management.akun')"
                                 >
                                     Management Akun
                                 </NavLink>
-                               
                                 <NavLink
                                     v-if="
                                         $page.props.auth?.user?.unit === 'loket'
@@ -86,23 +83,8 @@ const logout = () => {
                                 </NavLink>
                                 <NavLink
                                     v-if="
-                                        [
-                                            'verifikator',
-                                            'pengukuran',
-                                            'bensus',
-                                            'bukutanah',
-                                            'sps',
-                                            'pelaksana',
-                                            'pelaksana_bn',
-                                            'pelaksana_ph',
-                                            'pelaksana_roya',
-                                            'pelaksana_ph_ruko',
-                                            'pelaksana_sk',
-                                            'pengesahan',
-                                            'paraf',
-                                            'TTE_PRODUK_LAYANAN',
-                                            'loket_penyerahan',
-                                        ].includes($page.props.auth?.user?.unit)
+                                        ['verifikator', 'pengukuran','bensus','bukutanah', 'sps', 'QC', 'pengesahan', 'paraf', 'TTE_PRODUK_LAYANAN'].includes($page.props.auth?.user?.unit)
+
                                     "
                                     :href="route('tanya-genggam.index')"
                                     :active="
@@ -113,23 +95,8 @@ const logout = () => {
                                 </NavLink>
                                 <NavLink
                                     v-if="
-                                        [
-                                           'verifikator',
-                                            'pengukuran',
-                                            'bensus',
-                                            'bukutanah',
-                                            'sps',
-                                            'pelaksana',
-                                            'pelaksana_bn',
-                                            'pelaksana_ph',
-                                            'pelaksana_roya',
-                                            'pelaksana_ph_ruko',
-                                            'pelaksana_sk',
-                                            'pengesahan',
-                                            'paraf',
-                                            'TTE_PRODUK_LAYANAN',
-                                            'loket_penyerahan',
-                                        ].includes($page.props.auth?.user?.unit)
+                                       ['verifikator','bensus', 'pengukuran', 'bukutanah', 'sps', 'QC', 'pengesahan', 'paraf', 'TTE_PRODUK_LAYANAN'].includes($page.props.auth?.user?.unit)
+
                                     "
                                     :href="route('inventory.index')"
                                     :active="route().current('inventory.index')"
