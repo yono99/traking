@@ -12,9 +12,6 @@ export default {
 
     data() {
         return {
-            // Salinan lokal dari prop 'services' untuk diubah
-            localServices: [...this.services],
-
             buttons: {
                 verifikator: [
                     "FORWARD PENGUKURAN",
@@ -23,13 +20,8 @@ export default {
                     "FORWARD SPS",
                 ],
                 sps: ["FORWARD BENSUS"],
-                bensus: [
-                    "FORWARD PELAKSANA",
-                    "SELESAI INFO DISPOSISI",
-                    
-                    
-                ],
-                 pelaksana: [
+                bensus: ["FORWARD PELAKSANA", "SELESAI INFO DISPOSISI"],
+                pelaksana: [
                     "FORWARD PARAF",
                     "FORWARD ALIH MEDIA SUEL",
                     "FORWARD LOKET PENYERAHAN",
@@ -59,27 +51,24 @@ export default {
                     "FORWARD ALIH MEDIA SUEL",
                     "FORWARD LOKET PENYERAHAN",
                 ],
-                
                 pengukuran: [
                     "FORWARD VERIFIKASI LANJUTAN",
                     "FORWARD ALIH MEDIA BTEL",
-                    
                 ],
                 bukutanah: [
                     "FORWARD VERIFIKATOR CEK SYARAT",
                     "FORWARD PENGESAHAN ALIH MEDIA BTEL",
-                   
                 ],
                 pengesahan: ["FORWARD PARAF"],
                 paraf: ["FORWARD TTE PRODUK LAYANAN"],
-                TTE_PRODUK_LAYANAN: ["FORWARD PELAKSANA CEKTAK SERTEL"],
+                TTE_PRODUK_LAYANAN: ["FORWARD PELAKSANA CETAK SERTEL"],
                 LOKET_PENYERAHAN: ["SELESAI DISERAHKAN"],
             },
         };
     },
 
     methods: {
-        // Fungsi untuk memperbarui status layanan dan memuat ulang data
+        // Fungsi untuk memperbarui status layanan
         async updateStatus(serviceId, newStatus) {
             try {
                 const response = await axios.post(
@@ -87,37 +76,60 @@ export default {
                     { status: newStatus }
                 );
                 alert(response.data.message); // Tampilkan pesan sukses
-
-                // Perbarui status layanan di salinan lokal
-                const service = this.localServices.find(s => s.id === serviceId);
-                if (service) {
-                    service.status = newStatus;
-                }
-
-                // Panggil API untuk memuat ulang data setelah pembaruan status
                 await this.loadServices();
-
             } catch (error) {
                 console.error(error);
-                const errorMessage = error.response?.data?.message || "Terjadi kesalahan saat memperbarui status";
-                alert(errorMessage);
+                alert("Error updating status");
             }
         },
 
-        // Fungsi untuk memuat ulang data layanan dari backend
+        // Fungsi untuk memeriksa apakah tombol harus disembunyikan berdasarkan status
+        isButtonVisible(service, buttonType) {
+            const status = service.status;
+
+            // Mapping status dan button yang harus di-hide
+            const hideButtonRules = {
+                "PROSES VERIFIKASI LANJUTAN": ["FORWARD PENGUKURAN"],
+                "PROSES VERIFIKASI CROSSCHECK": [
+                    "FORWARD PENGUKURAN",
+                    "FORWARD CARI BT",
+                ],
+                "PROSES VERIFIKASI": ["FORWARD SPS"],
+                "PROSES MEMPERBAHARUI": ["FORWARD ALIH MEDIA BTEL"],
+                "PROSES ALIH MEDIA SUEL": ["FORWARD VERIFIKASI LANJUTAN"],
+                "PROSES CARI BT": ["FORWARD PENGESAHAN ALIH MEDIA BTEL"],
+                "PROSES ALIH MEDIA BTEL": ["FORWARD VERIFIKATOR CEK SYARAT"],
+                "PROSES BENSUS": ["SELESAI INFO DISPOSISI"],
+                "PROSES INFO DISPOSISI": ["FORWARD PELAKSANA"],
+                "PROSES PELAKSANA": [
+                    "FORWARD PARAF",
+                    "FORWARD LOKET PENYERAHAN",
+                ],
+                "PROSES PELAKSANA BUAT CATATAN": [
+                    "FORWARD ALIH MEDIA SUEL",
+                    "FORWARD LOKET PENYERAHAN",
+                ],
+                "PROSES CETAK SERTEL": [
+                    "FORWARD PARAF",
+                    "FORWARD ALIH MEDIA SUEL",
+                ],
+            };
+
+            // Cek apakah button harus di-hide berdasarkan status
+            const buttonsToHide = hideButtonRules[status] || [];
+            return !buttonsToHide.includes(buttonType);
+        },
+
+        // Fungsi untuk memuat ulang data layanan
         async loadServices() {
             try {
-                const response = await axios.get("/inventory");
-                // Update salinan lokal dari 'services' dengan data terbaru
-                this.localServices = response.data.services;
+                window.location.reload();
             } catch (error) {
-                console.error(error);
-                alert("Terjadi kesalahan saat memuat data layanan");
+                console.error("Error:", error);
             }
         },
     },
 };
-    
 </script>
 
 <template>
@@ -146,14 +158,13 @@ export default {
                     <td class="border px-4 py-2">
                         {{ service.land_book?.desa_kecamatan || "-" }}
                     </td>
-                    <td class="border px-4 py-2">
-                        {{ service.status }}
-                    </td>
+                    <td class="border px-4 py-2">{{ service.status }}</td>
                     <td class="border px-4 py-2">
                         <div v-if="buttons[user.unit]">
                             <button
                                 v-for="button in buttons[user.unit]"
                                 :key="button"
+                                v-show="isButtonVisible(service, button)"
                                 class="bg-blue-500 text-white px-2 py-1 rounded mr-2"
                                 @click="updateStatus(service.id, button)"
                             >

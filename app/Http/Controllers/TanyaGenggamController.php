@@ -66,7 +66,7 @@ class TanyaGenggamController extends Controller
             ],
             'bensus' => [
                 'FORWARD BENSUS' => 'PROSES BENSUS',
-                'FORWARD BENSUS DISPOSISI' => 'PROSES INFO',
+                'FORWARD BENSUS DISPOSISI' => 'PROSES INFO DISPOSISI',
             ],
             'pelaksana'=> [
                 'FORWARD PELAKSANA' => 'PROSES PELAKSANA',

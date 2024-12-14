@@ -23,7 +23,7 @@ class InventoryController extends Controller
             ],
             'bukutanah' => ['PROSES CARI BT', 'PROSES ALIH MEDIA BTEL'],
             'sps' => ['PROSES SPS'],
-            'bensus' => ['PROSES BENSUS', 'PROSES INFO'],
+            'bensus' => ['PROSES BENSUS', 'PROSES INFO DISPOSISI'],
             'pelaksana' => [
                 'PROSES PELAKSANA',
                 'PROSES PELAKSANA BUAT CATATAN',
