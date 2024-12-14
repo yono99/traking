@@ -23,45 +23,49 @@ class ServiceController extends Controller
         try {
             // Menghitung jumlah seluruh data Service
             $countSelesaiTTE = Service::whereIn('status', [
-                'SELESAI TTE',
-              
+                'FORWARD PELAKSANA CEKTAK SERTEL',
+
             ])->count();
 
             // Hitung jumlah berdasarkan status yang sudah selesai (contoh status selesai)
             $countProses = Service::whereIn('status', [
 
                 'PROSES VERIFIKASI',
-                'PROSES MEMPERBAHARUI REVISI',
+                'PROSES VERIFIKASI LANJUTAN',
                 'PROSES MEMPERBAHARUI',
                 'PROSES ALIH MEDIA SUEL',
                 'PROSES CARI BT',
                 'PROSES ALIH MEDIA BTEL',
                 'PROSES SPS',
                 'PROSES BENSUS',
-                'PROSES VERIFIKASI LANJUTAN',
-                'PROSES QC',
+                'PROSES PELAKSANA',
+                'PROSES PELAKSANA BUAT CATATAN',
+                'PROSES CETAK SERTEL',
                 'PROSES PENGESAHAN ALIH MEDIA BTEL',
                 'PROSES PARAF',
                 'PROSES TTE',
-                'FORWARD TTE PRODUK LAYANAN',
-                'FORWARD PARAF',
-                'FORWARD PENGESAHAN ALIH MEDIA BTEL',
-                'FORWARD SELESAI REVISI',
-                'FORWARD QC SELESAI ALIH MEDIA',
-                'FORWARD BENSUS',
-                'FORWARD SPS',
-                'FORWARD ALIH MEDIA BTEL',
-                'FORWARD CARI BT',
-                'FORWARD ALIH MEDIA SUEL',
+                'DI PROSES',
                 'FORWARD PENGUKURAN',
-                'FORWARD PENGUKURAN REVISI',
+                'FORWARD CARI BT',
+                'FORWARD BENSUS DISPOSISI',
+                'FORWARD SPS',
+                'FORWARD BENSUS',
+                'FORWARD PELAKSANA',
+                'FORWARD PARAF',
+                'FORWARD ALIH MEDIA SUEL',
+                'FORWARD LOKET PENYERAHAN',
+                'FORWARD VERIFIKATOR',
+                'FORWARD ALIH MEDIA BTEL',
+                'FORWARD SELESAI REVISI',
                 'FORWARD VERIFIKATOR CEK SYARAT',
-                'FORWARD VERIFIKATOR'
+                'FORWARD PENGESAHAN ALIH MEDIA BTEL',
+                'FORWARD TTE PRODUK LAYANAN',
+                'FORWARD PELAKSANA CETAK SERTEL',
             ])->count();
 
             // Kirimkan data sebagai JSON response
             return response()->json([
-             
+
                 'countSelesaiTTE' => $countSelesaiTTE,
                 'countProses' => $countProses
             ]);

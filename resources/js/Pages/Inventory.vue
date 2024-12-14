@@ -58,11 +58,7 @@ export default {
                     "FORWARD ALIH MEDIA SUEL",
                     "FORWARD LOKET PENYERAHAN",
                 ],
-                QC: [
-                    "FORWARD PENGESAHAN ALIH MEDIA BTEL",
-                    "FORWARD BUKU TANAH REVISI",
-                    "FORWARD PENGUKURAN REVISI",
-                ],
+                
                 pengukuran: [
                     "FORWARD VERIFIKATOR",
                     "FORWARD ALIH MEDIA BTEL",
