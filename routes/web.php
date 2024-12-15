@@ -14,6 +14,8 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Middleware\CheckUnit;
 use App\Http\Controllers\TeamsController;
+use App\Http\Controllers\LandBookController;
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -73,3 +75,7 @@ Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
 
 // Tambahkan route ini di web.php
 Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
+        ->name('inventory.update-status');
+});

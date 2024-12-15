@@ -17,6 +17,8 @@ class Service extends Model
         'PNBP',
         'nomor_hp',
         'remarks',
+
+        
     ];
 
 

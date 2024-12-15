@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
-
+ use App\Models\LandBook;
+ use Illuminate\Support\Facades\DB;
+ use Inertia\Inertia;
 class InventoryController extends Controller
 {
     public function index()
@@ -74,6 +76,38 @@ class InventoryController extends Controller
 
     public function updateStatus(Request $request, $serviceId)
     {
+        try {
+            DB::beginTransaction();
+
+            $service = Service::with('landBook')->findOrFail($serviceId);
+
+            $service->update([
+                'status' => $request->status,
+                'PNBP' => $request->PNBP,
+                'nomor_hp' => $request->nomor_hp,
+                'remarks' => $request->remarks,
+                'name'  => $request->name,
+            ]);
+
+            if ($service->landBook) {
+                $service->landBook->update([
+                    'nomer_hak' => $request->nomer_hak,
+                    'jenis_hak' => $request->jenis_hak,
+                    'desa_kecamatan' => $request->desa_kecamatan,
+                    'status_alih_media' => $request->status_alih_media,
+                ]);
+            }
+            // Log aktivitas jika diperlukan
+            $this->logActivity($service->id, Auth::id(), $service->getOriginal('status'), $request->status);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Data berhasil diupdate',
+                'service' => $service->fresh(['landBook'])
+            ]);
+        }  catch (\Exception $e) {}
+
         $user = Auth::user(); // Pengguna yang login
         $userUnit = $user->unit; // Unit pengguna
 
@@ -86,7 +120,16 @@ class InventoryController extends Controller
 
         // Validasi apakah status baru valid untuk unit pengguna
         $allowedStatuses = $this->getAllowedStatusesByUnit($userUnit);
-
+        $validated = $request->validate([
+            'status' => 'required|string',
+            'remarks' => 'nullable|string',
+            'PNBP' => 'nullable|string',
+            'nomor_hp' => 'nullable|string',
+            'nomer_hak' => 'nullable|string',
+            'jenis_hak' => 'nullable|string',
+            'desa_kecamatan' => 'nullable|string',
+            'status_alih_media' => 'nullable|string',
+        ]);
         if (!in_array($newStatus, $allowedStatuses)) {
             return response()->json(['message' => 'Status tidak valid untuk unit Anda.'], 400);
         }
@@ -101,6 +144,10 @@ class InventoryController extends Controller
             'message' => 'Status berhasil diperbarui',
             'newStatus' => $newStatus,
         ]);
+        $service = Service::findOrFail($serviceId);
+        $service->update($validated);
+
+        return response()->json(['message' => 'Status berhasil diperbarui']);
     }
 
     private function getAllowedStatusesByUnit($unit)

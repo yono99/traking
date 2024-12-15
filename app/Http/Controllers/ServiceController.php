@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
- 
+
 use App\Models\LandBook;
- 
+
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
@@ -79,38 +79,65 @@ class ServiceController extends Controller
             return response()->json(['error' => 'Failed to fetch counts.'], 500);
         }
     }
+    public function show(Service $service)
+    {
+        // Load relationship dengan land_book
+        $service->load('land_book');
 
+        return response()->json([
+            'service' => $service,
+            'landBook' => $service->land_book
+        ]);
+    }
     public function update(Request $request, Service $service)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'status' => 'required|string',
-            'remarks' => 'nullable|string',
-            'PNBP' => 'required|string',
-            'nomor_hp' => 'required|string',
-            'land_book.nomer_hak' => 'required|string',
-            'land_book.jenis_hak' => 'required|string',
-            'land_book.desa_kecamatan' => 'required|string',
-        ]);
+        try {
+            DB::beginTransaction();
 
-        DB::transaction(function () use ($request, $service) {
-            // Update land book data
-            $service->landBook->update([
-                'nomer_hak' => $request->input('land_book.nomer_hak'),
-                'jenis_hak' => $request->input('land_book.jenis_hak'),
-                'desa_kecamatan' => $request->input('land_book.desa_kecamatan'),
+            // Validate request
+            $validated = $request->validate([
+                'status' => 'required|string',
+                'remarks' => 'nullable|string',
+                'PNBP' => 'nullable|string',
+                'nomor_hp' => 'nullable|string',
+                'nomer_hak' => 'nullable|string',
+                'jenis_hak' => 'nullable|string',
+                'desa_kecamatan' => 'nullable|string',
+                'status_alih_media' => 'nullable|string',
             ]);
 
-            // Update service data
+            // Update service
             $service->update([
-                'name' => $request->name,
-                'status' => $request->status,
-                'remarks' => $request->remarks,
-                'PNBP' => $request->PNBP,
-                'nomor_hp' => $request->nomor_hp,
-            ]);
-        });
+                'status' => $validated['status'],
+                'remarks' => $validated['remarks'],
+                'PNBP' => $validated['PNBP'],
+                'nomor_hp' => $validated['nomor_hp'],
+                'name' => $validated['name'],
 
-        return redirect()->back()->with('message', 'Data updated successfully');
+            ]);
+
+            // Update or create land book
+            if ($service->land_book) {
+                $service->land_book->update([
+                    'nomer_hak' => $validated['nomer_hak'],
+                    'jenis_hak' => $validated['jenis_hak'],
+                    'desa_kecamatan' => $validated['desa_kecamatan'],
+                    'status_alih_media' => $validated['status_alih_media'],
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Data berhasil diupdate',
+                'service' => $service->fresh('land_book')
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Gagal mengupdate data',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

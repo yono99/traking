@@ -1,184 +1,242 @@
-<script>
+<script setup>
+import { ref, computed } from "vue";
 import axios from "axios";
 import AppLayout from "@/Layouts/AppLayout.vue";
+import UpdateModal from "@/Components/UpdateModal.vue";
 
-export default {
-    layout: AppLayout,
-
-    props: {
-        services: Array,
-        user: Object,
+// Props definition
+const props = defineProps({
+    services: {
+        type: Array,
+        required: true
     },
+    user: {
+        type: Object,
+        required: true
+    }
+});
 
-    data() {
-        return {
-            buttons: {
-                verifikator: [
-                    "FORWARD PENGUKURAN",
-                    "FORWARD CARI BT",
-                    "FORWARD BENSUS DISPOSISI",
-                    "FORWARD SPS",
-                ],
-                sps: ["FORWARD BENSUS"],
-                bensus: ["FORWARD PELAKSANA", "SELESAI INFO DISPOSISI"],
-                pelaksana: [
-                    "FORWARD PARAF",
-                    "FORWARD ALIH MEDIA SUEL",
-                    "FORWARD LOKET PENYERAHAN",
-                ],
-                pelaksana_bn: [
-                    "FORWARD PARAF",
-                    "FORWARD ALIH MEDIA SUEL",
-                    "FORWARD LOKET PENYERAHAN",
-                ],
-                pelaksana_ph: [
-                    "FORWARD PARAF",
-                    "FORWARD ALIH MEDIA SUEL",
-                    "FORWARD LOKET PENYERAHAN",
-                ],
-                pelaksana_roya: [
-                    "FORWARD PARAF",
-                    "FORWARD ALIH MEDIA SUEL",
-                    "FORWARD LOKET PENYERAHAN",
-                ],
-                pelaksana_ph_ruko: [
-                    "FORWARD PARAF",
-                    "FORWARD ALIH MEDIA SUEL",
-                    "FORWARD LOKET PENYERAHAN",
-                ],
-                pelaksana_sk: [
-                    "FORWARD PARAF",
-                    "FORWARD ALIH MEDIA SUEL",
-                    "FORWARD LOKET PENYERAHAN",
-                ],
-                pengukuran: [
-                    "FORWARD VERIFIKASI LANJUTAN",
-                    "FORWARD ALIH MEDIA BTEL",
-                ],
-                bukutanah: [
-                    "FORWARD VERIFIKATOR CEK SYARAT",
-                    "FORWARD PENGESAHAN ALIH MEDIA BTEL",
-                ],
-                pengesahan: ["FORWARD PARAF"],
-                paraf: ["FORWARD TTE PRODUK LAYANAN"],
-                TTE_PRODUK_LAYANAN: ["FORWARD PELAKSANA CETAK SERTEL"],
-                LOKET_PENYERAHAN: ["SELESAI DISERAHKAN"],
-            },
-        };
-    },
+// Reactive references
+const showUpdateModal = ref(false);
+const selectedItem = ref(null);
 
-    methods: {
-        // Fungsi untuk memperbarui status layanan
-        async updateStatus(serviceId, newStatus) {
-            try {
-                const response = await axios.post(
-                    `/inventory/update-status/${serviceId}`,
-                    { status: newStatus }
-                );
-                alert(response.data.message); // Tampilkan pesan sukses
-                await this.loadServices();
-            } catch (error) {
-                console.error(error);
-                alert("Error updating status");
+// Status buttons configuration
+const buttons = computed(() => ({
+    verifikator: [
+        "FORWARD PENGUKURAN",
+        "FORWARD CARI BT",
+        "FORWARD BENSUS DISPOSISI",
+        "FORWARD SPS",
+    ],
+    sps: ["FORWARD BENSUS"],
+    bensus: ["FORWARD PELAKSANA", "SELESAI INFO DISPOSISI"],
+    pelaksana: [
+        "FORWARD PARAF",
+        "FORWARD ALIH MEDIA SUEL",
+        "FORWARD LOKET PENYERAHAN",
+    ],
+    pelaksana_bn: [
+        "FORWARD PARAF",
+        "FORWARD ALIH MEDIA SUEL",
+        "FORWARD LOKET PENYERAHAN",
+    ],
+    pengukuran: [
+        "FORWARD VERIFIKASI LANJUTAN",
+        "FORWARD ALIH MEDIA BTEL",
+    ],
+    bukutanah: [
+        "FORWARD VERIFIKATOR CEK SYARAT",
+        "FORWARD PENGESAHAN ALIH MEDIA BTEL",
+    ],
+    pengesahan: ["FORWARD PARAF"],
+    paraf: ["FORWARD TTE PRODUK LAYANAN"],
+    TTE_PRODUK_LAYANAN: ["FORWARD PELAKSANA CETAK SERTEL"],
+    LOKET_PENYERAHAN: ["SELESAI DISERAHKAN"],
+}));
+
+// Status rules untuk visibility tombol
+const hideButtonRules = computed(() => ({
+    "PROSES VERIFIKASI LANJUTAN": ["FORWARD PENGUKURAN"],
+    "PROSES VERIFIKASI CROSSCHECK": [
+        "FORWARD PENGUKURAN",
+        "FORWARD CARI BT",
+    ],
+    "PROSES VERIFIKASI": ["FORWARD SPS"],
+    "PROSES MEMPERBAHARUI": ["FORWARD ALIH MEDIA BTEL"],
+    "PROSES ALIH MEDIA SUEL": ["FORWARD VERIFIKASI LANJUTAN"],
+    "PROSES CARI BT": ["FORWARD PENGESAHAN ALIH MEDIA BTEL"],
+    "PROSES ALIH MEDIA BTEL": ["FORWARD VERIFIKATOR CEK SYARAT"],
+    "PROSES BENSUS": ["SELESAI INFO DISPOSISI"],
+    "PROSES INFO DISPOSISI": ["FORWARD PELAKSANA"],
+    "PROSES PELAKSANA": [
+        "FORWARD PARAF",
+        "FORWARD LOKET PENYERAHAN",
+    ],
+    "PROSES PELAKSANA BUAT CATATAN": [
+        "FORWARD ALIH MEDIA SUEL",
+        "FORWARD LOKET PENYERAHAN",
+    ],
+    "PROSES CETAK SERTEL": [
+        "FORWARD PARAF",
+        "FORWARD ALIH MEDIA SUEL",
+    ],
+}));
+
+// Methods
+const updateStatus = async (serviceId, newStatus) => {
+    try {
+        console.log("Updating status:", { serviceId, newStatus });
+
+        await axios.post(
+            `/inventory/update-status/${serviceId}`,
+            {
+                status: newStatus,
+                _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
-        },
+        );
 
-        // Fungsi untuk memeriksa apakah tombol harus disembunyikan berdasarkan status
-        isButtonVisible(service, buttonType) {
-            const status = service.status;
+        alert("Status berhasil diperbarui.");
+        await loadServices();
+    } catch (error) {
+        console.error("Error updating status:", error);
+        alert(error.response?.data?.message || "Error updating status");
+    }
+};
 
-            // Mapping status dan button yang harus di-hide
-            const hideButtonRules = {
-                "PROSES VERIFIKASI LANJUTAN": ["FORWARD PENGUKURAN"],
-                "PROSES VERIFIKASI CROSSCHECK": [
-                    "FORWARD PENGUKURAN",
-                    "FORWARD CARI BT",
-                ],
-                "PROSES VERIFIKASI": ["FORWARD SPS"],
-                "PROSES MEMPERBAHARUI": ["FORWARD ALIH MEDIA BTEL"],
-                "PROSES ALIH MEDIA SUEL": ["FORWARD VERIFIKASI LANJUTAN"],
-                "PROSES CARI BT": ["FORWARD PENGESAHAN ALIH MEDIA BTEL"],
-                "PROSES ALIH MEDIA BTEL": ["FORWARD VERIFIKATOR CEK SYARAT"],
-                "PROSES BENSUS": ["SELESAI INFO DISPOSISI"],
-                "PROSES INFO DISPOSISI": ["FORWARD PELAKSANA"],
-                "PROSES PELAKSANA": [
-                    "FORWARD PARAF",
-                    "FORWARD LOKET PENYERAHAN",
-                ],
-                "PROSES PELAKSANA BUAT CATATAN": [
-                    "FORWARD ALIH MEDIA SUEL",
-                    "FORWARD LOKET PENYERAHAN",
-                ],
-                "PROSES CETAK SERTEL": [
-                    "FORWARD PARAF",
-                    "FORWARD ALIH MEDIA SUEL",
-                ],
-            };
+const isButtonVisible = (service, buttonType) => {
+    if (!service || !buttonType) return false;
+    
+    const status = service.status;
+    const buttonsToHide = hideButtonRules.value[status] || [];
+    return !buttonsToHide.includes(buttonType);
+};
 
-            // Cek apakah button harus di-hide berdasarkan status
-            const buttonsToHide = hideButtonRules[status] || [];
-            return !buttonsToHide.includes(buttonType);
-        },
+const loadServices = async () => {
+    window.location.reload();
+};
 
-        // Fungsi untuk memuat ulang data layanan
-        async loadServices() {
-            try {
-                window.location.reload();
-            } catch (error) {
-                console.error("Error:", error);
-            }
-        },
-    },
+const openModal = (service) => {
+    selectedItem.value = service;
+    showUpdateModal.value = true;
+};
+
+const closeModal = () => {
+    showUpdateModal.value = false;
+    selectedItem.value = null;
+    loadServices();
+};
+
+const submitForm = async () => {
+    try {
+        console.log("Submitting form with data:", {
+            status: selectedItem.value.status || '',
+            remarks: selectedItem.value.remarks || '',
+            PNBP: selectedItem.value.PNBP || '',
+            nomor_hp: selectedItem.value.nomor_hp || '',
+            nomer_hak: selectedItem.value.nomer_hak || '',
+            jenis_hak: selectedItem.value.jenis_hak || '',
+            desa_kecamatan: selectedItem.value.desa_kecamatan || '',
+            status_alih_media: selectedItem.value.status_alih_media || '',
+        });
+
+        await axios.post(`/inventory/update-status/${selectedItem.value.id}`, {
+            status: selectedItem.value.status || '',
+            remarks: selectedItem.value.remarks || '',
+            PNBP: selectedItem.value.PNBP || '',
+            nomor_hp: selectedItem.value.nomor_hp || '',
+            nomer_hak: selectedItem.value.nomer_hak || '',
+            jenis_hak: selectedItem.value.jenis_hak || '',
+            desa_kecamatan: selectedItem.value.desa_kecamatan || '',
+            status_alih_media: selectedItem.value.status_alih_media || '',
+        });
+
+        closeModal();
+    } catch (error) {
+        console.error("Error submitting form:", error);
+        alert(error.response?.data?.message || "Gagal mengupdate data");
+    }
 };
 </script>
 
 <template>
-    <div>
-        <h1 class="text-2xl font-bold mb-4">Inventory</h1>
-        <table class="table-auto w-full border-collapse border border-gray-200">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="border px-4 py-2">No</th>
-                    <th class="border px-4 py-2">Nomer hak</th>
-                    <th class="border px-4 py-2">Jenis Hak</th>
-                    <th class="border px-4 py-2">Desa - Kecamatan</th>
-                    <th class="border px-4 py-2">Status</th>
-                    <th class="border px-4 py-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(service, index) in services" :key="service.id">
-                    <td class="border px-4 py-2">{{ index + 1 }}</td>
-                    <td class="border px-4 py-2">
-                        {{ service.land_book?.nomer_hak || "-" }}
-                    </td>
-                    <td class="border px-4 py-2">
-                        {{ service.land_book?.jenis_hak || "-" }}
-                    </td>
-                    <td class="border px-4 py-2">
-                        {{ service.land_book?.desa_kecamatan || "-" }}
-                    </td>
-                    <td class="border px-4 py-2">{{ service.status }}</td>
-                    <td class="border px-4 py-2">
-                        <div v-if="buttons[user.unit]">
-                            <button
-                                v-for="button in buttons[user.unit]"
-                                :key="button"
-                                v-show="isButtonVisible(service, button)"
-                                class="bg-blue-500 text-white px-2 py-1 rounded mr-2"
-                                @click="updateStatus(service.id, button)"
-                            >
-                                {{ button }}
-                            </button>
+    <AppLayout>
+        <div class="py-6 px-4 sm:px-6 lg:px-8">
+            <div class="sm:flex sm:items-center">
+                <div class="sm:flex-auto">
+                    <h1 class="text-2xl font-semibold text-gray-900">Inventory</h1>
+                </div>
+            </div>
+
+            <div class="mt-8 flex flex-col">
+                <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">No</th>
+                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Nomer hak</th>
+                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Jenis Hak</th>
+                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Desa - Kecamatan</th>
+                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 bg-white">
+                                    <tr v-for="(service, index) in services" :key="service.id">
+                                        <td class="px-3 py-4 text-sm text-gray-500">{{ index + 1 }}</td>
+                                        <td class="px-3 py-4 text-sm text-gray-500">
+                                            {{ service.land_book?.nomer_hak || "-" }}
+                                        </td>
+                                        <td class="px-3 py-4 text-sm text-gray-500">
+                                            {{ service.land_book?.jenis_hak || "-" }}
+                                        </td>
+                                        <td class="px-3 py-4 text-sm text-gray-500">
+                                            {{ service.land_book?.desa_kecamatan || "-" }}
+                                        </td>
+                                        <td class="px-3 py-4 text-sm text-gray-500">
+                                            {{ service.status }}
+                                        </td>
+                                        <td class="px-3 py-4 text-sm text-gray-500">
+                                            <div >
+                                                <button
+                                                    @click="openModal(service)"
+                                                    class="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500"
+                                                >
+                                                    Update
+                                                </button>
+
+                                                <div v-if="buttons[user.unit]" class="flex flex-wrap gap-2">
+                                                    <button
+                                                        v-for="button in buttons[user.unit]"
+                                                        :key="button"
+                                                        v-show="isButtonVisible(service, button)"
+                                                        @click="updateStatus(service.id, button)"
+                                                        class="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500"
+                                                    >
+                                                        {{ button }}
+                                                    </button>
+                                                </div>
+                                                <div v-else>
+                                                    <span class="text-gray-500">No actions available</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div v-else>
-                            <span class="text-gray-500"
-                                >No actions available</span
-                            >
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                    </div>
+                </div>
+            </div>
+
+            <UpdateModal
+                :show="showUpdateModal"
+                :service-id="selectedItem?.id"
+                :service="selectedItem"
+                :user="user"
+                @close="closeModal"
+            />
+        </div>
+    </AppLayout>
 </template>
