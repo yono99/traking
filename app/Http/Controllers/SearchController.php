@@ -30,6 +30,7 @@ class SearchController extends Controller
                 });
             })
             ->get();
+        // dd($services);
 
         return response()->json([
             // 'landBooks' => $landBooks,

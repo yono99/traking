@@ -1,44 +1,64 @@
 <template>
-    <div class="search-container">
-        <h1>Pencarian Tanya Genggam</h1>
-        <input
-            type="text"
-            v-model="nomorHak"
-            placeholder="Masukkan Nomer Hak"
-            @keyup.enter="search"
-        />
-        <button @click="search">Cari</button>
+    <div class="p-5 max-w-7xl mx-auto">
+        <h1 class="text-2xl font-semibold mb-4 dark:text-white">Pencarian Tanya Genggam</h1>
+
+        <!-- Input Pencarian -->
+        <div class="flex mb-4">
+            <input type="text" v-model="nomorHak" placeholder="Masukkan Nomer Hak" @keyup.enter="search"
+                class="border border-gray-300 p-2 rounded-l-md w-64 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700" />
+            <button @click="search"
+                class="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 dark:bg-blue-600  ">
+                Cari
+            </button>
+        </div>
 
         <!-- Tabel hasil pencarian -->
-        <table v-if="services.length" class="result-table">
-            <thead>
-                <tr>
-                    <th>Nomer Hak</th>
-                    <th>Jenis Hak</th>
-                    <th>Desa/Kecamatan</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="service in services" :key="service.id">
-                    <!-- <td>{{ service.id }}</td> -->
-                    <td>{{ service.land_book?.nomer_hak || 'N/A' }}</td>
-                    <td>{{ service.land_book?.jenis_hak || 'N/A' }}</td>
-                    <td>{{ service.land_book?.desa_kecamatan || 'N/A' }}</td>
-                    <!-- <td>{{ service.land_book?.status_alih_media === 0 ? 'Belum Alih Media' : 'Sudah Alih Media' }}</td>
-                    <td>{{ service.PNBP || 'N/A' }}</td> -->
-                    <td> <!-- Tombol Update -->
-                        <button
-                            @click="updateStatus(service.id)"
-                            class="btn-update"
-                        >
-                            Update Status
-                        </button></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="mt-8 flex flex-col" v-if="services.length >= 0">
+            <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-300">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">No</th>
+                                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Nomer Hak</th>
+                                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Jenis Hak</th>
+                                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Desa/Kecamatan
+                                    </th>
+                                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                <tr v-for="(service, index) in services" :key="service.id">
+                                    <td class="px-3 py-4 text-sm text-gray-500">{{ index + 1 }}</td>
+                                    <td class="px-3 py-4 text-sm text-gray-500">{{ service.land_book?.nomer_hak || 'N/A'
+                                        }}</td>
+                                    <td class="px-3 py-4 text-sm text-gray-500">{{ service.land_book?.jenis_hak || 'N/A'
+                                        }}</td>
+                                    <td class="px-3 py-4 text-sm text-gray-500">{{ service.land_book?.desa_kecamatan ||
+                                        'N/A' }}</td>
+                                    <td class="px-3 py-4 text-sm text-gray-500">
+                                        <!-- Tombol Update -->
+                                        <button @click="updateStatus(service.id)"
+                                            class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+                                            Update Status
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr v-if="(services.length === 0)">
+                                    <td colspan="5" class="px-3 py-4 text-sm text-gray-500 text-center">
+                                        Tidak ada data yang ditemukan.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <div v-if="errorMessage" class="error-message">
+        <!-- Pesan error -->
+        <div v-if="errorMessage" class="mt-4 text-red-500 font-semibold">
             {{ errorMessage }}
         </div>
     </div>
@@ -48,7 +68,7 @@
 import { ref } from "vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 export default {
-layout : AppLayout,
+    layout: AppLayout,
     setup() {
         const nomorHak = ref("");
         const services = ref([]);

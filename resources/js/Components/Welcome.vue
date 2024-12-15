@@ -8,7 +8,7 @@ const parseFlatArrayToObjects = (flatArray) => {
     const result = [];
     for (let i = 0; i < flatArray.length; i += 8) {
         result.push({
-              nomer_hak: flatArray[i],
+            nomer_hak: flatArray[i],
             jenis_hak: flatArray[i + 1],
             desa_kecamatan: flatArray[i + 2],
             user_name: flatArray[i + 3],
@@ -36,7 +36,7 @@ export default {
         const errorMessage = ref("");
 
         const desaKecamatanList = [
-             "Balaraja - Balaraja",
+            "Balaraja - Balaraja",
             "Cangkudu - Balaraja",
             "Gembong - Balaraja",
             "Saga - Balaraja",
@@ -425,52 +425,34 @@ export default {
             handleKeydown,
         };
     },
-  
- 
+
+
 };
 </script>
- 
+
 <template>
-    <div
-        class="p-6 lg:p-9 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 rounded-xl"
-    >
+    <div class="p-6 lg:p-9 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 rounded-xl">
         <h1 class="text-2xl font-medium text-gray-900 dark:text-white mb-6">
-            Ada yang ingin dicari ? 
+            Ada yang ingin dicari ?
         </h1>
 
         <!-- Form -->
         <form @submit.prevent="submitForm" class="space-y-4">
             <!-- Input Desa/Kecamatan dengan Autocomplete -->
             <div>
-                <label
-                    for="desa_kecamatan"
-                    class="block text-sm font-medium text-gray-900 dark:text-white"
-                >
+                <label for="desa_kecamatan" class="block text-sm font-medium text-gray-900 dark:text-white">
                     Desa - Kecamatan
                 </label>
-                <input
-                    type="text"
-                    id="desa_kecamatan"
-                    v-model="searchQuery"
-                    @input="handleInput"
-                    @keydown="handleKeydown"
-                    placeholder="Masukkan Desa - Kecamatan..."
-                    class="mt-1 block w-full border border-gray-300 rounded p-2"
-                    required
-                />
+                <input type="text" id="desa_kecamatan" v-model="searchQuery" @input="handleInput"
+                    @keydown="handleKeydown" placeholder="Masukkan Desa - Kecamatan..."
+                    class="border-gray-300 w-full dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                    required />
                 <!-- Dropdown -->
-                <div
-                    v-if="showDropdown "
-                    class="absolute bg-white border mt-1 rounded shadow "
-                >
+                <div v-if="showDropdown" class="absolute bg-white border mt-1 rounded shadow ">
                     <ul>
-                        <li
-                            v-for="(location, index) in filteredLocations"
-                            :key="index"
-                            :class="{ 'bg-gray-200': index === selectedIndex }"
-                            @click="selectLocation(location)"
-                            class="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                        >
+                        <li v-for="(location, index) in filteredLocations" :key="index"
+                            :class="{ 'bg-gray-200': index === selectedIndex }" @click="selectLocation(location)"
+                            class="px-4 py-2 cursor-pointer hover:bg-gray-200">
                             {{ location }}
                         </li>
                     </ul>
@@ -478,18 +460,12 @@ export default {
             </div>
 
             <div>
-                <label
-                    for="jenis_hak"
-                    class="block text-sm font-medium text-gray-900 dark:text-white"
-                >
+                <label for="jenis_hak" class="block text-sm font-medium text-gray-900 dark:text-white">
                     Jenis Hak
                 </label>
-                <select
-                    id="jenis_hak"
-                    v-model="form.jenis_hak"
-                    class="mt-1 block w-full border border-gray-300 rounded p-2"
-                    required
-                >
+                <select id="jenis_hak" v-model="form.jenis_hak"
+                    class="border-gray-300 w-full dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                    required>
                     <option value="" disabled>Pilih Jenis Hak</option>
                     <option value="HGB">HGB</option>
                     <option value="HM">HM</option>
@@ -500,33 +476,21 @@ export default {
             </div>
 
             <div>
-                <label
-                    for="nomer_hak"
-                    class="block text-sm font-medium text-gray-900 dark:text-white"
-                >
+                <label for="nomer_hak" class="block text-sm font-medium text-gray-900 dark:text-white">
                     Nomer Hak
                 </label>
-                <input
-                    type="text"
-                    id="nomer_hak"
-                    maxlength="5"
-                    v-model="form.nomer_hak"
+                <input type="text" id="nomer_hak" maxlength="5" v-model="form.nomer_hak"
                     placeholder="Masukkan Nomer Hak..."
-                    class="mt-1 block w-full border border-gray-300 rounded p-2"
-                    required
-                    @input="
+                    class="border-gray-300 w-full dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                    required @input="
                         form.nomer_hak = form.nomer_hak
                             .replace(/\D/g, '')
                             .slice(0, 5)
-                    "
-                />
+                        " />
             </div>
 
-            <button
-                type="submit"
-                class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                :disabled="loading"
-            >
+            <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                :disabled="loading">
                 {{ loading ? "Memuat..." : "Submit" }}
             </button>
         </form>
@@ -542,68 +506,43 @@ export default {
                 History Aktivitas
             </h2>
 
-            <div
-                v-if="resultData.length === 0"
-                class="text-center text-gray-500"
-            >
+            <div v-if="resultData.length === 0" class="text-center text-gray-500">
                 Tidak ada data yang ditemukan untuk filter yang diberikan.
             </div>
 
             <div v-e lse class="overflow-x-auto">
-                <table
-                    class="table-auto w-full border-collapse border border-gray-300"
-                >
+                <table class="table-auto w-full border-collapse border border-gray-300">
                     <thead class="bg-gray-200">
                         <tr>
-                            <th
-                                class="border border-gray-300 px-4 py-2 text-left"
-                            >
+                            <th class="border border-gray-300 px-4 py-2 text-left">
                                 No. Hak
                             </th>
-                            <th
-                                class="border border-gray-300 px-4 py-2 text-left"
-                            >
+                            <th class="border border-gray-300 px-4 py-2 text-left">
                                 Jenis Hak
                             </th>
-                            <th
-                                class="border border-gray-300 px-4 py-2 text-left"
-                            >
+                            <th class="border border-gray-300 px-4 py-2 text-left">
                                 Desa/Kecamatan
                             </th>
-                            <th
-                                class="border border-gray-300 px-4 py-2 text-left"
-                            >
+                            <th class="border border-gray-300 px-4 py-2 text-left">
                                 Nama Petugas - unit
                             </th>
-                             
-                            <th
-                                class="border border-gray-300 px-4 py-2 text-left"
-                            >
+
+                            <th class="border border-gray-300 px-4 py-2 text-left">
                                 Status Aktivitas
                             </th>
-                            <th
-                                class="border border-gray-300 px-4 py-2 text-left"
-                            >
+                            <th class="border border-gray-300 px-4 py-2 text-left">
                                 Nama Layanan
                             </th>
-                            <th
-                                class="border border-gray-300 px-4 py-2 text-left"
-                            >
+                            <th class="border border-gray-300 px-4 py-2 text-left">
                                 Kontak
                             </th>
-                            <th
-                                class="border border-gray-300 px-4 py-2 text-left"
-                            >
+                            <th class="border border-gray-300 px-4 py-2 text-left">
                                 Waktu
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            v-for="(activity, index) in resultData"
-                            :key="index"
-                            class="odd:bg-white even:bg-gray-50"
-                        >
+                        <tr v-for="(activity, index) in resultData" :key="index" class="odd:bg-white even:bg-gray-50">
                             <td class="border border-gray-300 px-4 py-2">
                                 {{ activity.nomer_hak }}
                             </td>
@@ -616,7 +555,7 @@ export default {
                             <td class="border border-gray-300 px-4 py-2">
                                 {{ activity.user_name }}
                             </td>
-                             
+
                             <td class="border border-gray-300 px-4 py-2">
                                 {{ activity.activity_status }}
                             </td>
@@ -641,36 +580,51 @@ export default {
 <style>
 /* Box container styling untuk grid */
 .box-container {
-  display: grid; /* Menggunakan grid */
-  grid-template-columns: repeat(2, 1fr); /* Membuat 2 kolom dengan lebar yang sama */
-  gap: 1rem; /* Jarak antar kotak */
-  justify-items: center; /* Menempatkan item di tengah secara horizontal */
-  align-items: center; /* Menempatkan item di tengah secara vertikal */
-  padding: 2rem; /* Padding untuk seluruh container */
+    display: grid;
+    /* Menggunakan grid */
+    grid-template-columns: repeat(2, 1fr);
+    /* Membuat 2 kolom dengan lebar yang sama */
+    gap: 1rem;
+    /* Jarak antar kotak */
+    justify-items: center;
+    /* Menempatkan item di tengah secara horizontal */
+    align-items: center;
+    /* Menempatkan item di tengah secara vertikal */
+    padding: 2rem;
+    /* Padding untuk seluruh container */
 }
 
 /* Styling untuk setiap box */
 .box {
-  background-color: #f0f0f0; /* Warna latar belakang kotak */
-  border: 1px solid #ddd; /* Border abu-abu untuk kotak */
-  padding: 1rem; /* Padding di dalam kotak */
-  border-radius: 8px; /* Sudut kotak yang membulat */
-  display: flex; /* Flexbox untuk konten di dalam box */
-  justify-content: space-between; /* Memisahkan label dan count */
-  align-items: center; /* Vertikal align */
-  width: 200px; /* Menentukan lebar kotak */
+    background-color: #f0f0f0;
+    /* Warna latar belakang kotak */
+    border: 1px solid #ddd;
+    /* Border abu-abu untuk kotak */
+    padding: 1rem;
+    /* Padding di dalam kotak */
+    border-radius: 8px;
+    /* Sudut kotak yang membulat */
+    display: flex;
+    /* Flexbox untuk konten di dalam box */
+    justify-content: space-between;
+    /* Memisahkan label dan count */
+    align-items: center;
+    /* Vertikal align */
+    width: 200px;
+    /* Menentukan lebar kotak */
 }
 
 /* Styling untuk label di dalam box */
 .label {
-  font-weight: bold;
-  color: #333; /* Warna teks label */
+    font-weight: bold;
+    color: #333;
+    /* Warna teks label */
 }
 
 /* Styling untuk count di dalam box */
 .count {
-  font-size: 1.25rem;
-  color: #007BFF; /* Warna teks untuk count */
+    font-size: 1.25rem;
+    color: #007BFF;
+    /* Warna teks untuk count */
 }
-
 </style>

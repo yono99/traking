@@ -418,12 +418,23 @@ export default {
 
             // Kirim form jika tidak ada error
             form.nomer_hak = nomerHakWithoutLeadingZero; // Update nomer_hak dengan nilai tanpa nol
+            // console.log("Data form sebelum kirim:", form);
             form.post("/genggam-berkas", {
                 onSuccess: () => {
+                    console.log("Form berhasil dikirim!");
                     form.reset();
                     searchQuery.value = "";
                 },
+                onError: (errors) => {
+                    console.error("Error saat submit:", errors);
+                },
             });
+        };
+
+        const handleBlur = () => {
+            setTimeout(() => {
+                showDropdown.value = false;
+            }, 200); // Tunggu sebentar agar klik pada dropdown tidak terputus
         };
 
         return {
@@ -437,89 +448,122 @@ export default {
             handleInput,
             selectLocation,
             handleKeydown,
+            handleBlur,
         };
     },
 };
 </script>
 
 <template>
-    <div class="p-6 bg-white rounded shadow">
-        <h2 class="text-2xl font-bold mb-4">Input Data Genggam Berkas</h2>
-        <form @submit.prevent="submitForm">
-            <!-- Input Nomor HP -->
-            <div class="mb-4">
-                <label for="nomor_hp" class="block text-sm font-medium text-gray-700">Nomor HP</label>
-                <p class="text-gray-500 text-sm">8xxxx tanpa +62/0</p>
-                <input type="text" placeholder="8xxxx" id="nomor_hp" v-model="form.nomor_hp" maxlength="12" @input="
-                    form.nomor_hp = form.nomor_hp
-                        .replace(/\D/g, '')
-                        .slice(0, 12)
-                    " class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required />
+    <div>
+        <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8 dark:text-white">
+            <!-- <h2 class="text-2xl font-bold mb-4">Input Data Genggam Berkas</h2> -->
+            <form @submit.prevent="submitForm">
+                <div class="md:grid md:grid-cols-3 md:gap-6 px-4 sm:px-6 lg:px-8 gap-4">
+                    <div class="">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                            Input Data Genggam Berkas
+                        </h3>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                            Input Data Genggam Berkas
+                        </p>
+                    </div>
+                    <div class="col-span-2">
+                        <div class="bg-white dark:bg-gray-800 px-4 sm:px-6 lg:px-8 py-4 rounded-t-xl">
+                            <!-- Input Nomor HP -->
+                            <div class="mb-4">
+                                <label for="nomor_hp"
+                                    class="block font-medium text-sm text-gray-700 dark:text-gray-300">Nomor HP</label>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">8xxxx tanpa +62/0</p>
+                                <input type="text" placeholder="8xxxx" id="nomor_hp" v-model="form.nomor_hp"
+                                    maxlength="12" @input="
+                                        form.nomor_hp = form.nomor_hp
+                                            .replace(/\D/g, '')
+                                            .slice(0, 12)
+                                        "
+                                    class="border-gray-300 w-full max-w-lg dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                    required />
 
-                <p v-if="errors.nomor_hp" class="text-red-500 text-sm">
-                    {{ errors.nomor_hp }}
-                </p>
-            </div>
+                                <p v-if="errors.nomor_hp" class="text-red-500 text-sm">
+                                    {{ errors.nomor_hp }}
+                                </p>
+                            </div>
 
-            <!-- Autocomplete Input untuk Desa/Kecamatan -->
-            <div class="mb-4 relative">
-                <label for="desa_kecamatan" class="block text-sm font-medium text-gray-700">Desa/Kecamatan</label>
-                <input type="text" id="desa_kecamatan" v-model="searchQuery" @input="handleInput"
-                    @focus="showDropdown = true" @keydown="handleKeydown" placeholder="Ketik untuk mencari..."
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required />
-                <!-- Dropdown suggestions -->
-                <div v-if="showDropdown && filteredLocations.length > 0"
-                    class="absolute z-10 w-full bg-white mt-1 rounded-md shadow-lg border border-gray-200">
-                    <ul class="max-h-60 overflow-auto">
-                        <li v-for="(location, index) in filteredLocations" :key="location"
-                            @click="selectLocation(location)" :class="[
-                                'px-4 py-2 cursor-pointer',
-                                selectedIndex === index
-                                    ? 'bg-blue-100'
-                                    : 'hover:bg-gray-100',
-                            ]">
-                            {{ location }}
-                        </li>
-                    </ul>
+                            <!-- Autocomplete Input untuk Desa/Kecamatan -->
+                            <div class="mb-4 relative">
+                                <label for="desa_kecamatan"
+                                    class="block font-medium text-sm text-gray-700 dark:text-gray-300">Desa/Kecamatan</label>
+                                <input type="text" id="desa_kecamatan" v-model="searchQuery" @input="handleInput"
+                                    @focus="showDropdown = true" @blur="handleBlur" @keydown="handleKeydown"
+                                    placeholder="Ketik untuk mencari..."
+                                    class="border-gray-300 w-full max-w-lg dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                    required autocomplete="off" />
+                                <!-- Dropdown suggestions -->
+                                <div v-if="showDropdown && filteredLocations.length > 0" class=" absolute z-10 bg-white mt-1 rounded-md shadow-lg border border-gray-200
+                                    dark:border-gray-700 dark:bg-gray-800">
+                                    <ul class="max-h-60 overflow-auto">
+                                        <li v-for="(location, index) in filteredLocations" :key="location"
+                                            @click="selectLocation(location)" :class="[
+                                                'px-4 py-2 cursor-pointer',
+                                                selectedIndex === index
+                                                    ? 'bg-blue-100'
+                                                    : 'hover:bg-gray-100 dark:hover:bg-gray-700',
+                                            ]">
+                                            {{ location }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <p v-if="errors.desa_kecamatan" class="text-red-500 text-sm">
+                                    {{ errors.desa_kecamatan }}
+                                </p>
+                            </div>
+
+                            <!-- Dropdown Jenis Hak -->
+                            <div class="mb-4">
+                                <label for="jenis_hak"
+                                    class="block font-medium text-sm text-gray-700 dark:text-gray-300">Jenis Hak</label>
+                                <select id="jenis_hak" v-model="form.jenis_hak"
+                                    class="border-gray-300 w-full max-w-lg dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                    required>
+                                    <option value="" disabled>Pilih Jenis Hak</option>
+                                    <option value="HGB">HGB</option>
+                                    <option value="HM">HM</option>
+                                    <option value="HMRS">HMRS</option>
+                                    <option value="HP">HP</option>
+                                    <option value="HW">HW</option>
+                                </select>
+                                <p v-if="errors.jenis_hak" class="text-red-500 text-sm">
+                                    {{ errors.jenis_hak }}
+                                </p>
+                            </div>
+
+                            <!-- Input Nomer Hak -->
+                            <div class="mb-4">
+                                <label for="nomer_hak"
+                                    class="block font-medium text-sm text-gray-700 dark:text-gray-300">Nomer Hak</label>
+                                <input type="text" id="nomer_hak"
+                                    @input="form.nomer_hak = form.nomer_hak.replace(/\D/g, '').slice(0, 5)"
+                                    v-model="form.nomer_hak" maxlength="5"
+                                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                    required />
+
+                                <p v-if="errors.nomer_hak" class="text-red-500 text-sm">
+                                    {{ errors.nomer_hak }}
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="flex justify-end bg-gray-50 dark:bg-gray-700 px-4 sm:px-6 lg:px-8 py-4 rounded-b-xl">
+                            <button type="submit"
+                                class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 transition ease-in-out duration-150 justify-start">
+                                Submit
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <p v-if="errors.desa_kecamatan" class="text-red-500 text-sm">
-                    {{ errors.desa_kecamatan }}
-                </p>
-            </div>
 
-            <!-- Dropdown Jenis Hak -->
-            <div class="mb-4">
-                <label for="jenis_hak" class="block text-sm font-medium text-gray-700">Jenis Hak</label>
-                <select id="jenis_hak" v-model="form.jenis_hak"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
-                    <option value="" disabled>Pilih Jenis Hak</option>
-                    <option value="HGB">HGB</option>
-                    <option value="HM">HM</option>
-                    <option value="HMRS">HMRS</option>
-                    <option value="HP">HP</option>
-                    <option value="HW">HW</option>
-                </select>
-                <p v-if="errors.jenis_hak" class="text-red-500 text-sm">
-                    {{ errors.jenis_hak }}
-                </p>
-            </div>
-
-            <!-- Input Nomer Hak -->
-            <div class="mb-4">
-                <label for="nomer_hak" class="block text-sm font-medium text-gray-700">Nomer Hak</label>
-                <input type="text" id="nomer_hak"
-                    @input="form.nomer_hak = form.nomer_hak.replace(/\D/g, '').slice(0, 5)" v-model="form.nomer_hak"
-                    maxlength="5" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required />
-
-                <p v-if="errors.nomer_hak" class="text-red-500 text-sm">
-                    {{ errors.nomer_hak }}
-                </p>
-            </div>
-
-            <!-- Tombol Submit -->
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Submit
-            </button>
-        </form>
+                <!-- Tombol Submit -->
+            </form>
+        </div>
     </div>
 </template>

@@ -105,7 +105,7 @@ const updateStatus = async (serviceId, newStatus) => {
 
 const isButtonVisible = (service, buttonType) => {
     if (!service || !buttonType) return false;
-    
+
     const status = service.status;
     const buttonsToHide = hideButtonRules.value[status] || [];
     return !buttonsToHide.includes(buttonType);
@@ -160,10 +160,10 @@ const submitForm = async () => {
 
 <template>
     <AppLayout>
-        <div class="py-6 px-4 sm:px-6 lg:px-8">
+        <div class="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
-                    <h1 class="text-2xl font-semibold text-gray-900">Inventory</h1>
+                    <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-200">Inventory</h1>
                 </div>
             </div>
 
@@ -175,14 +175,24 @@ const submitForm = async () => {
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">No</th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Nomer hak</th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Jenis Hak</th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Desa - Kecamatan</th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Actions</th>
+                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Nomer hak
+                                        </th>
+                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Jenis Hak
+                                        </th>
+                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Desa -
+                                            Kecamatan</th>
+                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status
+                                        </th>
+                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Actions
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 bg-white">
+                                    <tr v-if="(services.length === 0)">
+                                        <td colspan="5" class="px-3 py-4 text-sm text-gray-500 text-center">
+                                            Tidak ada data yang ditemukan.
+                                        </td>
+                                    </tr>
                                     <tr v-for="(service, index) in services" :key="service.id">
                                         <td class="px-3 py-4 text-sm text-gray-500">{{ index + 1 }}</td>
                                         <td class="px-3 py-4 text-sm text-gray-500">
@@ -198,22 +208,17 @@ const submitForm = async () => {
                                             {{ service.status }}
                                         </td>
                                         <td class="px-3 py-4 text-sm text-gray-500">
-                                            <div >
-                                                <button
-                                                    @click="openModal(service)"
-                                                    class="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500"
-                                                >
+                                            <div class="flex flex-col gap-2">
+                                                <button @click="openModal(service)"
+                                                    class="inline-flex items-center w-fit rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500">
                                                     Update
                                                 </button>
 
                                                 <div v-if="buttons[user.unit]" class="flex flex-wrap gap-2">
-                                                    <button
-                                                        v-for="button in buttons[user.unit]"
-                                                        :key="button"
+                                                    <button v-for="button in buttons[user.unit]" :key="button"
                                                         v-show="isButtonVisible(service, button)"
                                                         @click="updateStatus(service.id, button)"
-                                                        class="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500"
-                                                    >
+                                                        class="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500">
                                                         {{ button }}
                                                     </button>
                                                 </div>
@@ -230,13 +235,8 @@ const submitForm = async () => {
                 </div>
             </div>
 
-            <UpdateModal
-                :show="showUpdateModal"
-                :service-id="selectedItem?.id"
-                :service="selectedItem"
-                :user="user"
-                @close="closeModal"
-            />
+            <UpdateModal :show="showUpdateModal" :service-id="selectedItem?.id" :service="selectedItem" :user="user"
+                @close="closeModal" />
         </div>
     </AppLayout>
 </template>
