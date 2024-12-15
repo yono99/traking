@@ -209,10 +209,9 @@ const submitForm = async () => {
                                         </td>
                                         <td class="px-3 py-4 text-sm text-gray-500">
                                             <div class="flex flex-col gap-2">
-                                                <button @click="openModal(service)"
-                                                    class="inline-flex items-center w-fit rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500">
-                                                    Update
-                                                </button>
+                                                <button v-if="user.unit === 'bensus'" @click="openModal(service)"
+                                                class="inline-flex items-center w-fit rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500">
+                                                Update</button>
 
                                                 <div v-if="buttons[user.unit]" class="flex flex-wrap gap-2">
                                                     <button v-for="button in buttons[user.unit]" :key="button"

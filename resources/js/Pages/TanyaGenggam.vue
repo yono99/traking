@@ -1,6 +1,6 @@
 <template>
     <div class="p-5 max-w-7xl mx-auto">
-        <h1 class="text-2xl font-semibold mb-4 dark:text-white">Pencarian Tanya Genggam</h1>
+        <h1 class="text-2xl font-semibold mb-4 dark:text-white">SMART Research</h1>
 
         <!-- Input Pencarian -->
         <div class="flex mb-4">
