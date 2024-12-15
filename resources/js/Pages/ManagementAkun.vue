@@ -5,9 +5,18 @@ import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import FormSection from "@/Components/FormSection.vue";
+import Users from "@/Components/Users.vue";
 
 export default {
-    layout: AppLayout, // Gunakan layout
+    components: {
+        Users,
+        AppLayout,
+        TextInput,
+        InputError,
+        InputLabel,
+        FormSection
+    },
+    layout: AppLayout,
     data() {
         return {
             form: {
@@ -32,7 +41,8 @@ export default {
     },
 };
 </script>
-<template>
+
+<template> 
     <div>
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8 dark:text-white">
             <form @submit.prevent="updateAccount">
@@ -104,6 +114,9 @@ export default {
                     </div>
                 </div>
             </form>
+
+            <!-- Add Users component here -->
+            <Users />
         </div>
     </div>
 </template>

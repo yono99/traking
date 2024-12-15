@@ -14,7 +14,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Middleware\CheckUnit;
 use App\Http\Controllers\TeamsController;
-use App\Http\Controllers\LandBookController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\BerkasController;
 
 
@@ -47,6 +47,10 @@ Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
     Route::delete('/teams/{team}/remove-member/{user}', [TeamsController::class, 'removeMember'])->name('teams.removeMember');
     Route::post('/users/{user}/move-team', [TeamsController::class, 'moveMember'])->name('users.moveTeam');
     Route::delete('/teams/{team}', [TeamsController::class, 'destroy'])->name('teams.destroy');
+
+    Route::get('/users', [UserController::class, 'index']);
+
+
 });
 
 Route::middleware(['auth', LoketMiddleware::class . ':loket'])->group(function () {
@@ -74,7 +78,7 @@ Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
 
 // Tambahkan route ini di web.php
 Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
-
+// update untuk komponen dijadikan universal agar bisa multifungsi
 Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
     ->name('inventory.update-status');
 
