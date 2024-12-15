@@ -146,7 +146,7 @@
                         <div>
                             <label
                                 class="block text-sm font-medium text-gray-700"
-                                >Status Alih Media</label
+                                >Status Berkas Rutin / Alih Media</label
                             >
                             <input
                                 type="text"
