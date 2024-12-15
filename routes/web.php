@@ -83,5 +83,8 @@ Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
 Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
     ->name('inventory.update-status');
 
-Route::get('/hitung-berkas-alihmedia-rutin', [Hitung_berkas_alihmedia_rutinController::class, 'hitungBerkasAlihmediaRutin']);
-Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
+Route::get('/total-proses', [ServiceController::class, 'dataProses'])->name('total-proses');
+// Route::get('/total-proses', function(){
+//     return Inertia::render('Process/ProcessData');
+// })->name('total-proses');
+Route::get('/total-proses-tte', [ServiceController::class, 'dataProsesTte'])->name('total-proses-tte');
