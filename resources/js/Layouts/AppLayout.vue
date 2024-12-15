@@ -65,6 +65,11 @@ const logout = () => {
                                     Management Akun
                                 </NavLink>
                                 <NavLink v-if="
+                                    $page.props.auth?.user?.role === 'admin'
+                                " :href="route('berkas.index')" :active="route().current('berkas.index')">
+                                    berkas
+                                </NavLink>
+                                <NavLink v-if="
                                     $page.props.auth?.user?.unit === 'loket'
                                 " :href="route('genggam.berkas')" :active="route().current('genggam.berkas')">
                                     Input data

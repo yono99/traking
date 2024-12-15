@@ -15,6 +15,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Middleware\CheckUnit;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\LandBookController;
+use App\Http\Controllers\BerkasController;
 
 
 Route::get('/', function () {
@@ -39,7 +40,7 @@ Route::middleware([
 Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
     Route::get('/management-akun', [ManagementAkunController::class, 'index'])->name('management.akun');
     Route::post('/management-akun/update', [ManagementAkunController::class, 'update'])->name('management.akun.update');
-
+    Route::get('/berkas', [BerkasController::class, 'index'])->name('berkas.index');
     Route::get('/teams', [TeamsController::class, 'index'])->name('teams.index');
     Route::post('/teams', [TeamsController::class, 'store'])->name('teams.store');
     Route::post('/teams/{team}/add-member', [TeamsController::class, 'addMember'])->name('teams.addMember');
@@ -76,3 +77,5 @@ Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
 
 Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
     ->name('inventory.update-status');
+
+ 

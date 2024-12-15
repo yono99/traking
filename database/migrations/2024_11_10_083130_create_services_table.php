@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('status')->default('FORWARD VERIFIKATOR'); // Default status awal
             $table->text('remarks')->nullable(); // Catatan tambahan
             $table->string('PNBP')->default('belum bayar');
+            $table->string('Noberkas')->default('null');
         });
     }
 

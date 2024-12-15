@@ -62,12 +62,12 @@ export default {
                                     class="block font-medium text-sm text-gray-700 dark:text-gray-300">Unit</label>
                                 <select v-model="form.unit" id="unit" required
                                     class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                    <option value="umum">umum</option>
                                     <option value="loket">loket</option>
                                     <option value="verifikator">verifikator</option>
                                     <option value="bukutanah">Buku tanah</option>
                                     <option value="sps">SPS</option>
                                     <option value="pengukuran">pengukuran</option>
-
                                     <option value="pengesahan">Pengesahan</option>
                                     <option value="bensus">bensus</option>
                                     <option value="pelaksana">pelaksana</option>
