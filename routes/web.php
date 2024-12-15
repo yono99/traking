@@ -46,14 +46,12 @@ Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
     Route::delete('/teams/{team}/remove-member/{user}', [TeamsController::class, 'removeMember'])->name('teams.removeMember');
     Route::post('/users/{user}/move-team', [TeamsController::class, 'moveMember'])->name('users.moveTeam');
     Route::delete('/teams/{team}', [TeamsController::class, 'destroy'])->name('teams.destroy');
-
 });
 
-Route::middleware(['auth', LoketMiddleware::class . ':loket' ])->group(function () {
+Route::middleware(['auth', LoketMiddleware::class . ':loket'])->group(function () {
     Route::get('/genggam-berkas', [GenggamBerkasController::class, 'index'])->name('genggam.berkas');
     Route::get('/genggam-berkas/create', [GenggamBerkasController::class, 'create'])->name('genggam-berkas.create');
     Route::post('/genggam-berkas', [GenggamBerkasController::class, 'store'])->name('genggam-berkas.store');
-
 });
 
 // Rute untuk TanyaGenggam dan Inventory
@@ -75,7 +73,6 @@ Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
 
 // Tambahkan route ini di web.php
 Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
-        ->name('inventory.update-status');
-});
+
+Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
+    ->name('inventory.update-status');

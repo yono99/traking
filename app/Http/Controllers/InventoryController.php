@@ -74,80 +74,74 @@ class InventoryController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request, $serviceId)
+   public function updateStatus(Request $request, $serviceId)
     {
-        try {
-            DB::beginTransaction();
-
-            $service = Service::with('landBook')->findOrFail($serviceId);
-
-            $service->update([
-                'status' => $request->status,
-                'PNBP' => $request->PNBP,
-                'nomor_hp' => $request->nomor_hp,
-                'remarks' => $request->remarks,
-                'name'  => $request->name,
-            ]);
-
-            if ($service->landBook) {
-                $service->landBook->update([
-                    'nomer_hak' => $request->nomer_hak,
-                    'jenis_hak' => $request->jenis_hak,
-                    'desa_kecamatan' => $request->desa_kecamatan,
-                    'status_alih_media' => $request->status_alih_media,
-                ]);
-            }
-            // Log aktivitas jika diperlukan
-            $this->logActivity($service->id, Auth::id(), $service->getOriginal('status'), $request->status);
-
-            DB::commit();
-
-            return response()->json([
-                'message' => 'Data berhasil diupdate',
-                'service' => $service->fresh(['landBook'])
-            ]);
-        }  catch (\Exception $e) {}
-
         $user = Auth::user(); // Pengguna yang login
         $userUnit = $user->unit; // Unit pengguna
 
-        // Cari layanan berdasarkan ID
-        $service = Service::findOrFail($serviceId); // Lempar 404 jika tidak ditemukan
-        $oldStatus = $service->status; // Simpan status lama
+        // Validasi input dari request
+       
 
-        // Ambil status baru dari request
-        $newStatus = $request->input('status');
+        try {
+            DB::beginTransaction(); // Mulai transaksi database
+            $validated = $request->validate([
+                'status' => 'required|string',
+                'remarks' => 'nullable|string',
+                'PNBP' => 'nullable|string',
+                'nomor_hp' => 'nullable|string',
+                'nomer_hak' => 'nullable|string',
+                'jenis_hak' => 'nullable|string',
+                'desa_kecamatan' => 'nullable|string',
+                'status_alih_media' => 'nullable|string',
+                'name' => 'nullable|string', // Pastikan validasi untuk kolom name
+            ]);
+            // Cari layanan berdasarkan ID
+            $service = Service::with('landBook')->findOrFail($serviceId);
+            $oldStatus = $service->status; // Simpan status lama
+            $newStatus = $validated['status']; // Ambil status baru
 
+           
+
+            // Update status dan data lain pada tabel services
+            $service->update([
+                'status' => $newStatus,
+                'PNBP' => $validated['PNBP'] ?? $service->PNBP,
+                'nomor_hp' => $validated['nomor_hp'] ?? $service->nomor_hp,
+                'remarks' => $validated['remarks'] ?? $service->remarks,
+                'name' => $validated['name'] ?? $service->name ?? 'Default Name', // Fallback aman untuk kolom name
+            ]);
+
+            // Jika layanan memiliki relasi dengan landBook, update juga datanya
+            if ($service->landBook) {
+                $service->landBook->update([
+                    'nomer_hak' => $validated['nomer_hak'] ?? $service->landBook->nomer_hak,
+                    'jenis_hak' => $validated['jenis_hak'] ?? $service->landBook->jenis_hak,
+                    'desa_kecamatan' => $validated['desa_kecamatan'] ?? $service->landBook->desa_kecamatan,
+                    'status_alih_media' => $validated['status_alih_media'] ?? $service->landBook->status_alih_media,
+                ]);
+            }
+
+            // Log aktivitas perubahan status
+            $this->logActivity($service->id, Auth::id(), $oldStatus, $newStatus);
+
+            DB::commit(); // Selesaikan transaksi jika tidak ada error
+
+            return response()->json([
+                'message' => 'Data berhasil diupdate',
+                'service' => $service->fresh(['landBook']) // Muat ulang data dengan relasi
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack(); // Batalkan transaksi jika ada error
+            return response()->json([
+                'message' => 'Terjadi kesalahan saat mengupdate data',
+                'error' => $e->getMessage()
+            ], 500);
+        }
         // Validasi apakah status baru valid untuk unit pengguna
         $allowedStatuses = $this->getAllowedStatusesByUnit($userUnit);
-        $validated = $request->validate([
-            'status' => 'required|string',
-            'remarks' => 'nullable|string',
-            'PNBP' => 'nullable|string',
-            'nomor_hp' => 'nullable|string',
-            'nomer_hak' => 'nullable|string',
-            'jenis_hak' => 'nullable|string',
-            'desa_kecamatan' => 'nullable|string',
-            'status_alih_media' => 'nullable|string',
-        ]);
         if (!in_array($newStatus, $allowedStatuses)) {
             return response()->json(['message' => 'Status tidak valid untuk unit Anda.'], 400);
         }
-
-        // Update status pada tabel services
-        $service->update(['status' => $newStatus]);
-
-        // Log aktivitas ke tabel activities
-        $this->logActivity($service->id, $user->id, $oldStatus, $newStatus);
-
-        return response()->json([
-            'message' => 'Status berhasil diperbarui',
-            'newStatus' => $newStatus,
-        ]);
-        $service = Service::findOrFail($serviceId);
-        $service->update($validated);
-
-        return response()->json(['message' => 'Status berhasil diperbarui']);
     }
 
     private function getAllowedStatusesByUnit($unit)
