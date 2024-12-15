@@ -18,6 +18,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BerkasController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\DateRangeController;
 
 
 Route::get('/', function () {
@@ -59,6 +60,7 @@ Route::middleware(['auth', LoketMiddleware::class . ':loket'])->group(function (
     Route::get('/genggam-berkas', [GenggamBerkasController::class, 'index'])->name('genggam.berkas');
     Route::get('/genggam-berkas/create', [GenggamBerkasController::class, 'create'])->name('genggam-berkas.create');
     Route::post('/genggam-berkas', [GenggamBerkasController::class, 'store'])->name('genggam-berkas.store');
+    Route::get('/berkas', [BerkasController::class, 'index'])->name('berkas.index');
 });
 
 // Rute untuk TanyaGenggam dan Inventory
@@ -90,4 +92,7 @@ Route::get('/total-proses', [ServiceController::class, 'dataProses'])->name('tot
 // })->name('total-proses');
 Route::get('/total-proses-tte', [ServiceController::class, 'dataProsesTte'])->name('total-proses-tte');
 Route::get('/hitung-berkas-alihmedia-rutin', [Hitung_berkas_alihmedia_rutinController::class, 'hitungBerkasAlihmediaRutin']);
-Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
+Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+
+Route::get('/date-range', [DateRangeController::class, 'getDateRangeData'])->name('date-range.index');
+Route::post('/api/date-range-data', [DateRangeController::class, 'getDateRangeData']);

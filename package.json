@@ -25,6 +25,7 @@
         "@inertiajs/inertia-vue3": "^0.6.0",
         "datatables.net": "^2.1.8",
         "datatables.net-dt": "^2.1.8",
+        "echarts": "^5.5.1",
         "jquery": "^3.7.1",
         "ziggy": "^2.4.0"
     }

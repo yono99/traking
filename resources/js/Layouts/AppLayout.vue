@@ -65,9 +65,18 @@ const logout = () => {
                                     Management Akun
                                 </NavLink>
                                 <NavLink v-if="
+                                    [
+                                        'admin',
+                                         'loket',
+                                    ].includes($page.props.auth?.user?.unit)
+                                " :href="route('berkas.index')" :active="route().current('berkas.index')
+                                        ">
+                                     Berkas
+                                </NavLink>
+                                <NavLink v-if="
                                     $page.props.auth?.user?.role === 'admin'
-                                " :href="route('berkas.index')" :active="route().current('berkas.index')">
-                                    berkas
+                                " :href="route('laporan.index')" :active="route().current('laporan.index')">
+                                    laporan
                                 </NavLink>
                                 <NavLink v-if="
                                     $page.props.auth?.user?.unit === 'loket'
