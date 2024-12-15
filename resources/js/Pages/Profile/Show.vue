@@ -29,10 +29,7 @@ defineProps({
 
                 <!-- Profile Information -->
                 <div v-if="$page.props.jetstream.canUpdateProfileInformation">
-                    <UpdateProfileInformationForm 
-                        :user="$page.props.auth.user"
-                        class="mt-10 sm:mt-0" 
-                    />
+                    <UpdateProfileInformationForm :user="$page.props.auth.user" class="mt-10 sm:mt-0" />
                     <SectionBorder />
                 </div>
 
@@ -44,18 +41,13 @@ defineProps({
 
                 <!-- Two Factor Authentication -->
                 <div v-if="$page.props.jetstream.canManageTwoFactorAuthentication">
-                    <TwoFactorAuthenticationForm
-                        :requires-confirmation="confirmsTwoFactorAuthentication"
-                        class="mt-10 sm:mt-0"
-                    />
+                    <TwoFactorAuthenticationForm :requires-confirmation="confirmsTwoFactorAuthentication"
+                        class="mt-10 sm:mt-0" />
                     <SectionBorder />
                 </div>
 
                 <!-- Browser Sessions -->
-                <LogoutOtherBrowserSessionsForm 
-                    :sessions="sessions" 
-                    class="mt-10 sm:mt-0" 
-                />
+                <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0" />
             </div>
         </div>
     </AppLayout>

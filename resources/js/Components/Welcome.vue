@@ -431,11 +431,8 @@ export default {
 </script>
  
 <template>
-    
-                                                         
-
     <div
-        class="p-6 lg:p-9 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"
+        class="p-6 lg:p-9 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 rounded-xl"
     >
         <h1 class="text-2xl font-medium text-gray-900 dark:text-white mb-6">
             Ada yang ingin dicari ? 
