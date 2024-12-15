@@ -16,6 +16,7 @@ use App\Http\Middleware\CheckUnit;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BerkasController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\LaporanController;
 
 
@@ -88,3 +89,5 @@ Route::get('/total-proses', [ServiceController::class, 'dataProses'])->name('tot
 //     return Inertia::render('Process/ProcessData');
 // })->name('total-proses');
 Route::get('/total-proses-tte', [ServiceController::class, 'dataProsesTte'])->name('total-proses-tte');
+Route::get('/hitung-berkas-alihmedia-rutin', [Hitung_berkas_alihmedia_rutinController::class, 'hitungBerkasAlihmediaRutin']);
+Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
