@@ -8,7 +8,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ActivityController;
-use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\Hitung_berkas_alihmedia_rutinController;
 use App\Http\Controllers\TanyaGenggamController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\SearchController;
@@ -16,6 +16,7 @@ use App\Http\Middleware\CheckUnit;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BerkasController;
+use App\Http\Controllers\LaporanController;
 
 
 Route::get('/', function () {
@@ -82,4 +83,5 @@ Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
 Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
     ->name('inventory.update-status');
 
- 
+Route::get('/hitung-berkas-alihmedia-rutin', [Hitung_berkas_alihmedia_rutinController::class, 'hitungBerkasAlihmediaRutin']);
+Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
