@@ -22,12 +22,21 @@
         </div>
       </div>
       
-      <button 
-        @click="fetchData"
-        class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
-      >
-        Tampilkan Data
-      </button>
+      <div class="flex space-x-4">
+        <button 
+          @click="fetchData"
+          class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+        >
+          Tampilkan Data
+        </button>
+
+        <button 
+          @click="downloadExcel"
+          class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+        >
+          Download Excel
+        </button>
+      </div>
     </div>
 
     <div class="bg-white rounded-lg shadow p-4">
@@ -50,6 +59,11 @@ onMounted(() => {
 })
 
 const fetchData = async () => {
+  if (!startDate.value || !endDate.value) {
+    alert('Silakan pilih rentang tanggal terlebih dahulu')
+    return
+  }
+
   try {
     const response = await fetch('/api/date-range-data', {
       method: 'POST',
@@ -71,6 +85,20 @@ const fetchData = async () => {
   } catch (error) {
     console.error('Error fetching data:', error)
   }
+}
+
+const downloadExcel = () => {
+  if (!startDate.value || !endDate.value) {
+    alert('Silakan pilih rentang tanggal terlebih dahulu')
+    return
+  }
+
+  const params = new URLSearchParams({
+    start_date: startDate.value,
+    end_date: endDate.value
+  })
+
+  window.location.href = `/export-excel?${params.toString()}`
 }
 
 const updateChart = (data) => {

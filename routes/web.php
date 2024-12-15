@@ -96,3 +96,7 @@ Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index
 
 Route::get('/date-range', [DateRangeController::class, 'getDateRangeData'])->name('date-range.index');
 Route::post('/api/date-range-data', [DateRangeController::class, 'getDateRangeData']);
+
+Route::get('/date-range', [DateRangeController::class, 'index'])->name('date-range.index');
+Route::post('/api/date-range-data', [DateRangeController::class, 'getDateRangeData']);
+Route::get('/export-excel', [DateRangeController::class, 'exportExcel'])->name('export.excel');
