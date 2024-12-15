@@ -82,4 +82,8 @@ Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
 Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
     ->name('inventory.update-status');
 
- 
+Route::get('/total-proses', [ServiceController::class, 'dataProses'])->name('total-proses');
+// Route::get('/total-proses', function(){
+//     return Inertia::render('Process/ProcessData');
+// })->name('total-proses');
+Route::get('/total-proses-tte', [ServiceController::class, 'dataProsesTte'])->name('total-proses-tte');

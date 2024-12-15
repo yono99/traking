@@ -140,4 +140,87 @@ class ServiceController extends Controller
             ], 500);
         }
     }
+
+    public function dataProses(){
+        // return inertia('Process/ProcessData');
+        try {
+            $dataProses = Service::with('landBook')->whereIn('status', [
+                'PROSES VERIFIKASI',
+                'PROSES VERIFIKASI LANJUTAN',
+                'PROSES MEMPERBAHARUI',
+                'PROSES ALIH MEDIA SUEL',
+                'PROSES CARI BT',
+                'PROSES ALIH MEDIA BTEL',
+                'PROSES SPS',
+                'PROSES BENSUS',
+                'PROSES PELAKSANA',
+                'PROSES PELAKSANA BUAT CATATAN',
+                'PROSES CETAK SERTEL',
+                'PROSES PENGESAHAN ALIH MEDIA BTEL',
+                'PROSES PARAF',
+                'PROSES TTE',
+                'DI PROSES',
+                'FORWARD PENGUKURAN',
+                'FORWARD CARI BT',
+                'FORWARD BENSUS DISPOSISI',
+                'FORWARD SPS',
+                'FORWARD BENSUS',
+                'FORWARD PELAKSANA',
+                'FORWARD PARAF',
+                'FORWARD ALIH MEDIA SUEL',
+                'FORWARD LOKET PENYERAHAN',
+                'FORWARD VERIFIKATOR',
+                'FORWARD ALIH MEDIA BTEL',
+                'FORWARD SELESAI REVISI',
+                'FORWARD VERIFIKATOR CEK SYARAT',
+                'FORWARD PENGESAHAN ALIH MEDIA BTEL',
+                'FORWARD TTE PRODUK LAYANAN',
+                'FORWARD PELAKSANA CETAK SERTEL',
+            ])->get();
+            $countProses = $dataProses->count();
+            $title = 'Data Proses';
+            $subtitle = 'Daftar proses yang sedang berlangsung';
+            $atEmpty = 'Belum ada data yang sedang diproses';
+            // dd($dataProses, $countProses);
+            return inertia('Process/ProcessData', [
+                'dataProses' => $dataProses,
+                'countProses' => $countProses,
+                'title' => $title,
+                'subtitle' => $subtitle,
+                'atEmpty' => $atEmpty
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Gagal mendapatkan data',
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function dataProsesTte(){
+        // return inertia('Process/ProcessData');
+        try {
+            $dataProses = Service::whereIn('status', [
+                'FORWARD PELAKSANA CEKTAK SERTEL',
+            ])->get();
+
+            $countProses = $dataProses->count();
+            $title = 'Data Selesai TTE';
+            $subtitle = 'Daftar proses selesai TTE';
+            $atEmpty = 'Belum ada data yang selesai TTE';
+            // dd($dataProses, $countProses);
+            return inertia('Process/ProcessData', [
+                'dataProses' => $dataProses,
+                'countProses' => $countProses,
+                'title' => $title,
+                'subtitle' => $subtitle,
+                'atEmpty' => $atEmpty
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Gagal mendapatkan data',
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
 }
