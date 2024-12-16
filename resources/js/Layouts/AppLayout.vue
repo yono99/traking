@@ -66,9 +66,18 @@ const logout = () => {
                                 </NavLink>
                                 <NavLink v-if="
                                     [
-                                        'admin',
+                                        
                                          'loket',
                                     ].includes($page.props.auth?.user?.unit)
+                                " :href="route('berkas.index')" :active="route().current('berkas.index')
+                                        ">
+                                     Berkas
+                                </NavLink>
+                                <NavLink v-if="
+                                    [
+                                        
+                                         'admin',
+                                    ].includes($page.props.auth?.user?.role)
                                 " :href="route('berkas.index')" :active="route().current('berkas.index')
                                         ">
                                      Berkas
