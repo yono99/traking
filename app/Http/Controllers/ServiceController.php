@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
-
+use App\Models\Activity;
 use App\Models\LandBook;
 
 use Inertia\Inertia;
@@ -27,8 +27,8 @@ class ServiceController extends Controller
     {
         try {
             // Menghitung jumlah seluruh data Service
-            $countSelesaiTTE = Service::whereIn('status', [
-                'FORWARD PELAKSANA CEKTAK SERTEL',
+            $countSelesaiTTE = Activity::whereIn('status', [
+                'FORWARD PELAKSANA CETAK SERTEL',
 
             ])->count();
 
@@ -65,6 +65,7 @@ class ServiceController extends Controller
                 'FORWARD VERIFIKATOR CEK SYARAT',
                 'FORWARD PENGESAHAN ALIH MEDIA BTEL',
                 'FORWARD TTE PRODUK LAYANAN',
+                'FORWARD VERIFIKASI LANJUTAN',
                 'FORWARD PELAKSANA CETAK SERTEL',
             ])->count();
 
