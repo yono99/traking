@@ -23,7 +23,6 @@ class ServicesExport
             ->get()
             ->map(function ($service) {
                 return [
-                    'ID' => $service->id,
                     'Status' => $service->status,
                     'Nomor HP' => $service->nomor_hp,
                     'PNBP' => $service->PNBP,
