@@ -201,7 +201,7 @@ class ServiceController extends Controller
         // return inertia('Process/ProcessData');
         try {
             $dataProses = Service::whereIn('status', [
-                'FORWARD PELAKSANA CEKTAK SERTEL',
+                'FORWARD PELAKSANA CETAK SERTEL',
             ])->get();
 
             $countProses = $dataProses->count();
