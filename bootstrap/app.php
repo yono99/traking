@@ -29,5 +29,6 @@ $app->routeMiddleware([
     'loket' => \App\Http\Middleware\LoketMiddleware::class,
     'checkUnit' => \App\Http\Middleware\CheckUnit::class,
     'main' => \App\Http\Middleware\CheckUnit::class,
-    
+    'loketdanadmin' => \App\Http\Middleware\Unitdanadmin::class,
+
 ]);

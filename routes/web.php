@@ -19,7 +19,7 @@ use App\Http\Controllers\BerkasController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DateRangeController;
-
+use App\Http\Middleware\Unitdanadmin;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -43,7 +43,7 @@ Route::middleware([
 Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
     Route::get('/management-akun', [ManagementAkunController::class, 'index'])->name('management.akun');
     Route::post('/management-akun/update', [ManagementAkunController::class, 'update'])->name('management.akun.update');
-    Route::get('/berkas', [BerkasController::class, 'index'])->name('berkas.index');
+     
     Route::get('/teams', [TeamsController::class, 'index'])->name('teams.index');
     Route::post('/teams', [TeamsController::class, 'store'])->name('teams.store');
     Route::post('/teams/{team}/add-member', [TeamsController::class, 'addMember'])->name('teams.addMember');
@@ -60,9 +60,12 @@ Route::middleware(['auth', LoketMiddleware::class . ':loket'])->group(function (
     Route::get('/genggam-berkas', [GenggamBerkasController::class, 'index'])->name('genggam.berkas');
     Route::get('/genggam-berkas/create', [GenggamBerkasController::class, 'create'])->name('genggam-berkas.create');
     Route::post('/genggam-berkas', [GenggamBerkasController::class, 'store'])->name('genggam-berkas.store');
-    Route::get('/berkas', [BerkasController::class, 'index'])->name('berkas.index');
 });
+Route::middleware(['auth', Unitdanadmin::class . ':loketdanadmin'])->group(
+    function () {
 
+Route::get('/berkas', [BerkasController::class, 'index'])->name('berkas.index');
+    });
 // Rute untuk TanyaGenggam dan Inventory
 Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
 

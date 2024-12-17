@@ -58,7 +58,7 @@ class SearchController extends Controller
             case  'pelaksana_roya':
             case  'pelaksana_ph_ruko':
             case 'pelaksana_sk':
-                return ['FORWARD PELAKSANA', 'FORWARD PELAKSANA BUAT CATATAN', 'FORWARD PELAKSANA CEKTAK SERTEL'];
+                return ['FORWARD PELAKSANA', 'FORWARD PELAKSANA BUAT CATATAN', 'FORWARD PELAKSANA CETAK SERTEL'];
             case 'pengesahan':
                 return ['FORWARD PENGESAHAN ALIH MEDIA BTEL'];
             case 'paraf':
