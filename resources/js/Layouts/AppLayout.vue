@@ -31,6 +31,8 @@ const switchToTeam = (team) => {
 const logout = () => {
     router.post(route("logout"));
 };
+
+const smartLogo = '/assets/images/smart_logo.svg';
 </script>
 
 <template>
@@ -49,7 +51,8 @@ const logout = () => {
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                <ApplicationMark class="block h-9 w-auto" />
+                                <!-- <ApplicationMark class="block h-9 w-auto" /> -->
+                                    <div class="w-10 h-10 bg-cover bg-center" :style="{ backgroundImage: `url(${smartLogo})` }"></div>
                                 </Link>
                             </div>
 
@@ -66,7 +69,7 @@ const logout = () => {
                                 </NavLink>
                                 <NavLink v-if="
                                     [
-                                        
+
                                          'loket',
                                     ].includes($page.props.auth?.user?.unit)
                                 " :href="route('berkas.index')" :active="route().current('berkas.index')
@@ -76,7 +79,7 @@ const logout = () => {
                                 <NavLink v-if="
                                     [
                                         'admin',
-                                          
+
                                     ].includes($page.props.auth?.user?.role)
                                 " :href="route('berkas.index')" :active="route().current('berkas.index')
                                         ">
