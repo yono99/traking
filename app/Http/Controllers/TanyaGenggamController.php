@@ -42,7 +42,7 @@ class TanyaGenggamController extends Controller
         // Catat aktivitas ke tabel activities
         $this->logActivity($service->id, $user->id, $oldStatus, $service->status);
 
-        return response()->json(['message' => 'Status berhasil diperbarui dan aktivitas dicatat!']);
+        return response()->json(['message' => 'Berhasil dimasukan kedalam inventory']);
     }
 
     private function getUpdateStatusByUnit($unit)
