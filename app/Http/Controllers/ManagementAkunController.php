@@ -30,6 +30,7 @@ class ManagementAkunController extends Controller
         $user->role = $request->role;
         $user->save();
 
-        return back()->with(['success' => 'Akun berhasil diperbarui!']);
+        return redirect()->back()->with('success', 'Akun berhasil diperbarui!');
     }
+
 }

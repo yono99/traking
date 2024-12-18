@@ -38,9 +38,10 @@ const smartLogo = '/assets/images/smart_logo.svg';
     <AuthenticationCard>
         <template #logo>
             <!-- <AuthenticationCardLogo /> -->
+             <a href="/">
              <div class="w-32 h-32 bg-cover bg-center"
                 :style="{ backgroundImage: `url(${smartLogo})` }">
-                </div>
+                </div></a>
         </template>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">

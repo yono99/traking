@@ -28,11 +28,13 @@ const smartLogo = '/assets/images/smart_logo.svg';
     <Head title="Register" />
 
     <AuthenticationCard>
-        <template #logo>
+    
+        <template #logo><a href="/">
             <!-- <AuthenticationCardLogo /> -->
              <div class="w-32 h-32 bg-cover bg-center"
                 :style="{ backgroundImage: `url(${smartLogo})` }">
-                </div>
+                </div></a>
+         
         </template>
 
         <form @submit.prevent="submit">
