@@ -49,10 +49,16 @@
                         <div>
                             <label
                                 class="block text-sm font-medium text-gray-700"
-                                >Status</label
+                                  v-if="
+                                         
+                                        $page.props.auth?.user?.role === 'admin'
+                                    ">Status</label
                             >
-                            <select
-                                v-model="form.status"
+                            <select v-if="
+                                         
+                                        $page.props.auth?.user?.role === 'admin'
+                                    "
+                                v-model="form.status "
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             >
                                 <option
