@@ -21,6 +21,7 @@ const submit = () => {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
+const smartLogo = '/assets/images/smart_logo.svg';
 </script>
 
 <template>
@@ -28,7 +29,10 @@ const submit = () => {
 
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <!-- <AuthenticationCardLogo /> -->
+             <div class="w-32 h-32 bg-cover bg-center"
+                :style="{ backgroundImage: `url(${smartLogo})` }">
+                </div>
         </template>
 
         <form @submit.prevent="submit">
