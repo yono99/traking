@@ -1,10 +1,9 @@
 <script setup>
-import { ref } from 'vue';
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 
 const props = defineProps({
-    dataProses: Array,// Mendapatkan dataProses dari Laravel
+    dataProses: Array, // Mendapatkan dataProses dari Laravel
     countProses: Number,
     title: String,
     subtitle: String,
@@ -57,38 +56,37 @@ const prevPage = () => {
                     </p>
                 </div>
                 <div class="col-span-2">
-                    <div class="bg-white dark:bg-gray-800 px-4 sm:px-6 lg:px-8 py-4 rounded-t-xl">
-                        <table class="table-auto w-full">
-                            <thead>
+                    <div class="bg-white dark:bg-gray-800 px-4 sm:px-6 lg:px-8 py-4 rounded-t-xl shadow-md">
+                        <table class="table-auto w-full border-collapse border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden">
+                            <thead class="bg-gray-100 dark:bg-gray-700">
                                 <tr>
-                                    <th>Service ID</th>
-                                    <th>Status</th>
-                                    <th>Land Book Number</th>
-                                    <th>Jenis Hak</th>
-                                    <th>Desa/Kecamatan</th>
+                                    <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">No</th>
+                                    <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">Status</th>
+                                    <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">Nomer Hak</th>
+                                    <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">Jenis Hak</th>
+                                    <th class="px-4 py-2 border border-gray-200 dark:border-gray-600">Desa/Kecamatan</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="service in paginatedData" :key="service.id">
-                                    <td>{{ service.id }}</td>
-                                    <td>{{ service.status }}</td>
-                                    <td v-if="service.land_book">{{ service.land_book.nomer_hak }}</td>
-                                    <td v-if="service.land_book">{{ service.land_book.jenis_hak }}</td>
-                                    <td v-if="service.land_book">{{ service.land_book.desa_kecamatan }}</td>
+                                <tr v-for="(service, index) in paginatedData" :key="service.id" class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600 text-center">{{ (currentPage - 1) * itemsPerPage + index + 1 }}</td>
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600">{{ service.status }}</td>
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600" v-if="service.land_book">{{ service.land_book.nomer_hak }}</td>
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600" v-if="service.land_book">{{ service.land_book.jenis_hak }}</td>
+                                    <td class="px-4 py-2 border border-gray-200 dark:border-gray-600" v-if="service.land_book">{{ service.land_book.desa_kecamatan }}</td>
                                 </tr>
-                                <tr v-if="dataProses.length === 0">
-                                    <td colspan="5" style="text-align: center">{{ atEmpty }}</td>
+                                <tr v-if="props.dataProses.length === 0">
+                                    <td colspan="5" class="px-4 py-2 text-center text-gray-500 dark:text-gray-400">{{ atEmpty }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div
-                        class="flex justify-between bg-gray-50 dark:bg-gray-800 px-4 sm:px-6 lg:px-8 py-4 rounded-b-xl">
-                        <button @click="prevPage" :disabled="currentPage === 1">
+                    <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-800 px-4 sm:px-6 lg:px-8 py-4 rounded-b-xl shadow-md">
+                        <button @click="prevPage" :disabled="currentPage === 1" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50">
                             Previous
                         </button>
-                        <span>Page {{ currentPage }} of {{ pageCount }}</span>
-                        <button @click="nextPage" :disabled="currentPage === pageCount">
+                        <span class="text-gray-700 dark:text-gray-300">Page {{ currentPage }} of {{ pageCount }}</span>
+                        <button @click="nextPage" :disabled="currentPage === pageCount" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50">
                             Next
                         </button>
                     </div>
@@ -99,16 +97,13 @@ const prevPage = () => {
 </template>
 
 <style scoped>
-/* Menambahkan styling untuk tabel */
 table {
     width: 100%;
     border-collapse: collapse;
-}
-
-th,
-td {
-    padding: 8px;
-    border: 1px solid #ddd;
     text-align: left;
+}
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
 }
 </style>

@@ -27,8 +27,10 @@ class ServiceController extends Controller
     {
         try {
             // Menghitung jumlah seluruh data Service
-            $countSelesaiTTE = Activity::whereIn('status', [
+            $countSelesaiTTE = Service::whereIn('status', [
                 'FORWARD PELAKSANA CETAK SERTEL',
+                'DI PROSES',
+                'SELESAI DISERAHKAN',
 
             ])->count();
 
@@ -201,8 +203,10 @@ class ServiceController extends Controller
     public function dataProsesTte(){
         // return inertia('Process/ProcessData');
         try {
-            $dataProses = Service::whereIn('status', [
-                'FORWARD PELAKSANA CEKTAK SERTEL',
+            $dataProses = Service::with('landBook')->whereIn('status', [
+                 'FORWARD PELAKSANA CETAK SERTEL',
+                'DI PROSES',
+                'SELESAI DISERAHKAN',
             ])->get();
 
             $countProses = $dataProses->count();

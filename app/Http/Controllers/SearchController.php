@@ -61,8 +61,6 @@ class SearchController extends Controller
                 return ['FORWARD PELAKSANA', 'FORWARD PELAKSANA BUAT CATATAN', 'FORWARD PELAKSANA CETAK SERTEL'];
             case 'pengesahan':
                 return ['FORWARD PENGESAHAN ALIH MEDIA BTEL'];
-            case 'paraf':
-                return ['FORWARD PARAF'];
             case 'TTE_PRODUK_LAYANAN':
                 return ['FORWARD TTE PRODUK LAYANAN'];
             case 'LOKET_PENYERAHAN':

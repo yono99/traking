@@ -102,9 +102,7 @@ class TanyaGenggamController extends Controller
             'pengesahan' => [
                 'FORWARD PENGESAHAN ALIH MEDIA BTEL' => 'PROSES PENGESAHAN ALIH MEDIA BTEL',
             ],
-            'paraf' => [
-                'FORWARD PARAF' => 'PROSES PARAF',
-            ],
+         
             'TTE_PRODUK_LAYANAN' => [
                 'FORWARD TTE PRODUK LAYANAN' => 'PROSES TTE',
             ],

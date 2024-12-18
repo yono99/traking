@@ -31,12 +31,32 @@ const buttons = computed(() => ({
     sps: ["FORWARD BENSUS"],
     bensus: ["FORWARD PELAKSANA", "SELESAI INFO DISPOSISI"],
     pelaksana: [
-        "FORWARD PARAF",
+        "FORWARD TTE PRODUK LAYANAN",
         "FORWARD ALIH MEDIA SUEL",
         "FORWARD LOKET PENYERAHAN",
     ],
     pelaksana_bn: [
-        "FORWARD PARAF",
+        "FORWARD TTE PRODUK LAYANAN",
+        "FORWARD ALIH MEDIA SUEL",
+        "FORWARD LOKET PENYERAHAN",
+    ],
+      pelaksana_ph: [
+        "FORWARD TTE PRODUK LAYANAN",
+        "FORWARD ALIH MEDIA SUEL",
+        "FORWARD LOKET PENYERAHAN",
+    ],
+      pelaksana_roya: [
+        "FORWARD TTE PRODUK LAYANAN",
+        "FORWARD ALIH MEDIA SUEL",
+        "FORWARD LOKET PENYERAHAN",
+    ],
+      pelaksana_ph_ruko: [
+        "FORWARD TTE PRODUK LAYANAN",
+        "FORWARD ALIH MEDIA SUEL",
+        "FORWARD LOKET PENYERAHAN",
+    ],
+      pelaksana_sk: [
+        "FORWARD TTE PRODUK LAYANAN",
         "FORWARD ALIH MEDIA SUEL",
         "FORWARD LOKET PENYERAHAN",
     ],
@@ -48,8 +68,8 @@ const buttons = computed(() => ({
         "FORWARD VERIFIKATOR CEK SYARAT",
         "FORWARD PENGESAHAN ALIH MEDIA BTEL",
     ],
-    pengesahan: ["FORWARD PARAF"],
-    paraf: ["FORWARD TTE PRODUK LAYANAN"],
+    pengesahan: ["FORWARD PELAKSANA BUAT CATATAN"],
+    
     TTE_PRODUK_LAYANAN: ["FORWARD PELAKSANA CETAK SERTEL"],
     LOKET_PENYERAHAN: ["SELESAI DISERAHKAN"],
 }));
@@ -69,7 +89,7 @@ const hideButtonRules = computed(() => ({
     "PROSES BENSUS": ["SELESAI INFO DISPOSISI"],
     "PROSES INFO DISPOSISI": ["FORWARD PELAKSANA"],
     "PROSES PELAKSANA": [
-        "FORWARD PARAF",
+        "FORWARD TTE PRODUK LAYANAN",
         "FORWARD LOKET PENYERAHAN",
     ],
     "PROSES PELAKSANA BUAT CATATAN": [
@@ -77,7 +97,7 @@ const hideButtonRules = computed(() => ({
         "FORWARD LOKET PENYERAHAN",
     ],
     "PROSES CETAK SERTEL": [
-        "FORWARD PARAF",
+        "FORWARD TTE PRODUK LAYANAN",
         "FORWARD ALIH MEDIA SUEL",
     ],
 }));
@@ -163,66 +183,151 @@ const submitForm = async () => {
         <div class="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
-                    <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-200">Inventory</h1>
+                    <h1
+                        class="text-2xl font-semibold text-gray-900 dark:text-gray-200"
+                    >
+                        Inventory
+                    </h1>
                 </div>
             </div>
 
             <div class="mt-8 flex flex-col">
                 <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                    <div
+                        class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8"
+                    >
+                        <div
+                            class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+                        >
                             <table class="min-w-full divide-y divide-gray-300">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">No</th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Nomer hak
+                                        <th
+                                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                        >
+                                            No
                                         </th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Jenis Hak
+                                        <th
+                                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                        >
+                                            Nomer hak
                                         </th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Desa -
-                                            Kecamatan</th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status
+                                        <th
+                                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                        >
+                                            Jenis Hak
                                         </th>
-                                        <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Actions
+                                        <th
+                                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                        >
+                                            Desa - Kecamatan
+                                        </th>
+                                        <th
+                                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                        >
+                                            Status
+                                        </th>
+                                        <th
+                                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                        >
+                                            Actions
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-200 bg-white">
-                                    <tr v-if="(services.length === 0)">
-                                        <td colspan="5" class="px-3 py-4 text-sm text-gray-500 text-center">
+                                <tbody
+                                    class="divide-y divide-gray-200 bg-white"
+                                >
+                                    <tr v-if="services.length === 0">
+                                        <td
+                                            colspan="5"
+                                            class="px-3 py-4 text-sm text-gray-500 text-center"
+                                        >
                                             Tidak ada data yang ditemukan.
                                         </td>
                                     </tr>
-                                    <tr v-for="(service, index) in services" :key="service.id">
-                                        <td class="px-3 py-4 text-sm text-gray-500">{{ index + 1 }}</td>
-                                        <td class="px-3 py-4 text-sm text-gray-500">
-                                            {{ service.land_book?.nomer_hak || "-" }}
+                                    <tr
+                                        v-for="(service, index) in services"
+                                        :key="service.id"
+                                    >
+                                        <td
+                                            class="px-3 py-4 text-sm text-gray-500"
+                                        >
+                                            {{ index + 1 }}
                                         </td>
-                                        <td class="px-3 py-4 text-sm text-gray-500">
-                                            {{ service.land_book?.jenis_hak || "-" }}
+                                        <td
+                                            class="px-3 py-4 text-sm text-gray-500"
+                                        >
+                                            {{
+                                                service.land_book?.nomer_hak ||
+                                                "-"
+                                            }}
                                         </td>
-                                        <td class="px-3 py-4 text-sm text-gray-500">
-                                            {{ service.land_book?.desa_kecamatan || "-" }}
+                                        <td
+                                            class="px-3 py-4 text-sm text-gray-500"
+                                        >
+                                            {{
+                                                service.land_book?.jenis_hak ||
+                                                "-"
+                                            }}
                                         </td>
-                                        <td class="px-3 py-4 text-sm text-gray-500">
+                                        <td
+                                            class="px-3 py-4 text-sm text-gray-500"
+                                        >
+                                            {{
+                                                service.land_book
+                                                    ?.desa_kecamatan || "-"
+                                            }}
+                                        </td>
+                                        <td
+                                            class="px-3 py-4 text-sm text-gray-500"
+                                        >
                                             {{ service.status }}
                                         </td>
-                                        <td class="px-3 py-4 text-sm text-gray-500">
+                                        <td
+                                            class="px-3 py-4 text-sm text-gray-500"
+                                        >
                                             <div class="flex flex-col gap-2">
-                                                <button v-if="user.unit === 'bensus'" @click="openModal(service)"
-                                                class="inline-flex items-center w-fit rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500">
-                                                Update</button>
+                                                <button
+                                                    v-if="
+                                                        user.unit === 'bensus'
+                                                    "
+                                                    @click="openModal(service)"
+                                                    class="inline-flex items-center w-fit rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500"
+                                                >
+                                                    Update
+                                                </button>
 
-                                                <div v-if="buttons[user.unit]" class="flex flex-wrap gap-2">
-                                                    <button v-for="button in buttons[user.unit]" :key="button"
-                                                        v-show="isButtonVisible(service, button)"
-                                                        @click="updateStatus(service.id, button)"
-                                                        class="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500">
+                                                <div
+                                                    v-if="buttons[user.unit]"
+                                                    class="flex flex-wrap gap-2"
+                                                >
+                                                    <button
+                                                        v-for="button in buttons[
+                                                            user.unit
+                                                        ]"
+                                                        :key="button"
+                                                        v-show="
+                                                            isButtonVisible(
+                                                                service,
+                                                                button
+                                                            )
+                                                        "
+                                                        @click="
+                                                            updateStatus(
+                                                                service.id,
+                                                                button
+                                                            )
+                                                        "
+                                                        class="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500"
+                                                    >
                                                         {{ button }}
                                                     </button>
                                                 </div>
                                                 <div v-else>
-                                                    <span class="text-gray-500">No actions available</span>
+                                                    <span class="text-gray-500"
+                                                        >No actions
+                                                        available</span
+                                                    >
                                                 </div>
                                             </div>
                                         </td>
@@ -234,8 +339,13 @@ const submitForm = async () => {
                 </div>
             </div>
 
-            <UpdateModal :show="showUpdateModal" :service-id="selectedItem?.id" :service="selectedItem" :user="user"
-                @close="closeModal" />
+            <UpdateModal
+                :show="showUpdateModal"
+                :service-id="selectedItem?.id"
+                :service="selectedItem"
+                :user="user"
+                @close="closeModal"
+            />
         </div>
     </AppLayout>
 </template>

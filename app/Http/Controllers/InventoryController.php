@@ -138,72 +138,72 @@ class InventoryController extends Controller
             ], 500);
         }
         // Validasi apakah status baru valid untuk unit pengguna
-        $allowedStatuses = $this->getAllowedStatusesByUnit($userUnit);
-        if (!in_array($newStatus, $allowedStatuses)) {
-            return response()->json(['message' => 'Status tidak valid untuk unit Anda.'], 400);
-        }
+        // $allowedStatuses = $this->getAllowedStatusesByUnit($userUnit);
+        // if (!in_array($newStatus, $allowedStatuses)) {
+        //     return response()->json(['message' => 'Status tidak valid untuk unit Anda.'], 400);
+        // }
     }
 
-    private function getAllowedStatusesByUnit($unit)
-    {
-        return [
-            'verifikator' => [
-                'FORWARD PENGUKURAN',
-                'FORWARD CARI BT',
-                'FORWARD BENSUS DISPOSISI',
-                'FORWARD SPS',
-            ],
-            'sps' => ['FORWARD BENSUS'],
-            'bensus' => [
-                'FORWARD PELAKSANA',
-                'SELESAI INFO DISPOSISI',
-            ],
-            'pelaksana' => [
-                "FORWARD PARAF",
-                "FORWARD ALIH MEDIA SUEL",
-                "FORWARD LOKET PENYERAHAN",
-            ],
-            'pelaksana_bn' => [
-                "FORWARD PARAF",
-                "FORWARD ALIH MEDIA SUEL",
-                "FORWARD LOKET PENYERAHAN",
-            ],
-            'pelaksana_ph' => [
-                "FORWARD PARAF",
-                "FORWARD ALIH MEDIA SUEL",
-                "FORWARD LOKET PENYERAHAN",
-            ],
-            'pelaksana_roya' => [
-                "FORWARD PARAF",
-                "FORWARD ALIH MEDIA SUEL",
-                "FORWARD LOKET PENYERAHAN",
-            ],
-            'pelaksana_ph_ruko' => [
-                "FORWARD PARAF",
-                "FORWARD ALIH MEDIA SUEL",
-                "FORWARD LOKET PENYERAHAN",
-            ],
-            'pelaksana_sk' => [
-                "FORWARD PARAF",
-                "FORWARD ALIH MEDIA SUEL",
-                "FORWARD LOKET PENYERAHAN",
-            ],
-            'pengukuran' => [
-                'FORWARD VERIFIKASI LANJUTAN',
-                'FORWARD ALIH MEDIA BTEL',
+    // private function getAllowedStatusesByUnit($unit)
+    // {
+    //     return [
+    //         'verifikator' => [
+    //             'FORWARD PENGUKURAN',
+    //             'FORWARD CARI BT',
+    //             'FORWARD BENSUS DISPOSISI',
+    //             'FORWARD SPS',
+    //         ],
+    //         'sps' => ['FORWARD BENSUS'],
+    //         'bensus' => [
+    //             'FORWARD PELAKSANA',
+    //             'SELESAI INFO DISPOSISI',
+    //         ],
+    //         'pelaksana' => [
+    //             "FORWARD PARAF",
+    //             "FORWARD ALIH MEDIA SUEL",
+    //             "FORWARD LOKET PENYERAHAN",
+    //         ],
+    //         'pelaksana_bn' => [
+    //             "FORWARD PARAF",
+    //             "FORWARD ALIH MEDIA SUEL",
+    //             "FORWARD LOKET PENYERAHAN",
+    //         ],
+    //         'pelaksana_ph' => [
+    //             "FORWARD PARAF",
+    //             "FORWARD ALIH MEDIA SUEL",
+    //             "FORWARD LOKET PENYERAHAN",
+    //         ],
+    //         'pelaksana_roya' => [
+    //             "FORWARD PARAF",
+    //             "FORWARD ALIH MEDIA SUEL",
+    //             "FORWARD LOKET PENYERAHAN",
+    //         ],
+    //         'pelaksana_ph_ruko' => [
+    //             "FORWARD PARAF",
+    //             "FORWARD ALIH MEDIA SUEL",
+    //             "FORWARD LOKET PENYERAHAN",
+    //         ],
+    //         'pelaksana_sk' => [
+    //             "FORWARD PARAF",
+    //             "FORWARD ALIH MEDIA SUEL",
+    //             "FORWARD LOKET PENYERAHAN",
+    //         ],
+    //         'pengukuran' => [
+    //             'FORWARD VERIFIKASI LANJUTAN',
+    //             'FORWARD ALIH MEDIA BTEL',
                 
-            ],
-            'bukutanah' => [
-                'FORWARD VERIFIKATOR CEK SYARAT',
-                'FORWARD PENGESAHAN ALIH MEDIA BTEL',
+    //         ],
+    //         'bukutanah' => [
+    //             'FORWARD VERIFIKATOR CEK SYARAT',
+    //             'FORWARD PENGESAHAN ALIH MEDIA BTEL',
                 
-            ],
-            'pengesahan' => ['FORWARD PARAF'],
-            'paraf' => ['FORWARD TTE PRODUK LAYANAN'],
-            'TTE_PRODUK_LAYANAN' => ['FORWARD PELAKSANA CETAK SERTEL'],
-            'LOKET_PENYERAHAN' => ['SELESAI DISERAHKAN'],
-        ][$unit] ?? [];
-    }
+    //         ],
+    //         'pengesahan' => ['FORWARD PARAF'],
+    //         'paraf' => ['FORWARD TTE PRODUK LAYANAN'],
+    //         'TTE_PRODUK_LAYANAN' => ['FORWARD PELAKSANA CETAK SERTEL'],
+    //         'LOKET_PENYERAHAN' => ['SELESAI DISERAHKAN'],
+    //     ][$unit] ?? [];
+    // }
 
     private function logActivity($serviceId, $userId, $oldStatus, $newStatus)
     {
