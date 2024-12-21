@@ -70,10 +70,10 @@ Route::get('/berkas', [BerkasController::class, 'index'])->name('berkas.index');
 Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
 
     // Rute untuk menampilkan halaman TanyaGenggam
-    Route::get('/tanya-genggam', [TanyaGenggamController::class, 'index'])->name('tanya-genggam.index');
+    Route::get('/tanya-smart', [TanyaGenggamController::class, 'index'])->name('tanya-smart.index');
 
     // Rute untuk menyimpan data dengan metode POST
-    Route::post('/tanya-genggam', [TanyaGenggamController::class, 'store'])->name('tanya-genggam.store');
+    Route::post('/tanya-smart', [TanyaGenggamController::class, 'store'])->name('tanya-smart.store');
     // Rute untuk pencarian berdasarkan nomer_hak
     Route::get('/search', [SearchController::class, 'search']);
     // Rute untuk update status
@@ -101,5 +101,5 @@ Route::get('/date-range', [DateRangeController::class, 'getDateRangeData'])->nam
 Route::post('/api/date-range-data', [DateRangeController::class, 'getDateRangeData']);
 
 Route::get('/date-range', [DateRangeController::class, 'index'])->name('date-range.index');
-Route::post('/api/date-range-data', [DateRangeController::class, 'getDateRangeData']);
+ 
 Route::get('/export-excel', [DateRangeController::class, 'exportExcel'])->name('export.excel');

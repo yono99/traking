@@ -88,13 +88,7 @@ function updateAccount() {
                                     <option value="pelaksana_sk">pelaksana sk</option>
                                     <option value="TTE_PRODUK_LAYANAN">TTE Produk Layanan</option>
                                     <option value="LOKET_PENYERAHAN">Loket Penyerahan</option>
-                                    <!-- Alur pengukuran -->
-                                    <option value="Petugas Administrasi">Petugas Administrasi</option>
-                                    <option value="Koordinator kelompok subtansi pengukuran dan pemetaan kadastral">Koordinator kelompok subtansi pengukuran dan pemetaan kadastral</option>
-                                    <option value="kepala seksi survei dan pemetaan">kepala seksi survei dan pemetaan</option>
-                                    <option value="Sekretarian">Sekretarian</option>
-                                    <option value="Koordinator pelakana teknis">Koordinator pelakana teknis</option>
-                                    <option value="Pelaksana teknis pemetaan">Pelaksana teknis pemetaan</option>
+                                
                                     
                                      
                                 </select>

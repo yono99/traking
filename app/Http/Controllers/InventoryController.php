@@ -93,7 +93,8 @@ class InventoryController extends Controller
                 'jenis_hak' => 'nullable|string',
                 'desa_kecamatan' => 'nullable|string',
                 'status_alih_media' => 'nullable|string',
-                'name' => 'nullable|string', // Pastikan validasi untuk kolom name
+                'name' => 'nullable|string',
+                'Noberkas' => 'nullable|string', // Pastikan validasi untuk kolom name
             ]);
             // Cari layanan berdasarkan ID
             $service = Service::with('landBook')->findOrFail($serviceId);
@@ -109,6 +110,7 @@ class InventoryController extends Controller
                 'nomor_hp' => $validated['nomor_hp'] ?? $service->nomor_hp,
                 'remarks' => $validated['remarks'] ?? $service->remarks,
                 'name' => $validated['name'] ?? $service->name ?? 'Default Name', // Fallback aman untuk kolom name
+                'Noberkas' => $validated['Noberkas'] ?? $service->Noberkas,
             ]);
 
             // Jika layanan memiliki relasi dengan landBook, update juga datanya

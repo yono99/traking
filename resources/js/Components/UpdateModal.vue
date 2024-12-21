@@ -121,7 +121,18 @@
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
-
+                        <!-- Nomor berkas -->
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-gray-700"
+                                >Nomor Berkas</label
+                            >
+                            <input
+                                type="text"
+                                v-model="form.Noberkas"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </div>  
                         <!-- Jenis Hak -->
                         <div>
                             <label
@@ -228,6 +239,7 @@ const form = useForm({
     jenis_hak: "",
     desa_kecamatan: "",
     status_alih_media: "",
+    Noberkas:"",
 });
 
 // Inisialisasi form dengan data yang ada
@@ -240,9 +252,11 @@ watch(
             form.PNBP = props.service.PNBP || "";
             form.nomor_hp = props.service.nomor_hp || "";
             form.name = props.service.name || "";
+            form.Noberkas = props.service.Noberkas || "";
             if (props.service.land_book) {
                 form.nomer_hak = props.service.land_book.nomer_hak || "";
                 form.jenis_hak = props.service.land_book.jenis_hak || "";
+               
                 form.desa_kecamatan =
                     props.service.land_book.desa_kecamatan || "";
                 form.status_alih_media =
@@ -263,6 +277,7 @@ const submitForm = async () => {
             nomor_hp: form.nomor_hp,
             nomer_hak: form.nomer_hak,
             jenis_hak: form.jenis_hak,
+            Noberkas: form.Noberkas,
             desa_kecamatan: form.desa_kecamatan,
             status_alih_media: form.status_alih_media,
             _token: document

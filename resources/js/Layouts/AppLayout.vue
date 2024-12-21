@@ -132,9 +132,9 @@ const smartLogo = "/assets/images/smart_logo.svg";
                                             'LOKET_PENYERAHAN',
                                         ].includes($page.props.auth?.user?.unit)
                                     "
-                                    :href="route('tanya-genggam.index')"
+                                    :href="route('tanya-smart.index')"
                                     :active="
-                                        route().current('tanya-genggam.index')
+                                        route().current('tanya-smart.index')
                                     "
                                 >
                                     Cari Berkas
