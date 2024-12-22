@@ -125,7 +125,7 @@ watch(
     (newVal) => {
         if (newVal && props.service) {
             form.status = props.service.status || "";
-            form.remarks = props.service.remarks || "";
+             
        
             
         }

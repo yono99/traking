@@ -477,8 +477,9 @@ export default {
                                 <p class="text-gray-500 dark:text-gray-400 text-sm">8xxxx tanpa +62/0</p>
                                 <input type="text" placeholder="8xxxx" id="nomor_hp" v-model="form.nomor_hp"
                                     maxlength="12" @input="
+                                    
                                         form.nomor_hp = form.nomor_hp
-                                            .replace(/\D/g, '')
+                                            .replace(/\D/g,/^0+/, '')
                                             .slice(0, 12)
                                         "
                                     class="border-gray-300 w-full max-w-lg dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"

@@ -7,7 +7,7 @@ import Hitung_berkas_alihmedia_rutin from "@/Components/Hitung_berkas_alihmedia_
 </script>
 
 <template>
-    <AppLayout title="Dashboard">
+    <AppLayout title="Laporan">
         
         <Hitung_berkas_alihmedia_rutin/><dateRange/>
         <div class="flex flex-col items-center">

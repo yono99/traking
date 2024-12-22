@@ -10,5 +10,6 @@ class LaporanController extends Controller
     public function index()
     {
         return Inertia::render('Laporan');
+        
     }
 }

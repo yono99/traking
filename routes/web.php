@@ -20,6 +20,8 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DateRangeController;
 use App\Http\Middleware\Unitdanadmin;
+use App\Http\Controllers\LaporanUnitController;
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -43,7 +45,7 @@ Route::middleware([
 Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
     Route::get('/management-akun', [ManagementAkunController::class, 'index'])->name('management.akun');
     Route::post('/management-akun/update', [ManagementAkunController::class, 'update'])->name('management.akun.update');
-     
+
     Route::get('/teams', [TeamsController::class, 'index'])->name('teams.index');
     Route::post('/teams', [TeamsController::class, 'store'])->name('teams.store');
     Route::post('/teams/{team}/add-member', [TeamsController::class, 'addMember'])->name('teams.addMember');
@@ -52,8 +54,6 @@ Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
     Route::delete('/teams/{team}', [TeamsController::class, 'destroy'])->name('teams.destroy');
 
     Route::get('/users', [UserController::class, 'index']);
-
-
 });
 
 Route::middleware(['auth', LoketMiddleware::class . ':loket'])->group(function () {
@@ -64,8 +64,9 @@ Route::middleware(['auth', LoketMiddleware::class . ':loket'])->group(function (
 Route::middleware(['auth', Unitdanadmin::class . ':loketdanadmin'])->group(
     function () {
 
-Route::get('/berkas', [BerkasController::class, 'index'])->name('berkas.index');
-    });
+        Route::get('/berkas', [BerkasController::class, 'index'])->name('berkas.index');
+    }
+);
 // Rute untuk TanyaGenggam dan Inventory
 Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
 
@@ -97,9 +98,13 @@ Route::get('/total-proses-tte', [ServiceController::class, 'dataProsesTte'])->na
 Route::get('/hitung-berkas-alihmedia-rutin', [Hitung_berkas_alihmedia_rutinController::class, 'hitungBerkasAlihmediaRutin']);
 Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
 
+// route chart & export excel admin
 Route::get('/date-range', [DateRangeController::class, 'getDateRangeData'])->name('date-range.index');
 Route::post('/api/date-range-data', [DateRangeController::class, 'getDateRangeData']);
-
 Route::get('/date-range', [DateRangeController::class, 'index'])->name('date-range.index');
- 
 Route::get('/export-excel', [DateRangeController::class, 'exportExcel'])->name('export.excel');
+
+// route chart & export excel UNIT
+Route::get('/laporan-unit', [LaporanUnitController::class, 'index'])->name('laporan-unit.index');
+Route::post('/api/date-range-data', [LaporanUnitController::class, 'getDateRangeData']);
+Route::get('/laporan-unit/export-excel', [LaporanUnitController::class, 'exportExcel'])->name('export.excel');

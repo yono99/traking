@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ServicesExport;
+use App\Exports\UnitExport;
 use App\Models\Service;
+use App\Models\Activity;
+use App\Models\LandBook;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+ 
 use Rap2hpoutre\FastExcel\FastExcel;
-
-class DateRangeController extends Controller
+class LaporanUnitController extends Controller
 {
-    public function index()
-    {
-        return Inertia::render('DateRange/Index');
-    }
     public function getDateRangeData(Request $request)
     {
         $request->validate([
@@ -23,31 +24,49 @@ class DateRangeController extends Controller
         ]);
 
         try {
+            $user = Auth::user();
+       
+            $currentUserId = Auth::user()->id; // Cara yang lebih singkat untuk mendapatkan ID user
+            
+            // Query untuk menghitung jumlah aktivitas per tanggal dan status
             $result = DB::table('activities')
-                ->select(
-                    DB::raw('DATE(created_at) as date'),
-                    DB::raw('COUNT(*) as count')
-                )
-                ->where('status', 'FORWARD VERIFIKATOR')
+            ->select(
+                DB::raw('DATE(created_at) as date'),
+                'status',
+                DB::raw('COUNT(*) as count')
+            )
+                ->where('user_id', $currentUserId)
                 ->whereBetween('created_at', [
                     $request->start_date . ' 00:00:00',
                     $request->end_date . ' 23:59:59'
                 ])
-                ->groupBy('date')
+                ->groupBy(DB::raw('DATE(created_at)'), 'status') // Gunakan DB::raw untuk DATE
                 ->orderBy('date')
                 ->get();
 
+            // Hitung total aktivitas
+            $totalActivities = DB::table('activities')
+            ->where('user_id', $currentUserId)
+                ->whereBetween('created_at', [
+                    $request->start_date . ' 00:00:00',
+                    $request->end_date . ' 23:59:59'
+                ])
+                ->count();
+
             return response()->json([
                 'success' => true,
-                'data' => $result
+                'data' => $result,
+                'total_activities' => $totalActivities,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => 'Error: ' . $e->getMessage()
             ], 500);
         }
     }
+
+
     public function exportExcel(Request $request)
     {
         $request->validate([
@@ -56,7 +75,7 @@ class DateRangeController extends Controller
         ]);
 
         try {
-            $exporter = new ServicesExport($request->start_date, $request->end_date);
+            $exporter = new UnitExport($request->start_date, $request->end_date);
             $data = $exporter->getData();
 
             return (new FastExcel($data))
@@ -64,5 +83,10 @@ class DateRangeController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal mengunduh data: ' . $e->getMessage());
         }
+    }
+
+    public function index()
+    {
+        return Inertia::render('LaporanUnit');
     }
 }

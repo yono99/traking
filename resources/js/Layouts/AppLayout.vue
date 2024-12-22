@@ -104,6 +104,32 @@ const smartLogo = "/assets/images/smart_logo.svg";
                                 </NavLink>
                                 <NavLink
                                     v-if="
+                                        [
+                                            'verifikator',
+                                            'pengukuran',
+                                            'bensus',
+                                            'pelaksana',
+                                            'pelaksana_bn',
+                                            'pelaksana_ph',
+                                            'pelaksana_roya',
+                                            'pelaksana_ph_ruko',
+                                            'pelaksana_sk',
+                                            'bukutanah',
+                                            'sps',
+                                            'QC',
+                                            'pengesahan',
+                                            'paraf',
+                                            'TTE_PRODUK_LAYANAN',
+                                            'LOKET_PENYERAHAN',
+                                        ].includes($page.props.auth?.user?.unit)
+                                    "
+                                    :href="route('laporan-unit.index')"
+                                    :active="route().current('laporan-unit.index')"
+                                >
+                                    Laporan
+                                </NavLink>
+                                <NavLink
+                                    v-if="
                                         $page.props.auth?.user?.unit === 'loket'
                                     "
                                     :href="route('genggam.berkas')"
