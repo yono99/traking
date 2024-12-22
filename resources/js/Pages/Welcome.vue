@@ -24,13 +24,13 @@ const backgroundUrl = '/assets/images/backgound_tracking.svg';
                 <Link
                     v-if="canLogin"
                     :href="route('login')"
-                    class="px-6 py-3 text-lg hover:scale-105 animate-bounce hover:animate-none transition-transform rounded-lg font-semibold">
+                    class="px-6 py-3 bg-black bg-opacity-20 lg:bg-opacity-0 text-lg hover:scale-105 animate-bounce hover:animate-none transition-transform rounded-lg font-semibold">
                     Login
                 </Link>
                 <Link
                     v-if="canRegister"
                     :href="route('register')"
-                    class="px-6 py-3 text-lg hover:scale-110 rounded-lg font-semibold">
+                    class="px-6 py-3 text-lg bg-black bg-opacity-20 lg:bg-opacity-0 hover:scale-110 rounded-lg font-semibold">
                     Register
                 </Link>
             </div>

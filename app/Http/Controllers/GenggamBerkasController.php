@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class GenggamBerkasController extends Controller
 {
-    
+
     public function index()
     {
          $landBooks = LandBook::all();// Mengambil semua data dari tabel `land_books`
@@ -37,7 +37,7 @@ class GenggamBerkasController extends Controller
         ]);
 
         // Tetapkan nilai default untuk `name` jika kosong
-       
+
 
         // Simpan data ke tabel `land_books`
         $landBook = LandBook::create([
@@ -53,7 +53,7 @@ class GenggamBerkasController extends Controller
             'name' => $name, // Masukkan default value untuk name
             'PNBP' =>  $PNBP,
         ]);
-        
+
         // Simpan data aktivitas ke tabel `activities`
         Activity::create([
             'service_id' => $service->id,
@@ -62,7 +62,12 @@ class GenggamBerkasController extends Controller
             'remarks' => 'NONE',
         ]);
 
-        // Redirect dengan pesan sukses
+        // Redirect dengan json response dengan onsuccess() di Vue dan tampilkan pesan sukses
+        // return back()->with('success', 'Data berhasil disimpan!');
+        // dd($service);
         return redirect()->route('genggam-berkas.create')->with('success', 'Data berhasil disimpan.');
+        // return Inertia::render('GenggamBerkas', [
+        //     'flash' => session('success') ? session('success') : null,
+        // ]);
     }
 }
