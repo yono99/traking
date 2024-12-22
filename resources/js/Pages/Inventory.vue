@@ -21,6 +21,8 @@ const props = defineProps({
 const showUpdateModal = ref(false);
 const showKendala = ref(false);
 const selectedItem = ref(null);
+const alertMessage = ref('');
+const alertType = ref('');
 
 // Status buttons configuration
 const buttons = computed(() => ({
@@ -142,12 +144,12 @@ const openKendalaModal = (service) => {
 
 const closeUpdateModal = () => {
     showUpdateModal.value = false;
-    
+
     selectedItem.value = null;
     loadServices();
 };
 const closeKendalaModal = () => {
-    
+
     showKendala.value = false;
     selectedItem.value = null;
     loadServices();
@@ -177,10 +179,27 @@ const submitForm = async () => {
             status_alih_media: selectedItem.value.status_alih_media || "",
         });
 
+        // Jika pengiriman berhasil, tampilkan alert sukses
+        alertMessage.value = response.data.message || "Data berhasil diupdate";
+        alertType.value = 'success';
+
         closeModal();
+
+        // Menghilangkan alert setelah 5 detik
+        setTimeout(() => {
+            alertMessage.value = '';
+        }, 5000); // 5000ms = 5 detik
     } catch (error) {
         console.error("Error submitting form:", error);
-        alert(error.response?.data?.message || "Gagal mengupdate data");
+        // Jika terjadi kesalahan, tampilkan alert error
+        alertMessage.value = error.response?.data?.message || "Gagal mengupdate data";
+        alertType.value = 'error';
+        // alert(error.response?.data?.message || "Gagal mengupdate data");
+
+        // Menghilangkan alert setelah 5 detik
+        setTimeout(() => {
+            alertMessage.value = '';
+        }, 5000); // 5000ms = 5 detik
     }
 };
 </script>
@@ -196,6 +215,20 @@ const submitForm = async () => {
                         Inventory
                     </h1>
                 </div>
+            </div>
+            <!-- Alert Message Floating di kanan atas -->
+            <div
+                v-if="alertMessage"
+                :class="[
+                    'p-4 mb-4 text-sm rounded-md fixed top-20 right-4 z-50',
+                    alertType === 'success' ? 'bg-green-100 text-green-800' : '',
+                    alertType === 'error' ? 'bg-red-100 text-red-800' : '',
+                    'transition-all duration-300 ease-in-out transform opacity-100'
+                ]"
+                style="max-width: 300px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+            >
+                <strong>{{ alertType === 'success' ? 'Sukses!' : 'Error!' }}</strong>
+                <p>{{ alertMessage }}</p>
             </div>
 
             <div class="mt-8 flex flex-col">
@@ -246,7 +279,7 @@ const submitForm = async () => {
                                 >
                                     <tr v-if="services.length === 0">
                                         <td
-                                            colspan="5"
+                                            colspan="6"
                                             class="px-3 py-4 text-sm text-gray-500 text-center"
                                         >
                                             Tidak ada data yang ditemukan.
@@ -331,7 +364,7 @@ const submitForm = async () => {
                                                     >
                                                         {{ button }}
                                                     </button>
-                                                    
+
                                                 </div>
                                                 <div v-else>
                                                     <span class="text-gray-500"

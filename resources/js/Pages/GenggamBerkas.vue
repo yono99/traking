@@ -429,6 +429,16 @@ export default {
                     console.error("Error saat submit:", errors);
                 },
             });
+
+            // Reset form setelah submit
+            form.reset();
+            searchQuery.value = "";
+
+            // Tampilkan pesan sukses
+            alert(
+                "Data berhasil dikirim! Silahkan cek kembali data yang telah diinput.",
+            );
+
         };
 
         const handleBlur = () => {
