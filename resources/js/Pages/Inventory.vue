@@ -3,21 +3,23 @@ import { ref, computed } from "vue";
 import axios from "axios";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import UpdateModal from "@/Components/UpdateModal.vue";
+import Kendala from "@/Components/Kendala.vue";
 
 // Props definition
 const props = defineProps({
     services: {
         type: Array,
-        required: true
+        required: true,
     },
     user: {
         type: Object,
-        required: true
-    }
+        required: true,
+    },
 });
 
 // Reactive references
 const showUpdateModal = ref(false);
+const showKendala = ref(false);
 const selectedItem = ref(null);
 
 // Status buttons configuration
@@ -28,7 +30,7 @@ const buttons = computed(() => ({
         "FORWARD BENSUS DISPOSISI",
         "FORWARD SPS",
     ],
-    sps: ["FORWARD BENSUS"],
+    sps: ["FORWARD BENSUS", "FORWARD BENSUS DISPOSISI"],
     bensus: ["FORWARD PELAKSANA", "SELESAI INFO DISPOSISI"],
     pelaksana: [
         "FORWARD TTE PRODUK LAYANAN",
@@ -40,36 +42,33 @@ const buttons = computed(() => ({
         "FORWARD ALIH MEDIA SUEL",
         "FORWARD LOKET PENYERAHAN",
     ],
-      pelaksana_ph: [
+    pelaksana_ph: [
         "FORWARD TTE PRODUK LAYANAN",
         "FORWARD ALIH MEDIA SUEL",
         "FORWARD LOKET PENYERAHAN",
     ],
-      pelaksana_roya: [
+    pelaksana_roya: [
         "FORWARD TTE PRODUK LAYANAN",
         "FORWARD ALIH MEDIA SUEL",
         "FORWARD LOKET PENYERAHAN",
     ],
-      pelaksana_ph_ruko: [
+    pelaksana_ph_ruko: [
         "FORWARD TTE PRODUK LAYANAN",
         "FORWARD ALIH MEDIA SUEL",
         "FORWARD LOKET PENYERAHAN",
     ],
-      pelaksana_sk: [
+    pelaksana_sk: [
         "FORWARD TTE PRODUK LAYANAN",
         "FORWARD ALIH MEDIA SUEL",
         "FORWARD LOKET PENYERAHAN",
     ],
-    pengukuran: [
-        "FORWARD VERIFIKASI LANJUTAN",
-        "FORWARD ALIH MEDIA BTEL",
-    ],
+    pengukuran: ["FORWARD VERIFIKASI LANJUTAN", "FORWARD ALIH MEDIA BTEL"],
     bukutanah: [
         "FORWARD VERIFIKATOR CEK SYARAT",
         "FORWARD PENGESAHAN ALIH MEDIA BTEL",
     ],
     pengesahan: ["FORWARD PELAKSANA BUAT CATATAN"],
-    
+
     TTE_PRODUK_LAYANAN: ["FORWARD PELAKSANA CETAK SERTEL"],
     LOKET_PENYERAHAN: ["SELESAI DISERAHKAN"],
 }));
@@ -77,10 +76,7 @@ const buttons = computed(() => ({
 // Status rules untuk visibility tombol
 const hideButtonRules = computed(() => ({
     "PROSES VERIFIKASI LANJUTAN": ["FORWARD PENGUKURAN"],
-    "PROSES VERIFIKASI CROSSCHECK": [
-        "FORWARD PENGUKURAN",
-        "FORWARD CARI BT",
-    ],
+    "PROSES VERIFIKASI CROSSCHECK": ["FORWARD PENGUKURAN", "FORWARD CARI BT"],
     "PROSES VERIFIKASI": ["FORWARD SPS"],
     "PROSES MEMPERBAHARUI": ["FORWARD ALIH MEDIA BTEL"],
     "PROSES ALIH MEDIA SUEL": ["FORWARD VERIFIKASI LANJUTAN"],
@@ -107,13 +103,12 @@ const updateStatus = async (serviceId, newStatus) => {
     try {
         console.log("Updating status:", { serviceId, newStatus });
 
-        await axios.post(
-            `/inventory/update-status/${serviceId}`,
-            {
-                status: newStatus,
-                _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        );
+        await axios.post(`/inventory/update-status/${serviceId}`, {
+            status: newStatus,
+            _token: document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+        });
 
         alert("Status berhasil diperbarui.");
         await loadServices();
@@ -135,13 +130,25 @@ const loadServices = async () => {
     window.location.reload();
 };
 
-const openModal = (service) => {
+const openUpdateModal = (service) => {
     selectedItem.value = service;
     showUpdateModal.value = true;
 };
 
-const closeModal = () => {
+const openKendalaModal = (service) => {
+    selectedItem.value = service;
+    showKendala.value = true;
+};
+
+const closeUpdateModal = () => {
     showUpdateModal.value = false;
+    
+    selectedItem.value = null;
+    loadServices();
+};
+const closeKendalaModal = () => {
+    
+    showKendala.value = false;
     selectedItem.value = null;
     loadServices();
 };
@@ -149,25 +156,25 @@ const closeModal = () => {
 const submitForm = async () => {
     try {
         console.log("Submitting form with data:", {
-            status: selectedItem.value.status || '',
-            remarks: selectedItem.value.remarks || '',
-            PNBP: selectedItem.value.PNBP || '',
-            nomor_hp: selectedItem.value.nomor_hp || '',
-            nomer_hak: selectedItem.value.nomer_hak || '',
-            jenis_hak: selectedItem.value.jenis_hak || '',
-            desa_kecamatan: selectedItem.value.desa_kecamatan || '',
-            status_alih_media: selectedItem.value.status_alih_media || '',
+            status: selectedItem.value.status || "",
+            remarks: selectedItem.value.remarks || "",
+            PNBP: selectedItem.value.PNBP || "",
+            nomor_hp: selectedItem.value.nomor_hp || "",
+            nomer_hak: selectedItem.value.nomer_hak || "",
+            jenis_hak: selectedItem.value.jenis_hak || "",
+            desa_kecamatan: selectedItem.value.desa_kecamatan || "",
+            status_alih_media: selectedItem.value.status_alih_media || "",
         });
 
         await axios.post(`/inventory/update-status/${selectedItem.value.id}`, {
-            status: selectedItem.value.status || '',
-            remarks: selectedItem.value.remarks || '',
-            PNBP: selectedItem.value.PNBP || '',
-            nomor_hp: selectedItem.value.nomor_hp || '',
-            nomer_hak: selectedItem.value.nomer_hak || '',
-            jenis_hak: selectedItem.value.jenis_hak || '',
-            desa_kecamatan: selectedItem.value.desa_kecamatan || '',
-            status_alih_media: selectedItem.value.status_alih_media || '',
+            status: selectedItem.value.status || "",
+            remarks: selectedItem.value.remarks || "",
+            PNBP: selectedItem.value.PNBP || "",
+            nomor_hp: selectedItem.value.nomor_hp || "",
+            nomer_hak: selectedItem.value.nomer_hak || "",
+            jenis_hak: selectedItem.value.jenis_hak || "",
+            desa_kecamatan: selectedItem.value.desa_kecamatan || "",
+            status_alih_media: selectedItem.value.status_alih_media || "",
         });
 
         closeModal();
@@ -286,17 +293,19 @@ const submitForm = async () => {
                                         <td
                                             class="px-3 py-4 text-sm text-gray-500"
                                         >
-                                            <div class="flex flex-col gap-2">
+                                            <div class="flex flex-wrap gap-2">
                                                 <button
-                                                    v-if="
-                                                        user.unit === 'bensus'
-                                                    "
-                                                    @click="openModal(service)"
+                                                    @click="openUpdateModal(service)"
                                                     class="inline-flex items-center w-fit rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500"
                                                 >
                                                     Update
                                                 </button>
-
+                                                <button
+                                                    @click="openKendalaModal(service)"
+                                                    class="inline-flex items-center w-fit rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500"
+                                                >
+                                                    Kendala
+                                                </button>
                                                 <div
                                                     v-if="buttons[user.unit]"
                                                     class="flex flex-wrap gap-2"
@@ -322,6 +331,7 @@ const submitForm = async () => {
                                                     >
                                                         {{ button }}
                                                     </button>
+                                                    
                                                 </div>
                                                 <div v-else>
                                                     <span class="text-gray-500"
@@ -344,7 +354,14 @@ const submitForm = async () => {
                 :service-id="selectedItem?.id"
                 :service="selectedItem"
                 :user="user"
-                @close="closeModal"
+                @close="closeUpdateModal"
+            />
+            <Kendala
+                :show="showKendala"
+                :service-id="selectedItem?.id"
+                :service="selectedItem"
+                :user="user"
+                @close="closeKendalaModal"
             />
         </div>
     </AppLayout>

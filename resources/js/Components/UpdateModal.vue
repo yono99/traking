@@ -33,32 +33,99 @@
 
                 <form @submit.prevent="submitForm" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                         
-                        <!-- Nama layanan -->
-                        <div>
+                        <!-- Nomor berkas -->
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
+                                class="block text-sm font-medium text-gray-700"
+                                >Nomor Berkas</label
+                            >
+                            <input
+                                 
+                                type="text"
+                                v-model="form.Noberkas"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </div>
+                        <!-- Nama layanan -->
+                        <div  v-if="
+                                    $page.props.auth?.user?.unit === 'bensus' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
+                            <label
+                                 
                                 class="block text-sm font-medium text-gray-700"
                                 >Nama Layanan</label
                             >
                             <input
+                                 
                                 type="text"
                                 v-model="form.name"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
-                        <div>
+                        <!-- Nomor Hak -->
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
                                 class="block text-sm font-medium text-gray-700"
-                                  v-if="
-                                         
-                                        $page.props.auth?.user?.role === 'admin'
-                                    ">Status</label
+                                >Nomor Hak</label
                             >
-                            <select v-if="
-                                         
-                                        $page.props.auth?.user?.role === 'admin'
-                                    "
-                                v-model="form.status "
+                            <input
+                                 
+                                type="text"
+                                v-model="form.nomer_hak"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </div>
+                        <!-- Jenis Hak -->
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
+                            <label
+                                class="block text-sm font-medium text-gray-700"
+                                >Jenis Hak</label
+                            >
+                            <input
+                                type="text"
+                                v-model="form.jenis_hak"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </div>
+                        <!-- Desa/Kecamatan -->
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
+                            <label
+                                class="block text-sm font-medium text-gray-700"
+                                >Desa/Kecamatan</label
+                            >
+                            <input
+                                type="text"
+                                v-model="form.desa_kecamatan"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </div>
+                        
+                        <!-- status-->
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
+                            <label
+                                class="block text-sm font-medium text-gray-700"
+                                 
+                                >Status</label
+                            >
+                            <select
+                                
+                                v-model="form.status"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             >
                                 <option
@@ -71,33 +138,44 @@
                             </select>
                         </div>
                         <!-- Keterangan -->
-                        <div>
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'verifikator' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
+                                 
                                 class="block text-sm font-medium text-gray-700"
                                 >Keterangan</label
                             >
                             <textarea
+                                 
                                 v-model="form.remarks"
                                 rows="3"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             ></textarea>
                         </div>
-
                         <!-- PNBP -->
-                        <div>
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
+                                 
                                 class="block text-sm font-medium text-gray-700"
                                 >PNBP</label
                             >
                             <input
+                                 
                                 type="text"
                                 v-model="form.PNBP"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
-
                         <!-- Nomor HP -->
-                        <div>
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
                                 class="block text-sm font-medium text-gray-700"
                                 >Nomor HP</label
@@ -108,59 +186,11 @@
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
-
-                        <!-- Nomor Hak -->
-                        <div>
-                            <label
-                                class="block text-sm font-medium text-gray-700"
-                                >Nomor Hak</label
-                            >
-                            <input
-                                type="text"
-                                v-model="form.nomer_hak"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            />
-                        </div>
-                        <!-- Nomor berkas -->
-                        <div>
-                            <label
-                                class="block text-sm font-medium text-gray-700"
-                                >Nomor Berkas</label
-                            >
-                            <input
-                                type="text"
-                                v-model="form.Noberkas"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            />
-                        </div>  
-                        <!-- Jenis Hak -->
-                        <div>
-                            <label
-                                class="block text-sm font-medium text-gray-700"
-                                >Jenis Hak</label
-                            >
-                            <input
-                                type="text"
-                                v-model="form.jenis_hak"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            />
-                        </div>
-
-                        <!-- Desa/Kecamatan -->
-                        <div>
-                            <label
-                                class="block text-sm font-medium text-gray-700"
-                                >Desa/Kecamatan</label
-                            >
-                            <input
-                                type="text"
-                                v-model="form.desa_kecamatan"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            />
-                        </div>
-
                         <!-- Status Alih Media -->
-                        <div>
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
                                 class="block text-sm font-medium text-gray-700"
                                 >Status Berkas Rutin / Alih Media</label
@@ -226,7 +256,7 @@ const statusOptions = [
     "FORWARD PENGESAHAN ALIH MEDIA BTEL",
     "FORWARD TTE PRODUK LAYANAN",
     "FORWARD PELAKSANA CETAK SERTEL",
-    'FORWARD PELAKSANA BUAT CATATAN',
+    "FORWARD PELAKSANA BUAT CATATAN",
 ];
 
 const form = useForm({
@@ -239,7 +269,7 @@ const form = useForm({
     jenis_hak: "",
     desa_kecamatan: "",
     status_alih_media: "",
-    Noberkas:"",
+    Noberkas: "",
 });
 
 // Inisialisasi form dengan data yang ada
@@ -256,7 +286,7 @@ watch(
             if (props.service.land_book) {
                 form.nomer_hak = props.service.land_book.nomer_hak || "";
                 form.jenis_hak = props.service.land_book.jenis_hak || "";
-               
+
                 form.desa_kecamatan =
                     props.service.land_book.desa_kecamatan || "";
                 form.status_alih_media =
