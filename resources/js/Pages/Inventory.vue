@@ -336,12 +336,13 @@ const submitForm = async () => {
                                             <div class="flex flex-wrap gap-2">
                                                 <button
                                                     v-if="
-                                                        ($page.props.auth?.user
-                                                            ?.unit === 'bensus',
-                                                        'sps' ||
-                                                            $page.props.auth
-                                                                ?.user?.role ===
-                                                                'admin')
+                                                        $page.props.auth?.user
+                                                            ?.unit ===
+                                                            'bensus' ||
+                                                        $page.props.auth?.user
+                                                            ?.unit === 'sps' ||
+                                                        $page.props.auth?.user
+                                                            ?.role === 'admin'
                                                     "
                                                     @click="
                                                         openUpdateModal(service)
