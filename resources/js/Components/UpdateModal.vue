@@ -68,7 +68,7 @@
                         </div>
                         <!-- Nomor Hak -->
                         <div v-if="
-                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||
                                     $page.props.auth?.user?.role === 'admin'
                                 ">
                             <label
@@ -84,7 +84,7 @@
                         </div>
                         <!-- Jenis Hak -->
                         <div v-if="
-                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||
                                     $page.props.auth?.user?.role === 'admin'
                                 ">
                             <label
@@ -99,7 +99,7 @@
                         </div>
                         <!-- Desa/Kecamatan -->
                         <div v-if="
-                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||
                                     $page.props.auth?.user?.role === 'admin'
                                 ">
                             <label
@@ -173,7 +173,7 @@
                         </div>
                         <!-- Nomor HP -->
                         <div v-if="
-                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||
                                     $page.props.auth?.user?.role === 'admin'
                                 ">
                             <label
@@ -188,7 +188,7 @@
                         </div>
                         <!-- Status Alih Media -->
                         <div v-if="
-                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||
                                     $page.props.auth?.user?.role === 'admin'
                                 ">
                             <label
