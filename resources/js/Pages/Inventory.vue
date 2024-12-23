@@ -21,8 +21,8 @@ const props = defineProps({
 const showUpdateModal = ref(false);
 const showKendala = ref(false);
 const selectedItem = ref(null);
-const alertMessage = ref('');
-const alertType = ref('');
+const alertMessage = ref("");
+const alertType = ref("");
 
 // Status buttons configuration
 const buttons = computed(() => ({
@@ -149,7 +149,6 @@ const closeUpdateModal = () => {
     loadServices();
 };
 const closeKendalaModal = () => {
-
     showKendala.value = false;
     selectedItem.value = null;
     loadServices();
@@ -181,24 +180,25 @@ const submitForm = async () => {
 
         // Jika pengiriman berhasil, tampilkan alert sukses
         alertMessage.value = response.data.message || "Data berhasil diupdate";
-        alertType.value = 'success';
+        alertType.value = "success";
 
         closeModal();
 
         // Menghilangkan alert setelah 5 detik
         setTimeout(() => {
-            alertMessage.value = '';
+            alertMessage.value = "";
         }, 5000); // 5000ms = 5 detik
     } catch (error) {
         console.error("Error submitting form:", error);
         // Jika terjadi kesalahan, tampilkan alert error
-        alertMessage.value = error.response?.data?.message || "Gagal mengupdate data";
-        alertType.value = 'error';
+        alertMessage.value =
+            error.response?.data?.message || "Gagal mengupdate data";
+        alertType.value = "error";
         // alert(error.response?.data?.message || "Gagal mengupdate data");
 
         // Menghilangkan alert setelah 5 detik
         setTimeout(() => {
-            alertMessage.value = '';
+            alertMessage.value = "";
         }, 5000); // 5000ms = 5 detik
     }
 };
@@ -221,13 +221,20 @@ const submitForm = async () => {
                 v-if="alertMessage"
                 :class="[
                     'p-4 mb-4 text-sm rounded-md fixed top-20 right-4 z-50',
-                    alertType === 'success' ? 'bg-green-100 text-green-800' : '',
+                    alertType === 'success'
+                        ? 'bg-green-100 text-green-800'
+                        : '',
                     alertType === 'error' ? 'bg-red-100 text-red-800' : '',
-                    'transition-all duration-300 ease-in-out transform opacity-100'
+                    'transition-all duration-300 ease-in-out transform opacity-100',
                 ]"
-                style="max-width: 300px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+                style="
+                    max-width: 300px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                "
             >
-                <strong>{{ alertType === 'success' ? 'Sukses!' : 'Error!' }}</strong>
+                <strong>{{
+                    alertType === "success" ? "Sukses!" : "Error!"
+                }}</strong>
                 <p>{{ alertMessage }}</p>
             </div>
 
@@ -328,13 +335,27 @@ const submitForm = async () => {
                                         >
                                             <div class="flex flex-wrap gap-2">
                                                 <button
-                                                    @click="openUpdateModal(service)"
+                                                    v-if="
+                                                        ($page.props.auth?.user
+                                                            ?.unit === 'bensus',
+                                                        'sps' ||
+                                                            $page.props.auth
+                                                                ?.user?.role ===
+                                                                'admin')
+                                                    "
+                                                    @click="
+                                                        openUpdateModal(service)
+                                                    "
                                                     class="inline-flex items-center w-fit rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500"
                                                 >
                                                     Update
                                                 </button>
                                                 <button
-                                                    @click="openKendalaModal(service)"
+                                                    @click="
+                                                        openKendalaModal(
+                                                            service
+                                                        )
+                                                    "
                                                     class="inline-flex items-center w-fit rounded-md bg-blue-600 px-2.5 py-1.5 text-sm font-semibold text-white hover:bg-blue-500"
                                                 >
                                                     Kendala
@@ -364,7 +385,6 @@ const submitForm = async () => {
                                                     >
                                                         {{ button }}
                                                     </button>
-
                                                 </div>
                                                 <div v-else>
                                                     <span class="text-gray-500"
