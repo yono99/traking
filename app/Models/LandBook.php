@@ -11,6 +11,8 @@ class LandBook extends Model
     protected $table = 'land_books';
 
     protected $fillable = [
+        'service_id',
+        'activities_id',
         'nomer_hak',
         'desa_kecamatan',
         'jenis_hak',
@@ -18,11 +20,13 @@ class LandBook extends Model
     ];
 
     // Model LandBook.php
-    public function services()
+    public function service()
     {
-        return $this->hasMany(Service::class, 'land_book_id');
-
+        return $this->belongsTo(Service::class, 'service_id');
     }
 
- 
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'activities_id');
+    }
 }

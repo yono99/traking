@@ -18,7 +18,7 @@ class UnitExport
     public function getData()
     {
         $currentUserId = Auth::user()->id;
-        return \App\Models\Service::with('landBook')
+        return \App\Models\Activity::with('landBook', 'service')
 
             ->whereBetween('created_at', [
                 $this->startDate . ' 00:00:00',
@@ -26,17 +26,17 @@ class UnitExport
             ])
             ->get()
             ->where('user_id', $currentUserId)
-            ->map(function ($service) {
+            ->map(function ($fetch) {
                 return [
-                    'Jenis Hak' => $service->landBook->jenis_hak ?? '-',
-                    'Nomor Hak' => $service->landBook->nomer_hak ?? '-',
-                    'Desa/Kecamatan' => $service->landBook->desa_kecamatan ?? '-',
-                    'Status' => $service->status,
-                    'Nomor HP' => $service->nomor_hp,
-                    'PNBP' => $service->PNBP,
-                    'Keterangan' => $service->remarks,
-                    'Tanggal Updated' => $service->created_at->format('Y-m-d H:i:s'),
-                    'Status Alih Media' => $service->landBook->status_alih_media ?? '-',
+                    'Jenis Hak' => $fetch->service->landBook->jenis_hak ?? '-',
+                    'Nomor Hak' => $fetch->service->landBook->nomer_hak ?? '-',
+                    'Desa/Kecamatan' => $fetch->service->landBook->desa_kecamatan ?? '-',
+                    'Status' => $fetch->service->status,
+                    'Nomor HP' => $fetch->service->nomor_hp,
+                    'PNBP' => $fetch->service->PNBP,
+                    'Keterangan' => $fetch->remarks,
+                    'Tanggal Updated' => $fetch->created_at->format('Y-m-d H:i:s'),
+                    'Status Alih Media' => $fetch->service->landBook->status_alih_media ?? '-',
                 ];
             });
     }

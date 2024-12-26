@@ -26,7 +26,7 @@ class Service extends Model
     // Model Service.php
     public function activities()
     {
-        return $this->hasMany(Activity::class, 'service_id');
+        return $this->hasMany(Activity::class, 'activities_id');
     }
 
     public function landBook()

@@ -11,6 +11,7 @@ class Activity extends Model
 
     protected $fillable = [
         'service_id',
+        'land_book_id',
         'user_id',
         'status',
         'remarks',
@@ -20,6 +21,10 @@ class Activity extends Model
     public function service()
     {
         return $this->belongsTo(Service::class, 'service_id');
+    }
+    public function landBook()
+    {
+        return $this->belongsTo(LandBook::class, 'land_book_id');
     }
 
     // Model Activity.php

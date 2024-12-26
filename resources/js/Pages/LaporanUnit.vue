@@ -179,10 +179,7 @@ const updateChart = (data, totalActivities) => {
 
 const translateStatus = (status) => {
   const translations = {
-    'pending': 'Menunggu',
-    'in_progress': 'Sedang Diproses',
-    'completed': 'Selesai',
-    'rejected': 'Ditolak'
+   
   }
   return translations[status] || status
 }

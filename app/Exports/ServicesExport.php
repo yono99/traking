@@ -23,14 +23,14 @@ class ServicesExport
             ->get()
             ->map(function ($service) {
                 return [
+                    'Jenis Hak' => $service->landBook->jenis_hak ?? '-',
+                    'Nomor Hak' => $service->landBook->nomer_hak ?? '-',
+                    'Desa/Kecamatan' => $service->landBook->desa_kecamatan ?? '-',
                     'Status' => $service->status,
                     'Nomor HP' => $service->nomor_hp,
                     'PNBP' => $service->PNBP,
                     'Remarks' => $service->remarks,
                     'Tanggal Dibuat' => $service->created_at->format('Y-m-d H:i:s'),
-                    'Nomor Hak' => $service->landBook->nomer_hak ?? '-',
-                    'Jenis Hak' => $service->landBook->jenis_hak ?? '-',
-                    'Desa/Kecamatan' => $service->landBook->desa_kecamatan ?? '-',
                     'Status Alih Media' => $service->landBook->status_alih_media ?? '-',
                 ];
             });
