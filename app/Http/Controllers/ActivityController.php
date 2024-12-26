@@ -52,9 +52,6 @@ class ActivityController extends Controller
         return inertia('ActivityIndex', ['activities' => $formattedActivities]);
     }
 
-
-
-
     /**
      * Menyimpan data aktivitas baru.
      */
@@ -75,7 +72,7 @@ class ActivityController extends Controller
         return back()->with('success', 'Aktivitas berhasil disimpan.');
     }
 
-
+    // fetch data activity di welcome komponen fitur pencarian 
     public function fetch(Request $request)
     {
         $nomerHak = $request->input('nomer_hak');

@@ -24,7 +24,7 @@ class LaporanUnitController extends Controller
         ]);
 
         try {
-            $user = Auth::user();
+           
        
             $currentUserId = Auth::user()->id; // Cara yang lebih singkat untuk mendapatkan ID user
             

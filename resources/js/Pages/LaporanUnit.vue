@@ -2,7 +2,7 @@
   <AppLayout>
     <div class="p-6 max-w-7xl mx-auto">
       <div class="mb-6 bg-white rounded-lg shadow p-4">
-        <h2 class="text-xl font-semibold mb-4">Analisis Berkas Masuk</h2>
+        <h2 class="text-xl font-semibold mb-4">Analisis Aktivitas Pengguna</h2>
         
         <div class="grid grid-cols-2 gap-4 mb-4">
           <div>
@@ -35,13 +35,13 @@
             @click="downloadExcel"
             class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
           >
-            Download Excel
+            Unduh Excel
           </button>
         </div>
       </div>
 
       <div class="bg-white rounded-lg shadow p-4">
-        <div ref="chartContainer" style="height: 400px"></div>
+        <div ref="chartContainer" class="h-96"></div>
       </div>
     </div>
   </AppLayout>
@@ -50,7 +50,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import * as echarts from 'echarts'
-import AppLayout from "@/Layouts/AppLayout.vue";
+import AppLayout from "@/Layouts/AppLayout.vue"
 
 const startDate = ref('')
 const endDate = ref('')
@@ -90,10 +90,10 @@ const fetchData = async () => {
     if (result.success) {
       updateChart(result.data, result.total_activities)
     } else {
-      alert('Gagal mengambil data: ' + (result.message || 'Unknown error'))
+      alert('Gagal mengambil data: ' + (result.message || 'Terjadi kesalahan'))
     }
   } catch (error) {
-    console.error('Error fetching data:', error)
+    console.error('Error:', error)
     alert('Terjadi kesalahan saat mengambil data')
   }
 }
@@ -113,11 +113,9 @@ const downloadExcel = () => {
 }
 
 const updateChart = (data, totalActivities) => {
-  // Mengorganisir data berdasarkan status
   const dates = [...new Set(data.map(item => item.date))].sort()
   const statuses = [...new Set(data.map(item => item.status))]
   
-  // Menyiapkan series untuk setiap status
   const series = statuses.map(status => {
     const statusData = dates.map(date => {
       const entry = data.find(item => item.date === date && item.status === status)
@@ -137,7 +135,7 @@ const updateChart = (data, totalActivities) => {
 
   const option = {
     title: {
-      text: 'Analisis Berkas Masuk',
+      text: 'Grafik Aktivitas Pengguna',
       subtext: `Total Aktivitas: ${totalActivities}`,
       left: 'center'
     },
@@ -148,7 +146,7 @@ const updateChart = (data, totalActivities) => {
       }
     },
     legend: {
-      data: statuses,
+      data: statuses.map(status => translateStatus(status)),
       top: 50
     },
     grid: {
@@ -161,18 +159,39 @@ const updateChart = (data, totalActivities) => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: dates,
+      data: dates.map(date => formatDate(date)),
       axisLabel: {
         rotate: 45
       }
     },
     yAxis: {
       type: 'value',
-      name: 'Jumlah Berkas'
+      name: 'Jumlah Aktivitas'
     },
-    series: series
+    series: series.map(s => ({
+      ...s,
+      name: translateStatus(s.name)
+    }))
   }
 
   chart.setOption(option)
+}
+
+const translateStatus = (status) => {
+  const translations = {
+    'pending': 'Menunggu',
+    'in_progress': 'Sedang Diproses',
+    'completed': 'Selesai',
+    'rejected': 'Ditolak'
+  }
+  return translations[status] || status
+}
+
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
 }
 </script>

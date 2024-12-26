@@ -472,10 +472,10 @@ export default {
                 <div class="md:grid md:grid-cols-3 md:gap-6 px-4 sm:px-6 lg:px-8 gap-4">
                     <div class="">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                            Input Data Genggam Berkas
+                            Input Data  Berkas
                         </h3>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                            Input Data Genggam Berkas
+                            Input Data  Berkas
                         </p>
                     </div>
                     <div class="col-span-2">
@@ -489,7 +489,8 @@ export default {
                                     maxlength="12" @input="
                                     
                                         form.nomor_hp = form.nomor_hp
-                                            .replace(/\D/g,/^0+/, '')
+                                            .replace(/^0+/, '')
+                                            .replace(/\D/g, '')
                                             .slice(0, 12)
                                         "
                                     class="border-gray-300 w-full max-w-lg dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"

@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Illuminate\Support\Facades\Auth;
 class UnitExport
 {
     protected $startDate;
@@ -14,8 +15,10 @@ class UnitExport
     }
 
     public function getData()
-    {
+    { 
+        $currentUserId = Auth::user()->id;
         return \App\Models\Service::with('landBook')
+            ->where('user_id', $currentUserId)
             ->whereBetween('created_at', [
                 $this->startDate . ' 00:00:00',
                 $this->endDate . ' 23:59:59'
