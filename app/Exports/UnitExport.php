@@ -18,12 +18,13 @@ class UnitExport
     { 
         $currentUserId = Auth::user()->id;
         return \App\Models\Service::with('landBook')
-            ->where('user_id', $currentUserId)
+            
             ->whereBetween('created_at', [
                 $this->startDate . ' 00:00:00',
                 $this->endDate . ' 23:59:59'
             ])
             ->get()
+            ->where('user_id', $currentUserId)
             ->map(function ($service) {
                 return [
                     'Status' => $service->status,
