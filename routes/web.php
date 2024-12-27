@@ -50,7 +50,8 @@ Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
     Route::post('/api/date-range-data', [DateRangeController::class, 'getDateRangeData']);
     Route::get('/date-range', [DateRangeController::class, 'index'])->name('date-range.index');
     Route::get('/export-excel', [DateRangeController::class, 'exportExcel'])->name('export.excel');
-
+    Route::get('/hitung-berkas-alihmedia-rutin', [Hitung_berkas_alihmedia_rutinController::class, 'hitungBerkasAlihmediaRutin']);
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/teams', [TeamsController::class, 'index'])->name('teams.index');
     Route::post('/teams', [TeamsController::class, 'store'])->name('teams.store');
     Route::post('/teams/{team}/add-member', [TeamsController::class, 'addMember'])->name('teams.addMember');
@@ -74,7 +75,8 @@ Route::middleware(['auth', Unitdanadmin::class . ':loketdanadmin'])->group(
 );
 // Rute untuk TanyaGenggam dan Inventory
 Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
-
+    Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
+        ->name('inventory.update-status');
     // route chart & export excel unit
     Route::get('/laporan-unit', [LaporanUnitController::class, 'index'])->name('laporan-unit.index');
     Route::post('/api/date-range-data', [LaporanUnitController::class, 'getDateRangeData']);
@@ -96,16 +98,14 @@ Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
 // Tambahkan route ini di web.php
 Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
 // update untuk komponen dijadikan universal agar bisa multifungsi
-Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
-    ->name('inventory.update-status');
+
 
 Route::get('/total-proses', [ServiceController::class, 'dataProses'])->name('total-proses');
 // Route::get('/total-proses', function(){
 //     return Inertia::render('Process/ProcessData');
 // })->name('total-proses');
 Route::get('/total-proses-tte', [ServiceController::class, 'dataProsesTte'])->name('total-proses-tte');
-Route::get('/hitung-berkas-alihmedia-rutin', [Hitung_berkas_alihmedia_rutinController::class, 'hitungBerkasAlihmediaRutin']);
-Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+
 
 
 
