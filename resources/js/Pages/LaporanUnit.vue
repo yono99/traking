@@ -49,6 +49,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import axios from 'axios'
 import * as echarts from 'echarts'
 import AppLayout from "@/Layouts/AppLayout.vue"
 
@@ -58,6 +59,10 @@ const chartContainer = ref(null)
 let chart = null
 
 onMounted(() => {
+  // Konfigurasi Axios untuk menangani CSRF token di Laravel 11
+  axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+  
+  // Inisialisasi chart
   chart = echarts.init(chartContainer.value)
   window.addEventListener('resize', () => chart?.resize())
 })
@@ -69,23 +74,12 @@ const fetchData = async () => {
   }
 
   try {
-    const response = await fetch('/api/date-range-data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      },
-      body: JSON.stringify({
-        start_date: startDate.value,
-        end_date: endDate.value
-      })
+    const response = await axios.post('/api/date-range-data', {
+      start_date: startDate.value,
+      end_date: endDate.value
     })
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    const result = await response.json()
+    const result = response.data
     
     if (result.success) {
       updateChart(result.data, result.total_activities)
@@ -179,7 +173,7 @@ const updateChart = (data, totalActivities) => {
 
 const translateStatus = (status) => {
   const translations = {
-   
+    // Tambahkan terjemahan status di sini jika diperlukan
   }
   return translations[status] || status
 }
@@ -192,3 +186,4 @@ const formatDate = (date) => {
   })
 }
 </script>
+ 

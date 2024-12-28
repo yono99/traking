@@ -75,8 +75,7 @@ Route::middleware(['auth', Unitdanadmin::class . ':loketdanadmin'])->group(
 );
 // Rute untuk TanyaGenggam dan Inventory
 Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
-    Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
-        ->name('inventory.update-status');
+ 
     // route chart & export excel unit
     Route::get('/laporan-unit', [LaporanUnitController::class, 'index'])->name('laporan-unit.index');
     Route::post('/api/date-range-data', [LaporanUnitController::class, 'getDateRangeData']);
@@ -89,10 +88,8 @@ Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
     // Rute untuk pencarian berdasarkan nomer_hak
     Route::get('/search', [SearchController::class, 'search']);
     // Rute untuk update status
-    Route::post('/update-status', [TanyaGenggamController::class, 'updateStatus']);
-    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
-
-    route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])->name('inventory.updateStatus');
+    
+  
 });
 
 // Tambahkan route ini di web.php
@@ -101,11 +98,12 @@ Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
 
 
 Route::get('/total-proses', [ServiceController::class, 'dataProses'])->name('total-proses');
-// Route::get('/total-proses', function(){
-//     return Inertia::render('Process/ProcessData');
-// })->name('total-proses');
+ 
 Route::get('/total-proses-tte', [ServiceController::class, 'dataProsesTte'])->name('total-proses-tte');
 
 
-
-
+Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
+    ->name('inventory.update-status');
+Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])->name('inventory.updateStatus');
+Route::post('/update-status', [TanyaGenggamController::class, 'updateStatus']);

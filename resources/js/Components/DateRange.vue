@@ -1,5 +1,5 @@
 <template>
-  <AppLayout>
+ 
     <div class="p-6 max-w-7xl mx-auto">
       <div class="mb-6 bg-white rounded-lg shadow p-4">
         <h2 class="text-xl font-semibold mb-4">Analisis Aktivitas Pengguna</h2>
@@ -44,13 +44,13 @@
         <div ref="chartContainer" class="h-96"></div>
       </div>
     </div>
-  </AppLayout>
+   
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import * as echarts from 'echarts'
-import AppLayout from "@/Layouts/AppLayout.vue"
+  
 
 const startDate = ref('')
 const endDate = ref('')
