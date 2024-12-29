@@ -34,66 +34,59 @@
                 <form @submit.prevent="submitForm" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Nomor berkas -->
-                        <div
-                            v-if="
-                                ($page.props.auth?.user?.unit === 'bensus',
-                                'loket' ||
-                                    $page.props.auth?.user?.role === 'admin')
-                            "
-                        >
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus','loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
                                 class="block text-sm font-medium text-gray-700"
                                 >Nomor Berkas</label
                             >
                             <input
+                                 
                                 type="text"
                                 v-model="form.Noberkas"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
                         <!-- Nama layanan -->
-                        <div
-                            v-if="
-                                $page.props.auth?.user?.unit === 'bensus' ||
-                                $page.props.auth?.user?.role === 'admin'
-                            "
-                        >
+                        <div  v-if="
+                                    $page.props.auth?.user?.unit === 'bensus' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
+                                 
                                 class="block text-sm font-medium text-gray-700"
                                 >Nama Layanan</label
                             >
                             <input
+                                 
                                 type="text"
                                 v-model="form.name"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
                         <!-- Nomor Hak -->
-                        <div
-                            v-if="
-                                $page.props.auth?.user?.unit === 'bensus' ||
-                                $page.props.auth?.user?.unit === 'loket' ||
-                                $page.props.auth?.user?.role === 'admin'
-                            "
-                        >
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
                                 class="block text-sm font-medium text-gray-700"
                                 >Nomor Hak</label
                             >
                             <input
+                                 
                                 type="text"
                                 v-model="form.nomer_hak"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
                         <!-- Jenis Hak -->
-                        <div
-                            v-if="
-                                $page.props.auth?.user?.unit === 'bensus' ||
-                                $page.props.auth?.user?.unit === 'loket' ||
-                                $page.props.auth?.user?.role === 'admin'
-                            "
-                        >
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
                                 class="block text-sm font-medium text-gray-700"
                                 >Jenis Hak</label
@@ -105,13 +98,10 @@
                             />
                         </div>
                         <!-- Desa/Kecamatan -->
-                        <div
-                            v-if="
-                                $page.props.auth?.user?.unit === 'bensus' ||
-                                $page.props.auth?.user?.unit === 'loket' ||
-                                $page.props.auth?.user?.role === 'admin'
-                            "
-                        >
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
                                 class="block text-sm font-medium text-gray-700"
                                 >Desa/Kecamatan</label
@@ -122,19 +112,19 @@
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
-
+                        
                         <!-- status-->
-                        <div
-                            v-if="
-                                $page.props.auth?.user?.unit === 'bensus' ||
-                                $page.props.auth?.user?.role === 'admin'
-                            "
-                        >
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
                                 class="block text-sm font-medium text-gray-700"
+                                 
                                 >Status</label
                             >
                             <select
+                                
                                 v-model="form.status"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             >
@@ -148,48 +138,44 @@
                             </select>
                         </div>
                         <!-- Keterangan -->
-                        <div
-                            v-if="
-                                $page.props.auth?.user?.unit ===
-                                    'verifikator' ||
-                                $page.props.auth?.user?.role === 'admin'
-                            "
-                        >
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'verifikator' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
+                                 
                                 class="block text-sm font-medium text-gray-700"
                                 >Keterangan</label
                             >
                             <textarea
+                                 
                                 v-model="form.remarks"
                                 rows="3"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             ></textarea>
                         </div>
                         <!-- PNBP -->
-                        <div
-                            v-if="
-                                $page.props.auth?.user?.unit === 'bensus' ||
-                                $page.props.auth?.user?.role === 'admin'
-                            "
-                        >
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
+                                 
                                 class="block text-sm font-medium text-gray-700"
                                 >PNBP</label
                             >
                             <input
+                                 
                                 type="text"
                                 v-model="form.PNBP"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
                         <!-- Nomor HP -->
-                        <div
-                            v-if="
-                                $page.props.auth?.user?.unit === 'bensus' ||
-                                $page.props.auth?.user?.unit === 'loket' ||
-                                $page.props.auth?.user?.role === 'admin'
-                            "
-                        >
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
                                 class="block text-sm font-medium text-gray-700"
                                 >Nomor HP</label
@@ -201,13 +187,10 @@
                             />
                         </div>
                         <!-- Status Alih Media -->
-                        <div
-                            v-if="
-                                $page.props.auth?.user?.unit === 'bensus' ||
-                                $page.props.auth?.user?.unit === 'loket' ||
-                                $page.props.auth?.user?.role === 'admin'
-                            "
-                        >
+                        <div v-if="
+                                    $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||
+                                    $page.props.auth?.user?.role === 'admin'
+                                ">
                             <label
                                 class="block text-sm font-medium text-gray-700"
                                 >Status Berkas Rutin / Alih Media</label
@@ -242,7 +225,7 @@
     </div>
 </template>
 
-<script setup> 
+<script setup>
 import { ref, watch, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import axios from "axios";
@@ -255,27 +238,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["close"]);
-const errorMessage = ref("");
-const isSubmitting = ref(false);
 
 const statusOptions = [
     "FORWARD PENGUKURAN",
-    "FORWARD CARI BT",
-    "FORWARD BENSUS DISPOSISI",
-    "FORWARD SPS",
-    "FORWARD BENSUS",
-    "FORWARD PELAKSANA",
-    "FORWARD PARAF",
-    "FORWARD ALIH MEDIA SUEL",
-    "FORWARD LOKET PENYERAHAN",
-    "FORWARD VERIFIKATOR",
-    "FORWARD ALIH MEDIA BTEL",
-    "FORWARD SELESAI REVISI",
-    "FORWARD VERIFIKATOR CEK SYARAT",
-    "FORWARD PENGESAHAN ALIH MEDIA BTEL",
-    "FORWARD TTE PRODUK LAYANAN",
-    "FORWARD PELAKSANA CETAK SERTEL",
-    "FORWARD PELAKSANA BUAT CATATAN",  "FORWARD PENGUKURAN",
     "FORWARD CARI BT",
     "FORWARD BENSUS DISPOSISI",
     "FORWARD SPS",
@@ -307,9 +272,8 @@ const form = useForm({
     Noberkas: "",
 });
 
-// Konfigurasi dasar Axios
-axios.defaults.withCredentials = true;
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+const errorMessage = ref("");
+const isSubmitting = ref(false);
 
 // Inisialisasi CSRF token saat komponen dimount
 onMounted(async () => {
@@ -320,18 +284,18 @@ onMounted(async () => {
     }
 });
 
-// Fungsi untuk mendapatkan CSRF token baru
+// Fungsi untuk memperbarui CSRF token jika diperlukan
 const refreshCSRFToken = async () => {
     try {
-        await axios.get('/sanctum/csrf-cookie');
+        await axios.get("/sanctum/csrf-cookie");
         return true;
     } catch (error) {
-        console.error('Gagal memperbarui CSRF token:', error);
+        console.error("Gagal memperbarui CSRF token:", error);
         return false;
     }
 };
 
-// Watch untuk mengisi form
+// Inisialisasi form dengan data yang ada
 watch(
     () => props.show,
     (newVal) => {
@@ -345,8 +309,10 @@ watch(
             if (props.service.land_book) {
                 form.nomer_hak = props.service.land_book.nomer_hak || "";
                 form.jenis_hak = props.service.land_book.jenis_hak || "";
-                form.desa_kecamatan = props.service.land_book.desa_kecamatan || "";
-                form.status_alih_media = props.service.land_book.status_alih_media || "";
+                form.desa_kecamatan =
+                    props.service.land_book.desa_kecamatan || "";
+                form.status_alih_media =
+                    props.service.land_book.status_alih_media || "";
             }
         }
     }
@@ -358,7 +324,7 @@ const submitForm = async () => {
     errorMessage.value = "";
 
     try {
-        const response = await axios.post(`/inventory/update-status/${props.serviceId}`, {
+        await axios.post(`/inventory/update-status/${props.serviceId}`, {
             status: form.status,
             remarks: form.remarks,
             PNBP: form.PNBP,
@@ -372,14 +338,14 @@ const submitForm = async () => {
         });
 
         closeModal();
-        emit('dataUpdated');
+        window.location.reload();
     } catch (error) {
         console.error("Error updating data:", error);
 
         if (error.response?.status === 419) {
-            errorMessage.value = "Memperbarui sesi...";
+            errorMessage.value = "Sesi kedaluwarsa. Memperbarui CSRF token...";
             const tokenRefreshed = await refreshCSRFToken();
-            
+
             if (tokenRefreshed) {
                 isSubmitting.value = false;
                 return submitForm(); // Coba submit ulang setelah refresh token
@@ -387,7 +353,7 @@ const submitForm = async () => {
                 errorMessage.value = "Gagal memperbarui sesi. Silakan muat ulang halaman.";
             }
         } else {
-            errorMessage.value = error.response?.data?.message || "Gagal mengupdate data";
+            errorMessage.value = error.response?.data?.message || "Gagal mengupdate data.";
         }
 
         if (errorMessage.value) {
@@ -405,4 +371,5 @@ const closeModal = () => {
     emit("close");
 };
 </script>
+ 
 
