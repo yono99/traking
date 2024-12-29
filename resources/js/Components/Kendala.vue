@@ -94,8 +94,8 @@
     </div>
 </template>
 
-<script setup>
-import { ref, watch } from "vue";
+<script setup> 
+import { ref, watch, onMounted } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import axios from "axios";
 
@@ -107,6 +107,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["close"]);
+const errorMessage = ref("");
+const isSubmitting = ref(false);
 
 const statusOptions = [
     "TERKENDALA",
@@ -116,44 +118,97 @@ const statusOptions = [
 const form = useForm({
     status: "",
     remarks: "",
-    
+  
 });
 
-// Inisialisasi form dengan data yang ada
+// Konfigurasi dasar Axios
+axios.defaults.withCredentials = true;
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+// Inisialisasi CSRF token saat komponen dimount
+onMounted(async () => {
+    try {
+        await axios.get("/sanctum/csrf-cookie");
+    } catch (error) {
+        console.error("Error saat inisialisasi CSRF:", error);
+    }
+});
+
+// Fungsi untuk mendapatkan CSRF token baru
+const refreshCSRFToken = async () => {
+    try {
+        await axios.get('/sanctum/csrf-cookie');
+        return true;
+    } catch (error) {
+        console.error('Gagal memperbarui CSRF token:', error);
+        return false;
+    }
+};
+
+// Watch untuk mengisi form
 watch(
     () => props.show,
     (newVal) => {
         if (newVal && props.service) {
             form.status = props.service.status || "";
              
-       
-            
+            form.PNBP = props.service.PNBP || "";
+            form.nomor_hp = props.service.nomor_hp || "";
+            form.name = props.service.name || "";
+            form.Noberkas = props.service.Noberkas || "";
+            if (props.service.land_book) {
+                form.nomer_hak = props.service.land_book.nomer_hak || "";
+                form.jenis_hak = props.service.land_book.jenis_hak || "";
+                form.desa_kecamatan = props.service.land_book.desa_kecamatan || "";
+                form.status_alih_media = props.service.land_book.status_alih_media || "";
+            }
         }
     }
 );
 
-// UpdateModal.vue
 const submitForm = async () => {
+    if (isSubmitting.value) return;
+    isSubmitting.value = true;
+    errorMessage.value = "";
+
     try {
-        await axios.post(`/inventory/update-status/${props.serviceId}`, {
+        const response = await axios.post(`/inventory/update-status/${props.serviceId}`, {
             status: form.status,
             remarks: form.remarks,
             
-            _token: document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content"), // Tambahkan ini
         });
 
         closeModal();
-        window.location.reload();
+        emit('dataUpdated');
     } catch (error) {
         console.error("Error updating data:", error);
-        alert(error.response?.data?.message || "Gagal mengupdate data");
+
+        if (error.response?.status === 419) {
+            errorMessage.value = "Memperbarui sesi...";
+            const tokenRefreshed = await refreshCSRFToken();
+            
+            if (tokenRefreshed) {
+                isSubmitting.value = false;
+                return submitForm(); // Coba submit ulang setelah refresh token
+            } else {
+                errorMessage.value = "Gagal memperbarui sesi. Silakan muat ulang halaman.";
+            }
+        } else {
+            errorMessage.value = error.response?.data?.message || "Gagal mengupdate data";
+        }
+
+        if (errorMessage.value) {
+            alert(errorMessage.value);
+        }
+    } finally {
+        isSubmitting.value = false;
     }
 };
 
 const closeModal = () => {
     form.reset();
+    errorMessage.value = "";
+    isSubmitting.value = false;
     emit("close");
 };
 </script>

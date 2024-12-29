@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import UpdateModal from "@/Components/UpdateModal.vue";
@@ -26,6 +26,7 @@ const alertType = ref("");
 
 // Status buttons configuration
 const buttons = computed(() => ({
+    // Define your button configurations here
     verifikator: [
         "FORWARD PENGUKURAN",
         "FORWARD CARI BT",
@@ -77,6 +78,7 @@ const buttons = computed(() => ({
 
 // Status rules untuk visibility tombol
 const hideButtonRules = computed(() => ({
+    // Define your hide button rules here
     "PROSES VERIFIKASI LANJUTAN": ["FORWARD PENGUKURAN"],
     "PROSES VERIFIKASI CROSSCHECK": ["FORWARD PENGUKURAN", "FORWARD CARI BT"],
     "PROSES VERIFIKASI": ["FORWARD SPS"],
@@ -100,32 +102,38 @@ const hideButtonRules = computed(() => ({
     ],
 }));
 
+// Configure Axios to handle CSRF
+onMounted(async () => {
+    try {
+        await axios.get("/sanctum/csrf-cookie"); // Inisialisasi CSRF token
+        console.log("CSRF token initialized successfully.");
+    } catch (error) {
+        console.error("Error initializing CSRF token:", error);
+        alertMessage.value = "Gagal memuat token CSRF.";
+        alertType.value = "error";
+    }
+});
+
 // Methods
 const updateStatus = async (serviceId, newStatus) => {
     try {
         console.log("Updating status:", { serviceId, newStatus });
 
-        await axios.post(`/inventory/update-status/${serviceId}`, {
-            status: newStatus,
-            _token: document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content"),
-        });
+        const response = await axios.post(
+            `/inventory/update-status/${serviceId}`,
+            { status: newStatus }
+        );
 
-        alert("Status berhasil diperbarui.");
+        alertMessage.value =
+            response.data.message || "Status berhasil diperbarui.";
+        alertType.value = "success";
         await loadServices();
     } catch (error) {
         console.error("Error updating status:", error);
-        alert(error.response?.data?.message || "Error updating status");
+        alertMessage.value =
+            error.response?.data?.message || "Gagal memperbarui status.";
+        alertType.value = "error";
     }
-};
-
-const isButtonVisible = (service, buttonType) => {
-    if (!service || !buttonType) return false;
-
-    const status = service.status;
-    const buttonsToHide = hideButtonRules.value[status] || [];
-    return !buttonsToHide.includes(buttonType);
 };
 
 const loadServices = async () => {
@@ -144,10 +152,10 @@ const openKendalaModal = (service) => {
 
 const closeUpdateModal = () => {
     showUpdateModal.value = false;
-
     selectedItem.value = null;
     loadServices();
 };
+
 const closeKendalaModal = () => {
     showKendala.value = false;
     selectedItem.value = null;
@@ -167,40 +175,47 @@ const submitForm = async () => {
             status_alih_media: selectedItem.value.status_alih_media || "",
         });
 
-        await axios.post(`/inventory/update-status/${selectedItem.value.id}`, {
-            status: selectedItem.value.status || "",
-            remarks: selectedItem.value.remarks || "",
-            PNBP: selectedItem.value.PNBP || "",
-            nomor_hp: selectedItem.value.nomor_hp || "",
-            nomer_hak: selectedItem.value.nomer_hak || "",
-            jenis_hak: selectedItem.value.jenis_hak || "",
-            desa_kecamatan: selectedItem.value.desa_kecamatan || "",
-            status_alih_media: selectedItem.value.status_alih_media || "",
-        });
+        const response = await axios.post(
+            `/inventory/update-status/${selectedItem.value.id}`,
+            {
+                status: selectedItem.value.status || "",
+                remarks: selectedItem.value.remarks || "",
+                PNBP: selectedItem.value.PNBP || "",
+                nomor_hp: selectedItem.value.nomor_hp || "",
+                nomer_hak: selectedItem.value.nomer_hak || "",
+                jenis_hak: selectedItem.value.jenis_hak || "",
+                desa_kecamatan: selectedItem.value.desa_kecamatan || "",
+                status_alih_media: selectedItem.value.status_alih_media || "",
+            }
+        );
 
-        // Jika pengiriman berhasil, tampilkan alert sukses
-        alertMessage.value = response.data.message || "Data berhasil diupdate";
+        alertMessage.value = response.data.message || "Berkas berhasil diteruskan kepetugas selanjutnya.";
         alertType.value = "success";
-
-        closeModal();
+        closeUpdateModal();
 
         // Menghilangkan alert setelah 5 detik
         setTimeout(() => {
             alertMessage.value = "";
-        }, 5000); // 5000ms = 5 detik
+        }, 5000);
     } catch (error) {
         console.error("Error submitting form:", error);
-        // Jika terjadi kesalahan, tampilkan alert error
         alertMessage.value =
             error.response?.data?.message || "Gagal mengupdate data";
         alertType.value = "error";
-        // alert(error.response?.data?.message || "Gagal mengupdate data");
 
         // Menghilangkan alert setelah 5 detik
         setTimeout(() => {
             alertMessage.value = "";
-        }, 5000); // 5000ms = 5 detik
+        }, 5000);
     }
+};
+
+const isButtonVisible = (service, buttonType) => {
+    if (!service || !buttonType) return false;
+
+    const status = service.status;
+    const buttonsToHide = hideButtonRules.value[status] || [];
+    return !buttonsToHide.includes(buttonType);
 };
 </script>
 

@@ -65,8 +65,10 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 import AppLayout from "@/Layouts/AppLayout.vue";
+
 export default {
     layout: AppLayout,
     setup() {
@@ -74,62 +76,56 @@ export default {
         const services = ref([]);
         const errorMessage = ref("");
 
-        const search = () => {
+        // Set up CSRF token in Axios globally
+        onMounted(async () => {
+            try {
+                await axios.get("/sanctum/csrf-cookie"); // Initialize CSRF token
+            } catch (error) {
+                console.error("Error saat inisialisasi CSRF:", error);
+                errorMessage.value =
+                    "Terjadi kesalahan saat memuat token CSRF.";
+            }
+        });
+
+        const search = async () => {
             services.value = [];
             errorMessage.value = "";
 
-            fetch(`/search?nomer_hak=${encodeURIComponent(nomorHak.value)}`)
-                .then((response) => {
-                    if (!response.ok)
-                        throw new Error(
-                            `HTTP error! status: ${response.status}`
-                        );
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log("Data diterima:", data); // Debugging
-                    services.value = data.services || [];
-                })
-                .catch((error) => {
-                    console.error("Error saat mencari data:", error);
-                    errorMessage.value =
-                        "Terjadi kesalahan saat mencari data. Silakan coba lagi.";
+            try {
+                const response = await axios.get(`/search`, {
+                    params: {
+                        nomer_hak: nomorHak.value,
+                    },
                 });
+                console.log("Data diterima:", response.data); // Debugging
+                services.value = response.data.services || [];
+            } catch (error) {
+                console.error("Error saat mencari data:", error);
+                errorMessage.value =
+                    error.response?.data?.message ||
+                    "Terjadi kesalahan saat mencari data. Silakan coba lagi.";
+            }
         };
 
-        const updateStatus = (serviceId) => {
+        const updateStatus = async (serviceId) => {
             if (!serviceId) {
                 errorMessage.value = "Service ID tidak valid.";
                 return;
             }
 
-            fetch(`/update-status`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document
-                        .querySelector('meta[name="csrf-token"]')
-                        .getAttribute("content"),
-                },
-                body: JSON.stringify({
+            try {
+                const response = await axios.post("/update-status", {
                     service_id: serviceId,
                     status: "UPDATED",
-                }),
-            })
-                .then((response) => {
-                    if (!response.ok)
-                        throw new Error("Gagal memperbarui status.");
-                    return response.json();
-                })
-                .then((data) => {
-                    alert(data.message);
-                    search(); // Refresh data
-                })
-                .catch((error) => {
-                    console.error("Error saat memperbarui status:", error);
-                    errorMessage.value =
-                        "Terjadi kesalahan saat memperbarui status.";
                 });
+                alert(response.data.message);
+                search(); // Refresh data
+            } catch (error) {
+                console.error("Error saat memperbarui status:", error);
+                errorMessage.value =
+                    error.response?.data?.message ||
+                    "Terjadi kesalahan saat memperbarui status.";
+            }
         };
 
         return {
@@ -142,6 +138,7 @@ export default {
     },
 };
 </script>
+
 
 <style scoped>
 .search-container {
