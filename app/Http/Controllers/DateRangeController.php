@@ -13,7 +13,7 @@ class DateRangeController extends Controller
 {
     public function index()
     {
-        return Inertia::render('DateRange/Index');
+        return Inertia::render('Components/DateRange');
     }
     public function getDateRangeData(Request $request)
     {

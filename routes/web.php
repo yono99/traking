@@ -45,13 +45,10 @@ Route::middleware([
 Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
     Route::get('/management-akun', [ManagementAkunController::class, 'index'])->name('management.akun');
     Route::post('/management-akun/update', [ManagementAkunController::class, 'update'])->name('management.akun.update');
-    // route chart & export excel admin
-    Route::get('/date-range', [DateRangeController::class, 'getDateRangeData'])->name('date-range.index');
-    Route::post('/api/date-range-data', [DateRangeController::class, 'getDateRangeData']);
-    Route::get('/date-range', [DateRangeController::class, 'index'])->name('date-range.index');
-    Route::get('/export-excel', [DateRangeController::class, 'exportExcel'])->name('export.excel');
+
+
     Route::get('/hitung-berkas-alihmedia-rutin', [Hitung_berkas_alihmedia_rutinController::class, 'hitungBerkasAlihmediaRutin']);
-    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+ 
     Route::get('/teams', [TeamsController::class, 'index'])->name('teams.index');
     Route::post('/teams', [TeamsController::class, 'store'])->name('teams.store');
     Route::post('/teams/{team}/add-member', [TeamsController::class, 'addMember'])->name('teams.addMember');
@@ -76,10 +73,7 @@ Route::middleware(['auth', Unitdanadmin::class . ':loketdanadmin'])->group(
 // Rute untuk TanyaGenggam dan Inventory
 Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
  
-    // route chart & export excel unit
-    Route::get('/laporan-unit', [LaporanUnitController::class, 'index'])->name('laporan-unit.index');
-    Route::post('/api/date-range-data', [LaporanUnitController::class, 'getDateRangeData']);
-    Route::get('/laporan-unit/export-excel', [LaporanUnitController::class, 'exportExcel'])->name('export.excel');
+    
     // Rute untuk menampilkan halaman TanyaGenggam
     Route::get('/tanya-smart', [TanyaGenggamController::class, 'index'])->name('tanya-smart.index');
 
@@ -91,7 +85,17 @@ Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
     
   
 });
+// route chart & export excel admin
+Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+Route::get('/date-range', [DateRangeController::class, 'getDateRangeData'])->name('date-range.index');
+Route::post('/api/date-range-data', [DateRangeController::class, 'getDateRangeData']);
+ 
+Route::get('/export-excel', [DateRangeController::class, 'exportExcel'])->name('export.excel');
 
+// route chart & export excel unit
+Route::get('/laporan-unit', [LaporanUnitController::class, 'index'])->name('laporan-unit.index');
+Route::post('/api/get-laporan-unit', [LaporanUnitController::class, 'getDateRangeData']);
+Route::get('/laporan-unit/export-excel', [LaporanUnitController::class, 'exportExcel'])->name('export.excel');
 // Tambahkan route ini di web.php
 Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
 // update untuk komponen dijadikan universal agar bisa multifungsi

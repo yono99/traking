@@ -74,7 +74,7 @@ const fetchData = async () => {
   }
 
   try {
-    const response = await axios.post('/api/date-range-data', {
+    const response = await axios.post('/api/get-laporan-unit', {
       start_date: startDate.value,
       end_date: endDate.value
     })
