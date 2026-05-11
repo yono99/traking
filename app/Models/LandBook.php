@@ -17,6 +17,8 @@ class LandBook extends Model
         'desa_kecamatan',
         'jenis_hak',
         'status_alih_media',
+        'file_path', // ✅ tambahkan ini
+
     ];
 
     // Model LandBook.php
@@ -29,4 +31,9 @@ class LandBook extends Model
     {
         return $this->hasMany(Activity::class, 'activities_id');
     }
+    // LandBook.php
+public function services()
+{
+    return $this->hasMany(Service::class, 'land_book_id');
+}
 }

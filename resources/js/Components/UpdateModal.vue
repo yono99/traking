@@ -171,21 +171,7 @@
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             />
                         </div>
-                        <!-- Nomor HP -->
-                        <div v-if="
-                                    $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||
-                                    $page.props.auth?.user?.role === 'admin'
-                                ">
-                            <label
-                                class="block text-sm font-medium text-gray-700"
-                                >Nomor HP</label
-                            >
-                            <input
-                                type="text"
-                                v-model="form.nomor_hp"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            />
-                        </div>
+                   
                         <!-- Status Alih Media -->
                         <div v-if="
                                     $page.props.auth?.user?.unit === 'bensus' || $page.props.auth?.user?.unit === 'loket' ||

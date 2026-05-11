@@ -35,8 +35,8 @@ class CheckUnit
             'paraf',
             'TTE_PRODUK_LAYANAN',
             'LOKET_PENYERAHAN',
+             
         ];
-
         // Ambil unit dari pengguna yang sedang login
         $userUnit = Auth::user()->unit; // Pastikan kolom "unit" ada di tabel users
 

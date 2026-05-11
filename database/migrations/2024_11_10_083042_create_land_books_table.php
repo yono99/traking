@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('jenis_hak');
             $table->string('desa_kecamatan');
             $table->string('status_alih_media')->default('null');
+            $table->string('file_path')->nullable(); // path file upload
             $table->timestamps();
         });
     }

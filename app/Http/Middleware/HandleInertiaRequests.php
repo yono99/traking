@@ -37,5 +37,11 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
         ];
+           return array_merge(parent::share($request), [
+        'flash' => [
+            'kode_berkas' => $request->session()->get('kode_berkas'),
+            'message'     => $request->session()->get('message'),
+        ],
+    ]);
     }
 }

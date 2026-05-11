@@ -21,7 +21,7 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DateRangeController;
 use App\Http\Middleware\Unitdanadmin;
 use App\Http\Controllers\LaporanUnitController;
-
+use App\Http\Controllers\WaGatewayController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -32,6 +32,11 @@ Route::get('/', function () {
     ]);
 });
 
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/wa-gateway', [WaGatewayController::class, 'index'])
+         ->name('wa-gateway.index');
+});
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -59,11 +64,11 @@ Route::middleware(['auth', CheckRole::class . ':admin'])->group(function () {
     Route::get('/users', [UserController::class, 'index']);
 });
 
-Route::middleware(['auth', LoketMiddleware::class . ':loket'])->group(function () {
+ 
     Route::get('/genggam-berkas', [GenggamBerkasController::class, 'index'])->name('genggam.berkas');
     Route::get('/genggam-berkas/create', [GenggamBerkasController::class, 'create'])->name('genggam-berkas.create');
     Route::post('/genggam-berkas', [GenggamBerkasController::class, 'store'])->name('genggam-berkas.store');
-});
+ 
 Route::middleware(['auth', Unitdanadmin::class . ':loketdanadmin'])->group(
     function () {
 
@@ -109,5 +114,17 @@ Route::get('/total-proses-tte', [ServiceController::class, 'dataProsesTte'])->na
 Route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])
     ->name('inventory.update-status');
 Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
-route::post('/inventory/update-status/{serviceId}', [InventoryController::class, 'updateStatus'])->name('inventory.updateStatus');
 Route::post('/update-status', [TanyaGenggamController::class, 'updateStatus']);
+
+
+Route::middleware(['auth'])->prefix('wa')->group(function () {
+    Route::get('/sessions', [WaGatewayController::class, 'sessions']);
+    Route::post('/sessions/start', [WaGatewayController::class, 'start']);
+    Route::get('/sessions/qr/{sessionId}', [WaGatewayController::class, 'qr']);
+    Route::get('/sessions/status/{sessionName}', [WaGatewayController::class, 'status']);
+    Route::delete('/sessions/{id}', [WaGatewayController::class, 'destroy']);
+});
+
+// Tanpa auth dulu untuk test
+Route::post('/wa/send', [WaGatewayController::class, 'sendMessage']);
+Route::post('/wa/send-image', [WaGatewayController::class, 'sendImage']);

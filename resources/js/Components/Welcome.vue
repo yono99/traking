@@ -16,7 +16,8 @@ const parseFlatArrayToObjects = (flatArray) => {
             service_name: flatArray[i + 5],
             service_contact: flatArray[i + 6],
             update_at: flatArray[i + 7],
-            unit: flatArray[i + 8], // Menambahkan unit di sini
+            unit: flatArray[i + 8],  
+            nama_pemohon: flatArray[i + 8],
         });
     }
     return result;
@@ -510,7 +511,7 @@ export default {
                 Tidak ada data yang ditemukan untuk filter yang diberikan.
             </div>
 
-            <div v-e lse class="overflow-x-auto">
+            <div v-else class="overflow-x-auto">
                 <table class="table-auto w-full border-collapse border border-gray-300">
                     <thead class="bg-gray-200">
                         <tr>
@@ -553,14 +554,14 @@ export default {
                                 {{ activity.desa_kecamatan }}
                             </td>
                             <td class="border border-gray-300 px-4 py-2">
-                                {{ activity.user_name }}
+                                {{ activity.user_name ?? ('customer - ' + activity.nama_pemohon) }}
                             </td>
 
                             <td class="border border-gray-300 px-4 py-2">
                                 {{ activity.activity_status }}
                             </td>
                             <td class="border border-gray-300 px-4 py-2">
-                                {{ activity.service_name }}
+                                {{ activity.service_name ?? 'pengecekan' }}
                             </td>
                             <td class="border border-gray-300 px-4 py-2">
                                 0{{ activity.service_contact }}

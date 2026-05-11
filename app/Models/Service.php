@@ -18,7 +18,8 @@ class Service extends Model
         'nomor_hp',
         'remarks',
         'Noberkas',
-
+        'file_path',  
+        'nama_pemohon', 
         
     ];
 
@@ -26,7 +27,8 @@ class Service extends Model
     // Model Service.php
     public function activities()
     {
-        return $this->hasMany(Activity::class, 'activities_id');
+         
+        return $this->hasMany(Activity::class, 'service_id');
     }
 
     public function landBook()
@@ -38,4 +40,5 @@ class Service extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
 }

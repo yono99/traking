@@ -148,8 +148,7 @@
                                             </td>
                                             <td
                                                 class="px-3 py-4 text-sm text-gray-500"
-                                           
-                                     >
+                                            >
                                                 {{ service.status }}
                                             </td>
                                             <td
@@ -160,8 +159,13 @@
                                             <td
                                                 class="px-3 py-4 text-sm text-gray-500"
                                             >
-                                                {{ service.nomor_hp || "N/A" }}
+                                                {{
+                                                    service.nomor_hp
+                                                        ? "0" + service.nomor_hp
+                                                        : "N/A"
+                                                }}
                                             </td>
+
                                             <td
                                                 class="px-3 py-4 text-sm text-gray-500"
                                             >
@@ -191,7 +195,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
 
             <!-- Update Modal -->
             <UpdateModal
@@ -234,15 +238,15 @@ const filteredServices = computed(() => {
         return (
             (!filters.value.nomer_hak ||
                 service.land_book?.nomer_hak?.includes(
-                    filters.value.nomer_hak
+                    filters.value.nomer_hak,
                 )) &&
             (!filters.value.jenis_hak ||
                 service.land_book?.jenis_hak?.includes(
-                    filters.value.jenis_hak
+                    filters.value.jenis_hak,
                 )) &&
             (!filters.value.desa_kecamatan ||
                 service.land_book?.desa_kecamatan?.includes(
-                    filters.value.desa_kecamatan
+                    filters.value.desa_kecamatan,
                 ))
         );
     });

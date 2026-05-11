@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
 // Mendaftarkan route middleware
 $app->routeMiddleware([
     'role' => \App\Http\Middleware\CheckRole::class, // Menggunakan namespace lengkap
-    'loket' => \App\Http\Middleware\LoketMiddleware::class,
+    
     'checkUnit' => \App\Http\Middleware\CheckUnit::class,
     'main' => \App\Http\Middleware\CheckUnit::class,
     'loketdanadmin' => \App\Http\Middleware\Unitdanadmin::class,

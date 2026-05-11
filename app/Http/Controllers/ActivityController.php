@@ -73,46 +73,45 @@ class ActivityController extends Controller
     }
 
     // fetch data activity di welcome komponen fitur pencarian 
-    public function fetch(Request $request)
-    {
-        $nomerHak = $request->input('nomer_hak');
-        $jenisHak = $request->input('jenis_hak');
-        $desaKecamatan = $request->input('desa_kecamatan');
+   public function fetch(Request $request)
+{
+    $nomerHak = $request->input('nomer_hak');
+    $jenisHak = $request->input('jenis_hak');
+    $desaKecamatan = $request->input('desa_kecamatan');
 
-        $activities = LandBook::query()
-            ->when($nomerHak, function ($query) use ($nomerHak) {
-                $query->where('nomer_hak', $nomerHak);
-            })
-            ->when($jenisHak, function ($query) use ($jenisHak) {
-                $query->where('jenis_hak', $jenisHak);
-            })
-            ->when($desaKecamatan, function ($query) use ($desaKecamatan) {
-                $query->where('desa_kecamatan', $desaKecamatan);
-            })
-            ->with(['services.activities.user'])
-            ->get();
+    $activities = LandBook::query()
+        ->when($nomerHak, function ($query) use ($nomerHak) {
+            $query->where('nomer_hak', $nomerHak);
+        })
+        ->when($jenisHak, function ($query) use ($jenisHak) {
+            $query->where('jenis_hak', $jenisHak);
+        })
+        ->when($desaKecamatan, function ($query) use ($desaKecamatan) {
+            $query->where('desa_kecamatan', $desaKecamatan);
+        })
+        ->with(['services.activities.user'])
+        ->get();
 
-        // Format data menjadi array of objects
-        $formattedActivities = $activities->flatMap(function ($landBook) {
-            return $landBook->services->flatMap(function ($service) {
-                return $service->activities->map(function ($activity) use ($service) {
-                    return [
-                        'nomer_hak' => $service->landBook->nomer_hak ?? null,
-                        'jenis_hak' => $service->landBook->jenis_hak ?? null,
-                        'desa_kecamatan' => $service->landBook->desa_kecamatan ?? null,
-                        'user_name' => $activity->user->name
-                            . ' - '
-                            . ($activity->user->unit ?? 'Unknown'), // Gabungkan nama dengan unit
-                        'activity_status' => $activity->status,
-                        'service_name' => $service->name,
-                    
-                        'service_contact' => $service->nomor_hp,
-                        'created_at' => $activity->created_at->format('Y-m-d H:i:s'), // Format waktu
-                    ];
-                });
+    $formattedActivities = $activities->flatMap(function ($landBook) {
+        return $landBook->services->flatMap(function ($service) {
+            return $service->activities->map(function ($activity) use ($service) {
+                return [
+                    'nomer_hak'      => $service->landBook->nomer_hak ?? null,
+                    'jenis_hak'      => $service->landBook->jenis_hak ?? null,
+                    'desa_kecamatan' => $service->landBook->desa_kecamatan ?? null,
+                    'user_name'      => $activity->user   
+                        ? $activity->user->name . ' - ' . ($activity->user->unit ?? 'Unknown')
+                        : null,
+                    'activity_status' => $activity->status,
+                    'service_name'    => $service->name,
+                    'service_contact' => $service->nomor_hp,
+                    'created_at'      => $activity->created_at->format('Y-m-d H:i:s'),
+                    'nama_pemohon'    => $service->nama_pemohon,  
+                ];
             });
         });
+    });
 
-        return response()->json($formattedActivities->flatten());
-    }
+    return response()->json($formattedActivities->flatten());
+}
 }
