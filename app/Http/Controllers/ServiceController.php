@@ -153,4 +153,56 @@ class ServiceController extends Controller
             return response()->json(['message' => 'Gagal mendapatkan data', 'error' => $th->getMessage()], 500);
         }
     }
+    public function getDashboardStats()
+{
+    try {
+        $breakdown = Service::selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $forwardStatuses = [
+            'FORWARD LOKET', 'FORWARD BUKU TANAH', 'FORWARD PENGUKURAN',
+            'FORWARD VALIDASI BIDANG', 'FORWARD VALIDASI BUKU TANAH',
+            'FORWARD LOKET PENYERAHAN',
+        ];
+        $prosesStatuses = [
+            'PROSES LOKET', 'PROSES BUKU TANAH', 'PROSES PENGUKURAN',
+            'PROSES VALIDASI BIDANG', 'PROSES VALIDASI BUKU TANAH',
+            'PROSES LOKET PENYERAHAN',
+        ];
+
+        return response()->json([
+            'countProses'    => array_sum(array_intersect_key($breakdown->toArray(), array_flip($prosesStatuses))),
+            'countSelesaiTTE'=> $breakdown->get('SELESAI DISERAHKAN', 0),
+            'countForward'   => array_sum(array_intersect_key($breakdown->toArray(), array_flip($forwardStatuses))),
+            'countTotal'     => $breakdown->sum(),
+            'breakdown'      => $breakdown,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Gagal mengambil data.'], 500);
+    }
+}
+
+public function getRecentServices()
+{
+    try {
+        $recent = Service::with('land_book')
+            ->latest()
+            ->limit(10)
+            ->get()
+            ->map(fn($s) => [
+                'id'       => $s->id,
+                'name'     => $s->land_book?->nama_pemegang ?? '-',
+                'hak'      => ($s->land_book?->jenis_hak ?? '-') . ' / ' . ($s->land_book?->nomer_hak ?? '-'),
+                'lokasi'   => $s->land_book?->desa_kecamatan ?? '-',
+                'pnbp'     => $s->PNBP ?? '-',
+                'status'   => $s->status,
+                'created'  => $s->created_at?->format('d/m/Y'),
+            ]);
+
+        return response()->json(['data' => $recent]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Gagal mengambil data.'], 500);
+    }
+}
 }

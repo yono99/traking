@@ -21,7 +21,7 @@ const submit = () => {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
-const smartLogo = '/assets/images/smart_logo.svg';
+const smartLogo = '/assets/images/favicon2.svg';
 </script>
 
 <template>

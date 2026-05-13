@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title inertia>{{ config('traking','app.name') }}</title>
-    <link rel="icon" href="/assets/images/smart_logo.svg" type="image/x-icon">
+    <link rel="icon" href="/assets/favicon2.svg" type="image/x-icon">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

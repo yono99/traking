@@ -23,6 +23,7 @@ use App\Http\Middleware\Unitdanadmin;
 use App\Http\Controllers\LaporanUnitController;
 use App\Http\Controllers\WaGatewayController;
 use App\Http\Controllers\LacakBerkasController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -108,7 +109,7 @@ Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
 
 
 Route::get('/total-proses', [ServiceController::class, 'dataProses'])->name('total-proses');
- 
+Route::get('/api/service/counts', [ServiceController::class, 'getServiceCounts']);
 Route::get('/total-proses-tte', [ServiceController::class, 'dataProsesTte'])->name('total-proses-tte');
 
 
@@ -137,4 +138,11 @@ Route::get('/lacak', [LacakBerkasController::class, 'index'])
  
 Route::get('/lacak/{kode}', [LacakBerkasController::class, 'show'])
     ->name('lacak.show');
+ Route::get('/service/dashboard-stats', [ServiceController::class, 'getDashboardStats']);
+Route::get('/service/recent',          [ServiceController::class, 'getRecentServices']);
  
+Route::get('/api/dashboard-stats', [ServiceController::class, 'getDashboardStats']);
+
+
+
+Route::get('/api/notifications', [NotificationController::class, 'index']);

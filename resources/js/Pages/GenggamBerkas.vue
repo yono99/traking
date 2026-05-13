@@ -1095,8 +1095,7 @@ export default {
                                 {{ resumeData.kode_berkas }}
                             </div>
                             <div class="resume-kode-hint">
-                                Sampaikan kode ini kepada pemohon untuk
-                                pelacakan berkas.
+                                Diatas adalah kode berkas yang dapat di lacak.
                             </div>
                             <!-- URL lacak yang akan di-encode QR -->
                             <div class="resume-lacak-url">
