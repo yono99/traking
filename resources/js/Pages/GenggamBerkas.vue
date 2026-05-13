@@ -2,8 +2,9 @@
 import { ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import axios from "axios";
- 
+
 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]')?.content;
+
 export default {
     setup() {
         // ─── Step & Resume State ───────────────────────────────────
@@ -389,6 +390,13 @@ export default {
             jenis_hak: "",
         });
 
+        // ─── Helper: build QR URL (dinamis pakai window.location.origin) ──
+        const buildQrUrl = (kode, size = "300x300") => {
+            const baseUrl = window.location.origin;
+            const lacakUrl = `${baseUrl}/lacak/${kode}`;
+            return `https://api.qrserver.com/v1/create-qr-code/?size=${size}&data=${encodeURIComponent(lacakUrl)}&format=png`;
+        };
+
         // ─── Submit ────────────────────────────────────────────────
         const submitForm = () => {
             errors.value = {
@@ -449,7 +457,7 @@ export default {
                     searchQuery.value = "";
                     uploadedFileName.value = "";
 
-                    // ← Otomatis kirim WA setelah berkas tersimpan
+                    // Otomatis kirim WA setelah berkas tersimpan
                     await kirimWA();
                 },
                 onError: (errs) => console.error("Error submit:", errs),
@@ -457,44 +465,46 @@ export default {
         };
 
         // ─── Kirim WA ──────────────────────────────────────────────
- 
+        const kirimWA = async () => {
+            if (!resumeData.value) return;
+            waSending.value = true;
+            waError.value = "";
 
-       const kirimWA = async () => {
-    if (!resumeData.value) return;
-    waSending.value = true;
-    waError.value = "";
+            const phone = "62" + resumeData.value.nomor_hp;
 
-    const phone = "62" + resumeData.value.nomor_hp;
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(resumeData.value.kode_berkas)}&format=png`;
+            // URL lacak berkas yang akan di-encode ke QR
+            const baseUrl = window.location.origin;
+            const lacakUrl = `${baseUrl}/lacak/${resumeData.value.kode_berkas}`;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(lacakUrl)}&format=png`;
 
-    const text =
-        `✅ *Berkas Anda Telah Diterima*\n\n` +
-        `📋 Kode Berkas: *${resumeData.value.kode_berkas}*\n` +
-        `👤 Nama: ${resumeData.value.nama_pemohon || "-"}\n` +
-        `📍 Lokasi: ${resumeData.value.desa_kecamatan}\n` +
-        `📄 Jenis Hak: ${resumeData.value.jenis_hak} / No. ${resumeData.value.nomer_hak}\n` +
-        `📅 Tanggal: ${resumeData.value.tanggal}\n\n` +
-        `Gunakan kode berkas di atas untuk melacak status berkas Anda.\n` +
-        `Terima kasih.`;
+            const text =
+                `✅ *Berkas Anda Telah Diterima*\n\n` +
+                `📋 Kode Berkas: *${resumeData.value.kode_berkas}*\n` +
+                `👤 Nama: ${resumeData.value.nama_pemohon || "-"}\n` +
+                `📍 Lokasi: ${resumeData.value.desa_kecamatan}\n` +
+                `📄 Jenis Hak: ${resumeData.value.jenis_hak} / No. ${resumeData.value.nomer_hak}\n` +
+                `📅 Tanggal: ${resumeData.value.tanggal}\n\n` +
+                `🔗 Lacak berkas Anda di:\n${lacakUrl}\n\n` +
+                `Terima kasih.`;
 
-    try {
-        // Kirim teks dulu
-        await axios.post("/wa/send", { to: phone, text });
+            try {
+                // Kirim teks dulu
+                await axios.post("/wa/send", { to: phone, text });
 
-        // Kirim QR sebagai gambar
-        await axios.post("/wa/send-image", {
-            to: phone,
-            text: `🔲 QR Code untuk kode berkas *${resumeData.value.kode_berkas}*`,
-            image_url: qrUrl,
-        });
+                // Kirim QR sebagai gambar
+                await axios.post("/wa/send-image", {
+                    to: phone,
+                    text: `🔲 QR Code untuk melacak berkas *${resumeData.value.kode_berkas}*\nScan untuk membuka: ${lacakUrl}`,
+                    image_url: qrUrl,
+                });
 
-        waSent.value = true;
-    } catch (err) {
-        waError.value = err.response?.data?.message || "Gagal mengirim WhatsApp.";
-    } finally {
-        waSending.value = false;
-    }
-};
+                waSent.value = true;
+            } catch (err) {
+                waError.value = err.response?.data?.message || "Gagal mengirim WhatsApp.";
+            } finally {
+                waSending.value = false;
+            }
+        };
 
         // ─── Reset ke form ─────────────────────────────────────────
         const inputBaru = () => {
@@ -526,6 +536,7 @@ export default {
             waError,
             kirimWA,
             inputBaru,
+            buildQrUrl,
         };
     },
 };
@@ -1087,18 +1098,23 @@ export default {
                                 Sampaikan kode ini kepada pemohon untuk
                                 pelacakan berkas.
                             </div>
+                            <!-- URL lacak yang akan di-encode QR -->
+                            <div class="resume-lacak-url">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                </svg>
+                                {{ $page?.props?.ziggy?.url ?? '' }}/lacak/{{ resumeData.kode_berkas }}
+                            </div>
                         </div>
-                        <!-- QR code menggunakan Google Charts API -->
+                        <!-- QR code — encode URL lacak penuh, dinamis dari window.location.origin -->
                         <div class="resume-qr">
                             <img
-                                :src="`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(resumeData.kode_berkas)}&format=png&margin=8`"
-                                :alt="resumeData.kode_berkas"
+                                :src="buildQrUrl(resumeData.kode_berkas, '140x140') + '&margin=8'"
+                                :alt="`QR lacak berkas ${resumeData.kode_berkas}`"
                                 width="140"
                                 height="140"
                             />
-                            <span class="resume-qr-label"
-                                >Scan untuk kode berkas</span
-                            >
+                            <span class="resume-qr-label">Scan untuk lacak berkas</span>
                         </div>
                     </div>
 
@@ -1743,6 +1759,21 @@ export default {
     color: #64748b;
     max-width: 260px;
     line-height: 1.5;
+    margin-bottom: 0.5rem;
+}
+.resume-lacak-url {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    color: #2563eb;
+    font-family: "JetBrains Mono", monospace;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    max-width: 280px;
+    word-break: break-all;
 }
 .resume-qr {
     display: flex;

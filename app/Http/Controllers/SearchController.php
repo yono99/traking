@@ -2,27 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Activity;
-use Illuminate\Http\Request;
-use App\Models\LandBook;
 use App\Models\Service;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class SearchController extends Controller
 {
-
     public function search(Request $request)
     {
         $nomerHak = $request->input('nomer_hak');
         $userUnit = Auth::user()->unit;
 
-        // Tentukan status berdasarkan unit user
         $statusArray = $this->getStatusByUnit($userUnit);
 
         $services = Service::when(!empty($statusArray), function ($query) use ($statusArray) {
-            return $query->whereIn('status', $statusArray);
-        })
+                return $query->whereIn('status', $statusArray);
+            })
             ->with('landBook')
             ->when(!empty($nomerHak), function ($query) use ($nomerHak) {
                 return $query->whereHas('LandBook', function ($subQuery) use ($nomerHak) {
@@ -30,43 +25,17 @@ class SearchController extends Controller
                 });
             })
             ->get();
-        // dd($services);
 
-        return response()->json([
-            // 'landBooks' => $landBooks,
-            'services' => $services,
-        ]);
+        return response()->json(['services' => $services]);
     }
 
     private function getStatusByUnit($unit)
     {
-        switch ($unit) {
-            case 'verifikator':
-                return ['FORWARD VERIFIKATOR', 'FORWARD VERIFIKATOR CEK SYARAT', 'FORWARD VERIFIKASI LANJUTAN'];
-            case 'pengukuran':
-                return ['FORWARD PENGUKURAN', 'FORWARD ALIH MEDIA SUEL'];
-            case 'bukutanah':
-                return ['FORWARD CARI BT', 'FORWARD ALIH MEDIA BTEL'];
-            case 'sps':
-                return ['FORWARD SPS'];
-            case 'bensus':
-                return ['FORWARD BENSUS', 'FORWARD BENSUS DISPOSISI'];
-            case 'pelaksana':
-            case 'pelaksana':
-            case 'pelaksana_bn':
-            case 'pelaksana_ph':
-            case  'pelaksana_roya':
-            case  'pelaksana_ph_ruko':
-            case 'pelaksana_sk':
-                return ['FORWARD PELAKSANA', 'FORWARD PELAKSANA BUAT CATATAN', 'FORWARD PELAKSANA CETAK SERTEL'];
-            case 'pengesahan':
-                return ['FORWARD PENGESAHAN ALIH MEDIA BTEL'];
-            case 'TTE_PRODUK_LAYANAN':
-                return ['FORWARD TTE PRODUK LAYANAN'];
-            case 'LOKET_PENYERAHAN':
-                return ['FORWARD LOKET PENYERAHAN'];
-            default:
-                return [];
-        }
+        return [
+            'loket'            => ['FORWARD LOKET'],
+            'bukutanah'        => ['FORWARD BUKU TANAH', 'FORWARD VALIDASI BUKU TANAH'],
+            'pengukuran'       => ['FORWARD PENGUKURAN', 'FORWARD VALIDASI BIDANG'],
+            'loket_penyerahan' => ['FORWARD LOKET PENYERAHAN'],
+        ][$unit] ?? [];
     }
 }

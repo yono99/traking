@@ -22,6 +22,7 @@ use App\Http\Controllers\DateRangeController;
 use App\Http\Middleware\Unitdanadmin;
 use App\Http\Controllers\LaporanUnitController;
 use App\Http\Controllers\WaGatewayController;
+use App\Http\Controllers\LacakBerkasController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -123,8 +124,17 @@ Route::middleware(['auth'])->prefix('wa')->group(function () {
     Route::get('/sessions/qr/{sessionId}', [WaGatewayController::class, 'qr']);
     Route::get('/sessions/status/{sessionName}', [WaGatewayController::class, 'status']);
     Route::delete('/sessions/{id}', [WaGatewayController::class, 'destroy']);
+    
 });
 
 // Tanpa auth dulu untuk test
 Route::post('/wa/send', [WaGatewayController::class, 'sendMessage']);
 Route::post('/wa/send-image', [WaGatewayController::class, 'sendImage']);
+
+
+Route::get('/lacak', [LacakBerkasController::class, 'index'])
+    ->name('lacak.index');
+ 
+Route::get('/lacak/{kode}', [LacakBerkasController::class, 'show'])
+    ->name('lacak.show');
+ 

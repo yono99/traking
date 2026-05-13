@@ -20,6 +20,7 @@ class CheckUnit
     {
         // Daftar unit yang diizinkan
         $allowedUnits = [
+            'loket',
             'verifikator',
             'pengukuran',
             'bukutanah',

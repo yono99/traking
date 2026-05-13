@@ -8,7 +8,7 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Selamat Datang - SMART" />
+    <Head title="Selamat Datang  " />
 
     <div class="smart-page">
         <!-- Noise texture overlay -->
@@ -18,7 +18,7 @@ defineProps({
         <header class="smart-header">
             <div class="brand">
                 <img src="/assets/images/smart_logo.svg" alt="SMART" class="brand-logo" />
-                <span class="brand-name">SMART</span>
+                <span class="brand-name">traking</span>
             </div>
             <div class="nav-actions" v-if="canLogin">
                 <Link :href="route('login')" class="btn-ghost">Masuk</Link>

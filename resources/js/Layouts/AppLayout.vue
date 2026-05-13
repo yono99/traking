@@ -24,7 +24,7 @@ const switchToTeam = (team) => {
         },
         {
             preserveState: false,
-        }
+        },
     );
 };
 
@@ -37,7 +37,7 @@ const smartLogo = "/assets/images/smart_logo.svg";
 
 <template>
     <div>
-        <Head :title="title"> @vite(['resources/js/app.js']) </Head>
+        <Head :title="title" > @vite(['resources/js/app.js']) </Head>
 
         <Banner />
 
@@ -104,6 +104,17 @@ const smartLogo = "/assets/images/smart_logo.svg";
                                 </NavLink>
                                 <NavLink
                                     v-if="
+                                        $page.props.auth?.user?.role === 'admin'
+                                    "
+                                    :href="route('wa-gateway.index')"
+                                    :active="
+                                        route().current('wa-gateway.index')
+                                    "
+                                >
+                                    wagateway
+                                </NavLink>
+                                <NavLink
+                                    v-if="
                                         [
                                             'verifikator',
                                             'pengukuran',
@@ -124,7 +135,9 @@ const smartLogo = "/assets/images/smart_logo.svg";
                                         ].includes($page.props.auth?.user?.unit)
                                     "
                                     :href="route('laporan-unit.index')"
-                                    :active="route().current('laporan-unit.index')"
+                                    :active="
+                                        route().current('laporan-unit.index')
+                                    "
                                 >
                                     Laporan
                                 </NavLink>
@@ -140,7 +153,7 @@ const smartLogo = "/assets/images/smart_logo.svg";
                                 <NavLink
                                     v-if="
                                         [
-                                            'verifikator',
+                                            'loket',
                                             'pengukuran',
                                             'bensus',
                                             'pelaksana',
@@ -163,12 +176,12 @@ const smartLogo = "/assets/images/smart_logo.svg";
                                         route().current('tanya-smart.index')
                                     "
                                 >
-                                    Cari Berkas
+                                    Berkas Pending
                                 </NavLink>
                                 <NavLink
                                     v-if="
                                         [
-                                            'verifikator',
+                                            'loket',
                                             'pengukuran',
                                             'bensus',
                                             'pelaksana',
@@ -246,7 +259,7 @@ const smartLogo = "/assets/images/smart_logo.svg";
                                                     route(
                                                         'teams.show',
                                                         $page.props.auth.user
-                                                            .current_team
+                                                            .current_team,
                                                     )
                                                 "
                                             >

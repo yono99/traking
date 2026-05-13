@@ -20,6 +20,7 @@ class Service extends Model
         'Noberkas',
         'file_path',  
         'nama_pemohon', 
+        'kode_berkas',  // ← tambah ini
         
     ];
 

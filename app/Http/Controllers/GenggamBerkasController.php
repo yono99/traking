@@ -56,22 +56,24 @@ class GenggamBerkasController extends Controller
         ]);
 
         // Simpan ke tabel services
-        $service = Service::create([
-            'land_book_id' => $landBook->id,
-            'nomor_hp'     => $request->nomor_hp,
-            'name'         => $name,
-            'PNBP'         => $PNBP,
-            'nama_pemohon' => $request->nama_pemohon,
-            'kode_berkas'  => $kode,  // ← tambahan baru
-        ]);
+    $service = Service::create([
+    'land_book_id' => $landBook->id,
+    'nomor_hp'     => $request->nomor_hp,
+    'name'         => $name,
+    'PNBP'         => $PNBP,
+    'nama_pemohon' => $request->nama_pemohon,
+    'kode_berkas'  => $kode,
+    'status'       => 'FORWARD LOKET', // <-- tambah ini
+]);
 
         // Simpan aktivitas
         Activity::create([
-            'service_id' => $service->id,
-            'user_id'    => Auth::id(),
-            'status'     => 'FORWARD VERIFIKATOR',
-            'remarks'    => 'NONE',
-        ]);
+    'service_id' => $service->id,
+    'user_id'    => Auth::id(),
+    'status'     => 'FORWARD LOKET', // <-- ubah dari FORWARD VERIFIKATOR
+    'remarks'    => 'NONE',
+]);
+
 
         // Flash kode untuk ditampilkan di resume Vue
         return redirect()->route('genggam.berkas')->with('kode_berkas', $kode);
