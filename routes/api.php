@@ -3,7 +3,7 @@ use App\Http\Controllers\WaGatewayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServiceController;
- 
+use App\Http\Controllers\LaporanController;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -25,6 +25,16 @@ Route::get('/wa-session', function () {
 // Route untuk menghitung jumlah data berdasarkan status
 Route::get('services/count', [ServiceController::class, 'getServiceCounts']);
 
+ Route::middleware(['auth:sanctum'])->group(function () {
+ 
+    // Dashboard stats (untuk halaman utama)
+    Route::get('/dashboard-stats', [LaporanController::class, 'dashboardStats']);
+ 
+    // Data grafik laporan per unit
+    Route::post('/get-laporan-unit', [LaporanController::class, 'getLaporanUnit']);
+
+ 
+});
  
  
  

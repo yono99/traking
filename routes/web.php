@@ -94,14 +94,14 @@ Route::middleware(['auth', CheckUnit::class . ':main'])->group(function () {
 });
 // route chart & export excel admin
 Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-Route::get('/date-range', [DateRangeController::class, 'getDateRangeData'])->name('date-range.index');
-Route::post('/api/date-range-data', [DateRangeController::class, 'getDateRangeData']);
+Route::get('/date-range', [DateRangeController::class, 'getLaporanUnit'])->name('date-range.index');
+Route::post('/api/date-range-data', [DateRangeController::class, 'getLaporanUnit']);
  
 Route::get('/export-excel', [DateRangeController::class, 'exportExcel'])->name('export.excel');
 
 // route chart & export excel unit
 Route::get('/laporan-unit', [LaporanUnitController::class, 'index'])->name('laporan-unit.index');
-Route::post('/api/get-laporan-unit', [LaporanUnitController::class, 'getDateRangeData']);
+Route::post('/api/get-laporan-unit', [LaporanUnitController::class, 'getLaporanUnit']);
 Route::get('/laporan-unit/export-excel', [LaporanUnitController::class, 'exportExcel'])->name('export.excel');
 // Tambahkan route ini di web.php
 Route::get('/activities/fetch', [ActivityController::class, 'fetch']);
@@ -144,5 +144,16 @@ Route::get('/service/recent',          [ServiceController::class, 'getRecentServ
 Route::get('/api/dashboard-stats', [ServiceController::class, 'getDashboardStats']);
 
 
+ 
+Route::middleware(['auth'])->group(function () {
+ 
+    // Halaman laporan (Inertia)
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+ 
+    // Export Excel
+    Route::get('/laporan-unit/export-excel', [LaporanController::class, 'exportExcel'])
+         ->name('laporan.export-excel');
+ 
+});
 
 Route::get('/api/notifications', [NotificationController::class, 'index']);

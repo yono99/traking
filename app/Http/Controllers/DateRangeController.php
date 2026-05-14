@@ -15,7 +15,7 @@ class DateRangeController extends Controller
     {
         return Inertia::render('Components/DateRange');
     }
-    public function getDateRangeData(Request $request)
+    public function getLaporanUnit(Request $request)
     {
         $request->validate([
             'start_date' => 'required|date',

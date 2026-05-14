@@ -37,7 +37,7 @@ const unitList = [
     "loket", "verifikator", "pengukuran", "bensus", "pelaksana",
     "pelaksana_bn", "pelaksana_ph", "pelaksana_roya", "pelaksana_ph_ruko",
     "pelaksana_sk", "bukutanah", "sps", "QC", "pengesahan", "paraf",
-    "TTE_PRODUK_LAYANAN", "LOKET_PENYERAHAN",
+    "TTE_PRODUK_LAYANAN", "loket_penyerahan",
 ];
 
 const unitListNoLoket = unitList.filter((u) => u !== "loket");
@@ -64,13 +64,7 @@ const navItems = computed(() => [
         active: route().current("berkas.index"),
         show: userUnit.value === "loket" || isAdmin.value,
     },
-    {
-        label: "Input Data",
-        icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>`,
-        href: route("genggam.berkas"),
-        active: route().current("genggam.berkas"),
-        show: userUnit.value === "loket",
-    },
+    
     {
         label: "Berkas Pending",
         icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>`,

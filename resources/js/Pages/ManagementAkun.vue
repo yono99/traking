@@ -87,7 +87,7 @@ function updateAccount() {
                                     <option value="pelaksana_ph_ruko">pelaksana ph ruko</option>
                                     <option value="pelaksana_sk">pelaksana sk</option>
                                     <option value="TTE_PRODUK_LAYANAN">TTE Produk Layanan</option>
-                                    <option value="LOKET_PENYERAHAN">Loket Penyerahan</option>
+                                    <option value="loket">Loket Penyerahan</option>
                                 
                                     
                                      
