@@ -30,8 +30,42 @@ export default {
             if (e.key === "Enter") cariKode();
         };
 
+        // 10 tahap proses berkas
+        const allSteps = [
+            { key: "LOKET",                     label: "Loket",                          icon: "loket",   step: 1 },
+            { key: "VERIFIKASI_DOKUMEN",         label: "Loket Verifikasi Dokumen",       icon: "verif",   step: 2 },
+            { key: "FORWARD BUKU TANAH",         label: "Forward Buku Tanah",             icon: "forward", step: 3 },
+            { key: "PROSES BUKU TANAH",          label: "Pencarian Arsip Buku Tanah",     icon: "buku",    step: 4 },
+            { key: "FORWARD PENGUKURAN",         label: "Forward Pengukuran",             icon: "forward", step: 5 },
+            { key: "PROSES PENGUKURAN",          label: "Validasi Bidang",                icon: "ukur",    step: 6 },
+            { key: "PROSES VALIDASI BIDANG",     label: "Validasi Tekstual Surat Ukur",   icon: "validasi",step: 7 },
+            { key: "PROSES VALIDASI BUKU TANAH", label: "Validasi Buku Tanah",            icon: "validasi",step: 8 },
+            { key: "PROSES LOKET PENYERAHAN",    label: "Loket Penyerahan",               icon: "serah",   step: 9 },
+            { key: "SELESAI DISERAHKAN",         label: "Selesai",                        icon: "done",    step: 10 },
+        ];
+
+        // Hitung steps dengan done/active berdasarkan status service
+        const computeSteps = (currentStatus) => {
+            if (!currentStatus) return allSteps.map(s => ({ ...s, done: false, active: false }));
+            const currentIdx = allSteps.findIndex(s => s.key === currentStatus);
+            return allSteps.map((s, i) => ({
+                ...s,
+                done:   i < currentIdx,
+                active: i === currentIdx,
+            }));
+        };
+
+        // Gunakan steps dari props jika ada, atau compute dari service.status
+        const getSteps = () => {
+            if (props.steps && props.steps.length > 0) return props.steps;
+            if (props.service?.status) return computeSteps(props.service.status);
+            return allSteps.map(s => ({ ...s, done: false, active: false }));
+        };
+
         const iconMap = {
             loket:   "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
+            verif:   "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4",
+            forward: "M13 5l7 7-7 7M5 5l7 7-7 7",
             buku:    "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
             ukur:    "M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7",
             validasi:"M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
@@ -41,7 +75,17 @@ export default {
 
         const getIcon = (icon) => iconMap[icon] || iconMap.loket;
 
-        return { inputKode, searching, cariKode, handleKeydown, getIcon };
+        // Hapus kata "PROSES" dan "FORWARD" dari label status
+        const statusLabel = (status) => {
+            if (!status) return "-";
+            return status
+                .replace(/^PROSES\s+/i, "")
+                .replace(/^FORWARD\s+/i, "")
+                .toLowerCase()
+                .replace(/\b\w/g, c => c.toUpperCase());
+        };
+
+        return { inputKode, searching, cariKode, handleKeydown, getIcon, getSteps, statusLabel, allSteps };
     },
 };
 </script>
@@ -158,7 +202,7 @@ export default {
                                     </div>
                                     <div class="lb-status-pill">
                                         <span class="lb-status-dot"></span>
-                                        {{ service.status }}
+                                        {{ statusLabel(service.status) }}
                                     </div>
                                 </div>
                             </div>
@@ -204,8 +248,8 @@ export default {
                         <div class="lb-stepper-wrap">
                             <div class="lb-stepper">
                                 <div
-                                    v-for="(step, idx) in steps"
-                                    :key="step.status"
+                                    v-for="(step, idx) in getSteps()"
+                                    :key="step.key || step.status || idx"
                                     :class="['lb-step', step.done ? 'done' : '', step.active ? 'active' : '']"
                                 >
                                     <div v-if="idx > 0" :class="['lb-connector', (step.done || step.active) ? 'filled' : '']"></div>
@@ -219,7 +263,9 @@ export default {
                                                 <path stroke-linecap="round" stroke-linejoin="round" :d="getIcon(step.icon)" />
                                             </svg>
                                         </div>
-                                        <div class="lb-step-label">{{ step.label }}</div>
+                                         
+                                        <!-- Label tanpa kata "PROSES"/"FORWARD" -->
+                                        <div class="lb-step-label">{{ step.label || statusLabel(step.status) }}</div>
                                         <div v-if="step.active" class="lb-step-badge">Sekarang</div>
                                     </div>
                                 </div>
@@ -228,32 +274,7 @@ export default {
                     </div>
                 </div>
 
-                <!-- History Card -->
-                <div v-if="history.length > 0" class="lb-card">
-                    <div class="lb-section">
-                        <div class="lb-section-label">
-                            <div class="lb-section-num">04</div>
-                            <div>
-                                <div class="lb-section-title">Riwayat Aktivitas</div>
-                                <div class="lb-section-sub">Catatan perubahan status berkas</div>
-                            </div>
-                        </div>
-                        <div class="lb-timeline">
-                            <div
-                                v-for="(h, idx) in history"
-                                :key="idx"
-                                :class="['lb-timeline-item', idx === history.length - 1 ? 'last' : '']"
-                            >
-                                <div class="lb-timeline-dot"></div>
-                                <div class="lb-timeline-content">
-                                    <div class="lb-timeline-status">{{ h.status }}</div>
-                                    <div class="lb-timeline-remarks" v-if="h.remarks && h.remarks !== 'NONE'">{{ h.remarks }}</div>
-                                    <div class="lb-timeline-time">{{ h.created_at }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+             
 
             </template>
 

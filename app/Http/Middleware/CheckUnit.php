@@ -36,7 +36,7 @@ class CheckUnit
             'paraf',
             'TTE_PRODUK_LAYANAN',
             'loket_penyerahan',
-            'LOKET PENYERAHAN',
+            'LOKET_PENYERAHAN',
             'loket penyerahan',
             'loket_penyerahan',
 

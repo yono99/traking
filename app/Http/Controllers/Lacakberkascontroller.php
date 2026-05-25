@@ -8,20 +8,20 @@ use Inertia\Inertia;
 class LacakBerkasController extends Controller
 {
     private array $allSteps = [
-        'FORWARD LOKET'               => ['label' => 'Loket',              'icon' => 'loket'],
-        'PROSES LOKET'                => ['label' => 'Proses Loket',       'icon' => 'loket'],
-        'FORWARD BUKU TANAH'          => ['label' => 'Forward Buku Tanah', 'icon' => 'buku'],
-        'PROSES BUKU TANAH'           => ['label' => 'Proses Buku Tanah',  'icon' => 'buku'],
-        'FORWARD PENGUKURAN'          => ['label' => 'Forward Pengukuran', 'icon' => 'ukur'],
-        'PROSES PENGUKURAN'           => ['label' => 'Proses Pengukuran',  'icon' => 'ukur'],
-        'FORWARD VALIDASI BIDANG'     => ['label' => 'Validasi Bidang',    'icon' => 'validasi'],
-        'PROSES VALIDASI BIDANG'      => ['label' => 'Proses Validasi',    'icon' => 'validasi'],
-        'FORWARD VALIDASI BUKU TANAH' => ['label' => 'Validasi Buku Tanah','icon' => 'validasi'],
-        'PROSES VALIDASI BUKU TANAH'  => ['label' => 'Proses Validasi BT', 'icon' => 'validasi'],
-        'FORWARD LOKET PENYERAHAN'    => ['label' => 'Loket Penyerahan',   'icon' => 'serah'],
-        'PROSES LOKET PENYERAHAN'     => ['label' => 'Proses Penyerahan',  'icon' => 'serah'],
-        'SELESAI DISERAHKAN'          => ['label' => 'Selesai',            'icon' => 'done'],
-    ];
+    'FORWARD LOKET'               => ['label' => 'Loket',              'icon' => 'loket'],
+    'PROSES LOKET'                => ['label' => 'Verifikasi Loket',   'icon' => 'loket'],
+    'FORWARD BUKU TANAH'          => ['label' => 'Cari Buku Tanah',         'icon' => 'buku'],
+    //'PROSES BUKU TANAH'           => ['label' => 'Arsip Buku Tanah',   'icon' => 'buku'],
+    'FORWARD PENGUKURAN'          => ['label' => 'Pengukuran',         'icon' => 'ukur'],
+    'PROSES PENGUKURAN'           => ['label' => 'Validasi Bidang',    'icon' => 'ukur'],
+    'FORWARD VALIDASI BIDANG'     => ['label' => 'Tekstual Bidang',    'icon' => 'validasi'],
+   // 'PROSES VALIDASI BIDANG'      => ['label' => 'Cek Surat Ukur',     'icon' => 'validasi'],
+    'FORWARD VALIDASI BUKU TANAH' => ['label' => 'Validasi Buku Tanah','icon' => 'validasi'],
+    'PROSES VALIDASI BUKU TANAH'  => ['label' => 'Tekstual Buku Tanah',    'icon' => 'validasi'],
+    'FORWARD LOKET PENYERAHAN'    => ['label' => 'Loket Penyerahan',   'icon' => 'serah'],
+    'PROSES LOKET PENYERAHAN'     => ['label' => 'Penyerahan',         'icon' => 'serah'],
+    'SELESAI DISERAHKAN'          => ['label' => 'Selesai',            'icon' => 'done'],
+];
 
     /**
      * Halaman awal — form pencarian kosong

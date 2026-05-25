@@ -5,7 +5,6 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import Users from "@/Components/Users.vue";
 
 defineProps({});
-
 defineExpose({});
 
 const form = reactive({
@@ -73,24 +72,10 @@ function updateAccount() {
                                 >
                                     <option value="" disabled selected>Pilih Unit</option>
                                     <option value="umum">Umum</option>
-                                    <option value="loket">loket</option>
-                                    <option value="verifikator">verifikator</option>
-                                    <option value="bukutanah">Buku tanah</option>
-                                    <option value="sps">SPS</option>
-                                    <option value="pengukuran">pengukuran</option>
-                                    <option value="pengesahan">Pengesahan</option>
-                                    <option value="bensus">bensus</option>
-                                    <option value="pelaksana">pelaksana</option>
-                                    <option value="pelaksana_bn">pelaksana bn</option>
-                                    <option value="pelaksana_ph">pelaksana ph</option>
-                                    <option value="pelaksana_roya">pelaksana roya</option>
-                                    <option value="pelaksana_ph_ruko">pelaksana ph ruko</option>
-                                    <option value="pelaksana_sk">pelaksana sk</option>
-                                    <option value="TTE_PRODUK_LAYANAN">TTE Produk Layanan</option>
-                                    <option value="loket">Loket Penyerahan</option>
-                                
-                                    
-                                     
+                                    <option value="loket">Loket</option>
+                                    <option value="bukutanah">Buku Tanah</option>
+                                    <option value="pengukuran">Pengukuran</option>
+                                    <option value="LOKET_PENYERAHAN">Loket Penyerahan</option>
                                 </select>
                             </div>
 
@@ -132,7 +117,6 @@ function updateAccount() {
 </template>
 
 <style scoped>
-/* Custom Styles */
 form div {
     margin-bottom: 15px;
 }

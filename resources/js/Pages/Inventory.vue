@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed } from "vue";
+import { onMounted } from "vue";
 import axios from "axios";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import UpdateModal from "@/Components/UpdateModal.vue";
@@ -11,7 +12,7 @@ const kirimWaSelesai = async (service) => {
         const phone =
             "62" +
             (service.nomor_hp ?? "").replace(/^0+/, "").replace(/\D/g, "");
-        if (!phone || phone === "62") return; // skip kalau nomor kosong
+        if (!phone || phone === "62") return;
 
         const baseUrl = window.location.origin;
         const kode = service.kode_berkas ?? "-";
@@ -40,23 +41,20 @@ const kirimWaSelesai = async (service) => {
             `🔗 Cek status berkas:\n${lacakUrl}\n\n` +
             `Terima kasih.`;
 
-        // Kirim teks
         await axios.post("/wa/send", { to: phone, text });
-
-        // Kirim QR
         await axios.post("/wa/send-image", {
             to: phone,
             text: `🔲 QR Code berkas *${kode}*\nScan untuk membuka: ${lacakUrl}`,
             image_url: qrUrl,
         });
     } catch (err) {
-        // Silent fail — status tetap terupdate walau WA gagal
         console.warn(
             "Gagal kirim WA selesai:",
             err?.response?.data?.message ?? err.message,
         );
     }
 };
+
 const props = defineProps({
     services: { type: Array, required: true },
     user: { type: Object, required: true },
@@ -68,10 +66,12 @@ const selectedItem = ref(null);
 const alertMessage = ref("");
 const alertType = ref("");
 
-// Image viewer
+// Image / PDF viewer
 const showImageModal = ref(false);
 const imageModalSrc = ref("");
 const imageModalTitle = ref("");
+const isPdf = ref(false);
+const imgError = ref(false);
 const zoomLevel = ref(1);
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 4;
@@ -98,18 +98,9 @@ const badgeConfig = {
     "PROSES LOKET": { label: "Loket", cls: "badge-loket" },
     "PROSES BUKU TANAH": { label: "Buku Tanah", cls: "badge-buku" },
     "PROSES PENGUKURAN": { label: "Pengukuran", cls: "badge-ukur" },
-    "PROSES VALIDASI BIDANG": {
-        label: "Validasi Bidang",
-        cls: "badge-validasi",
-    },
-    "PROSES VALIDASI BUKU TANAH": {
-        label: "Validasi BT",
-        cls: "badge-validasi",
-    },
-    "PROSES LOKET PENYERAHAN": {
-        label: "Loket Penyerahan",
-        cls: "badge-loket",
-    },
+    "PROSES VALIDASI BIDANG": { label: "Validasi Bidang", cls: "badge-validasi" },
+    "PROSES VALIDASI BUKU TANAH": { label: "Validasi BT", cls: "badge-validasi" },
+    "PROSES LOKET PENYERAHAN": { label: "Loket Penyerahan", cls: "badge-loket" },
     "SELESAI DISERAHKAN": { label: "Selesai", cls: "badge-selesai" },
 };
 
@@ -128,16 +119,12 @@ const updateStatus = async (serviceId, newStatus) => {
             `/inventory/update-status/${serviceId}`,
             { status: newStatus },
         );
-        alertMessage.value =
-            response.data.message || "Status berhasil diperbarui.";
+        alertMessage.value = response.data.message || "Status berhasil diperbarui.";
         alertType.value = "success";
-        setTimeout(() => {
-            alertMessage.value = "";
-        }, 3000);
+        setTimeout(() => { alertMessage.value = ""; }, 3000);
         window.location.reload();
     } catch (error) {
-        alertMessage.value =
-            error.response?.data?.message || "Gagal memperbarui status.";
+        alertMessage.value = error.response?.data?.message || "Gagal memperbarui status.";
         alertType.value = "error";
     }
 };
@@ -145,20 +132,19 @@ const updateStatus = async (serviceId, newStatus) => {
 const handleNext = async (service) => {
     const status = nextStatus[service.status];
     if (!status) return alert("Tidak ada tahap selanjutnya.");
-
-    // Kirim WA dulu sebelum update status (hanya saat loket penyerahan → selesai)
     if (service.status === "PROSES LOKET PENYERAHAN") {
         await kirimWaSelesai(service);
     }
-
     await updateStatus(service.id, status);
 };
+
 const handleTolak = async (service) => {
     const status = rejectStatus[service.status];
     if (status === null || status === undefined)
         return alert("Berkas tidak dapat ditolak di tahap ini.");
     await updateStatus(service.id, status);
 };
+
 const openUpdateModal = (s) => {
     selectedItem.value = s;
     showUpdateModal.value = true;
@@ -178,31 +164,36 @@ const closeKendalaModal = () => {
     window.location.reload();
 };
 
+// ── File viewer — support gambar & PDF ──────────────────────────
 const openImageModal = (filePath, title) => {
-    imageModalSrc.value = `/storage/${filePath}`;
+    if (!filePath) return;
+
+    // Normalize path: hapus prefix ganda jika ada
+    let cleanPath = filePath
+        .replace(/^\/+/, "")                  // hapus leading slash
+        .replace(/^storage\//, "")            // hapus "storage/" di awal jika ada
+        .replace(/^public\//, "");            // hapus "public/" di awal jika ada
+
+    imageModalSrc.value = `/storage/${cleanPath}`;
     imageModalTitle.value = title || "File Dokumen";
+    isPdf.value = cleanPath.toLowerCase().endsWith(".pdf");
+    imgError.value = false;
     zoomLevel.value = 1;
     showImageModal.value = true;
 };
+
 const closeImageModal = () => {
     showImageModal.value = false;
     zoomLevel.value = 1;
+    imgError.value = false;
 };
 const zoomIn = () => {
-    zoomLevel.value = Math.min(
-        MAX_ZOOM,
-        +(zoomLevel.value + ZOOM_STEP).toFixed(2),
-    );
+    zoomLevel.value = Math.min(MAX_ZOOM, +(zoomLevel.value + ZOOM_STEP).toFixed(2));
 };
 const zoomOut = () => {
-    zoomLevel.value = Math.max(
-        MIN_ZOOM,
-        +(zoomLevel.value - ZOOM_STEP).toFixed(2),
-    );
+    zoomLevel.value = Math.max(MIN_ZOOM, +(zoomLevel.value - ZOOM_STEP).toFixed(2));
 };
-const resetZoom = () => {
-    zoomLevel.value = 1;
-};
+const resetZoom = () => { zoomLevel.value = 1; };
 const handleWheel = (e) => {
     e.preventDefault();
     e.deltaY < 0 ? zoomIn() : zoomOut();
@@ -210,6 +201,7 @@ const handleWheel = (e) => {
 const handleBackdrop = (e) => {
     if (e.target === e.currentTarget) closeImageModal();
 };
+const onImgError = () => { imgError.value = true; };
 const getBadge = (status) =>
     badgeConfig[status] || { label: status, cls: "badge-loket" };
 </script>
@@ -223,38 +215,14 @@ const getBadge = (status) =>
                     v-if="alertMessage"
                     :class="[
                         'inv-alert',
-                        alertType === 'success'
-                            ? 'inv-alert-success'
-                            : 'inv-alert-error',
+                        alertType === 'success' ? 'inv-alert-success' : 'inv-alert-error',
                     ]"
                 >
-                    <svg
-                        v-if="alertType === 'success'"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="15"
-                        height="15"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
+                    <svg v-if="alertType === 'success'" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                         <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
-                    <svg
-                        v-else
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="15"
-                        height="15"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10" />
                         <line x1="12" y1="8" x2="12" y2="12" />
                         <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -270,9 +238,7 @@ const getBadge = (status) =>
                         <span class="inv-section-num">01</span>
                         <div>
                             <p class="inv-section-title">Daftar Berkas</p>
-                            <p class="inv-section-sub">
-                                Berkas aktif sesuai unit Anda
-                            </p>
+                            <p class="inv-section-sub">Berkas aktif sesuai unit Anda</p>
                         </div>
                     </div>
                 </div>
@@ -293,53 +259,23 @@ const getBadge = (status) =>
                         </thead>
                         <tbody>
                             <tr v-if="services.length === 0">
-                                <td colspan="7">
+                                <td colspan="8">
                                     <div class="inv-empty">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="34"
-                                            height="34"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="1.5"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                        >
-                                            <path
-                                                d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
-                                            />
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                                         </svg>
                                         <p>Tidak ada data berkas.</p>
                                     </div>
                                 </td>
                             </tr>
-                            <tr
-                                v-for="(service, index) in services"
-                                :key="service.id"
-                            >
+                            <tr v-for="(service, index) in services" :key="service.id">
                                 <td class="inv-td-muted">{{ index + 1 }}</td>
-                                <td class="inv-td-muted">
-                                    {{ service.kode_berkas || "—" }}
-                                </td>
-                                <td class="inv-td-bold">
-                                    {{ service.land_book?.nomer_hak || "—" }}
-                                </td>
-                                <td class="inv-td-muted">
-                                    {{ service.land_book?.jenis_hak || "—" }}
-                                </td>
-                                <td class="inv-td-muted">
-                                    {{
-                                        service.land_book?.desa_kecamatan || "—"
-                                    }}
-                                </td>
+                                <td class="inv-td-muted">{{ service.kode_berkas || "—" }}</td>
+                                <td class="inv-td-bold">{{ service.land_book?.nomer_hak || "—" }}</td>
+                                <td class="inv-td-muted">{{ service.land_book?.jenis_hak || "—" }}</td>
+                                <td class="inv-td-muted">{{ service.land_book?.desa_kecamatan || "—" }}</td>
                                 <td>
-                                    <span
-                                        :class="[
-                                            'inv-badge',
-                                            getBadge(service.status).cls,
-                                        ]"
-                                    >
+                                    <span :class="['inv-badge', getBadge(service.status).cls]">
                                         <span class="inv-badge-dot"></span>
                                         {{ getBadge(service.status).label }}
                                     </span>
@@ -347,36 +283,13 @@ const getBadge = (status) =>
                                 <td>
                                     <button
                                         v-if="service.land_book?.file_path"
-                                        @click="
-                                            openImageModal(
-                                                service.land_book.file_path,
-                                                service.land_book?.nomer_hak,
-                                            )
-                                        "
+                                        @click="openImageModal(service.land_book.file_path, service.land_book?.nomer_hak)"
                                         class="inv-btn inv-btn-file"
                                     >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="13"
-                                            height="13"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                        >
-                                            <rect
-                                                x="3"
-                                                y="3"
-                                                width="18"
-                                                height="18"
-                                                rx="2"
-                                            />
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" />
                                             <circle cx="8.5" cy="8.5" r="1.5" />
-                                            <polyline
-                                                points="21 15 16 10 5 21"
-                                            />
+                                            <polyline points="21 15 16 10 5 21" />
                                         </svg>
                                         Lihat
                                     </button>
@@ -386,129 +299,42 @@ const getBadge = (status) =>
                                     <div class="inv-actions">
                                         <button
                                             v-if="
-                                                $page.props.auth?.user?.unit ===
-                                                    'loket' ||
-                                                $page.props.auth?.user?.unit ===
-                                                    'bukutanah' ||
-                                                $page.props.auth?.user?.role ===
-                                                    'admin'
+                                                $page.props.auth?.user?.unit === 'loket' ||
+                                                $page.props.auth?.user?.unit === 'bukutanah' ||
+                                                $page.props.auth?.user?.role === 'admin'
                                             "
                                             @click="openUpdateModal(service)"
                                             class="inv-btn inv-btn-update"
                                         >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="13"
-                                                height="13"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="2"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            >
-                                                <path
-                                                    d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                                                />
-                                                <path
-                                                    d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                                                />
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                                             </svg>
                                             Update
                                         </button>
-                                        <button
-                                            @click="openKendalaModal(service)"
-                                            class="inv-btn inv-btn-kendala"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="13"
-                                                height="13"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="2"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            >
-                                                <path
-                                                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-                                                />
-                                                <line
-                                                    x1="12"
-                                                    y1="9"
-                                                    x2="12"
-                                                    y2="13"
-                                                />
-                                                <line
-                                                    x1="12"
-                                                    y1="17"
-                                                    x2="12.01"
-                                                    y2="17"
-                                                />
+                                        <button @click="openKendalaModal(service)" class="inv-btn inv-btn-kendala">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                                                <line x1="12" y1="9" x2="12" y2="13" />
+                                                <line x1="12" y1="17" x2="12.01" y2="17" />
                                             </svg>
                                             Kendala
                                         </button>
-                                        <button
-                                            @click="handleNext(service)"
-                                            class="inv-btn inv-btn-next"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="13"
-                                                height="13"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="2.5"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            >
-                                                <line
-                                                    x1="5"
-                                                    y1="12"
-                                                    x2="19"
-                                                    y2="12"
-                                                />
-                                                <polyline
-                                                    points="12 5 19 12 12 19"
-                                                />
+                                        <button @click="handleNext(service)" class="inv-btn inv-btn-next">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="5" y1="12" x2="19" y2="12" />
+                                                <polyline points="12 5 19 12 12 19" />
                                             </svg>
                                             Next
                                         </button>
                                         <button
                                             @click="handleTolak(service)"
-                                            :disabled="
-                                                rejectStatus[service.status] ===
-                                                    null ||
-                                                rejectStatus[service.status] ===
-                                                    undefined
-                                            "
+                                            :disabled="rejectStatus[service.status] === null || rejectStatus[service.status] === undefined"
                                             class="inv-btn inv-btn-tolak"
                                         >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="13"
-                                                height="13"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="2.5"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            >
-                                                <line
-                                                    x1="18"
-                                                    y1="6"
-                                                    x2="6"
-                                                    y2="18"
-                                                />
-                                                <line
-                                                    x1="6"
-                                                    y1="6"
-                                                    x2="18"
-                                                    y2="18"
-                                                />
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="18" y1="6" x2="6" y2="18" />
+                                                <line x1="6" y1="6" x2="18" y2="18" />
                                             </svg>
                                             Tolak
                                         </button>
@@ -522,18 +348,7 @@ const getBadge = (status) =>
                 <div class="inv-card-footer">
                     <span>Menampilkan {{ services.length }} berkas</span>
                     <span class="inv-footer-hint">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="13"
-                            height="13"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            style="vertical-align: -2px; margin-right: 4px"
-                        >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px">
                             <circle cx="12" cy="12" r="10" />
                             <line x1="12" y1="8" x2="12" y2="12" />
                             <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -543,7 +358,7 @@ const getBadge = (status) =>
                 </div>
             </div>
 
-            <!-- Other Modals -->
+            <!-- Modals -->
             <UpdateModal
                 :show="showUpdateModal"
                 :service-id="selectedItem?.id"
@@ -560,7 +375,7 @@ const getBadge = (status) =>
             />
         </div>
 
-        <!-- Image Viewer Modal -->
+        <!-- ── File Viewer Modal ── -->
         <Teleport to="body">
             <Transition name="inv-modal">
                 <div
@@ -570,108 +385,57 @@ const getBadge = (status) =>
                     @wheel.prevent="handleWheel"
                 >
                     <div class="inv-modal-box">
+                        <!-- Header -->
                         <div class="inv-modal-header">
-                            <span class="inv-modal-title">{{
-                                imageModalTitle
-                            }}</span>
+                            <span class="inv-modal-title">{{ imageModalTitle }}</span>
                             <div class="inv-modal-tools">
-                                <button
-                                    @click="zoomOut"
-                                    :disabled="zoomLevel <= MIN_ZOOM"
-                                    class="inv-tool-btn"
-                                    title="Perkecil"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="14"
-                                        height="14"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2.5"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <line x1="5" y1="12" x2="19" y2="12" />
-                                    </svg>
-                                </button>
-                                <button
-                                    @click="resetZoom"
-                                    class="inv-zoom-display"
-                                >
-                                    {{ Math.round(zoomLevel * 100) }}%
-                                </button>
-                                <button
-                                    @click="zoomIn"
-                                    :disabled="zoomLevel >= MAX_ZOOM"
-                                    class="inv-tool-btn"
-                                    title="Perbesar"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="14"
-                                        height="14"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2.5"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <line x1="12" y1="5" x2="12" y2="19" />
-                                        <line x1="5" y1="12" x2="19" y2="12" />
-                                    </svg>
-                                </button>
-                                <div class="inv-divider"></div>
-                                <a
-                                    :href="imageModalSrc"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="inv-tool-btn"
-                                    title="Buka di tab baru"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="14"
-                                        height="14"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
-                                        <path
-                                            d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-                                        />
+                                <!-- Zoom controls hanya untuk gambar -->
+                                <template v-if="!isPdf && !imgError">
+                                    <button @click="zoomOut" :disabled="zoomLevel <= MIN_ZOOM" class="inv-tool-btn" title="Perkecil">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                        </svg>
+                                    </button>
+                                    <button @click="resetZoom" class="inv-zoom-display">
+                                        {{ Math.round(zoomLevel * 100) }}%
+                                    </button>
+                                    <button @click="zoomIn" :disabled="zoomLevel >= MAX_ZOOM" class="inv-tool-btn" title="Perbesar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                        </svg>
+                                    </button>
+                                    <div class="inv-divider"></div>
+                                </template>
+                                <a :href="imageModalSrc" target="_blank" rel="noopener noreferrer" class="inv-tool-btn" title="Buka di tab baru">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                                         <polyline points="15 3 21 3 21 9" />
                                         <line x1="10" y1="14" x2="21" y2="3" />
                                     </svg>
                                 </a>
-                                <button
-                                    @click="closeImageModal"
-                                    class="inv-tool-btn inv-tool-close"
-                                    title="Tutup"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="14"
-                                        height="14"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2.5"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    >
+                                <button @click="closeImageModal" class="inv-tool-btn inv-tool-close" title="Tutup">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <line x1="18" y1="6" x2="6" y2="18" />
                                         <line x1="6" y1="6" x2="18" y2="18" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
+
+                        <!-- Body -->
                         <div class="inv-modal-img-wrap">
+                            <!-- PDF -->
+                            <iframe
+                                v-if="isPdf"
+                                :src="imageModalSrc"
+                                class="inv-modal-pdf"
+                                frameborder="0"
+                            ></iframe>
+
+                            <!-- Gambar normal -->
                             <img
+                                v-else-if="!imgError"
                                 :src="imageModalSrc"
                                 :alt="imageModalTitle"
                                 :style="{
@@ -681,10 +445,27 @@ const getBadge = (status) =>
                                 }"
                                 class="inv-modal-img"
                                 draggable="false"
+                                @error="onImgError"
                             />
+
+                            <!-- Fallback jika gambar gagal load -->
+                            <div v-else class="inv-modal-error">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                    <line x1="12" y1="18" x2="12" y2="12" />
+                                    <line x1="9" y1="15" x2="15" y2="15" />
+                                </svg>
+                                <p>Gagal memuat file.</p>
+                                <a :href="imageModalSrc" target="_blank" rel="noopener noreferrer" class="inv-modal-error-link">
+                                    Buka langsung di tab baru →
+                                </a>
+                            </div>
                         </div>
+
                         <div class="inv-modal-footer">
-                            Scroll untuk zoom · Klik di luar untuk tutup
+                            <span v-if="isPdf">Gunakan tombol buka tab baru untuk tampilan penuh</span>
+                            <span v-else>Scroll untuk zoom · Klik di luar untuk tutup</span>
                         </div>
                     </div>
                 </div>
@@ -692,6 +473,36 @@ const getBadge = (status) =>
         </Teleport>
     </AppLayout>
 </template>
+
+<style scoped>
+.inv-modal-pdf {
+    width: 100%;
+    height: 70vh;
+    border: none;
+    border-radius: 4px;
+}
+
+.inv-modal-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 48px 24px;
+    color: #6b7280;
+}
+
+.inv-modal-error p {
+    font-size: 14px;
+    margin: 0;
+}
+
+.inv-modal-error-link {
+    font-size: 13px;
+    color: #6366f1;
+    text-decoration: underline;
+}
+</style>
 
 <style scoped>
 .inv-page {
