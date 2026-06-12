@@ -71,11 +71,10 @@ function updateAccount() {
                                     class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 >
                                     <option value="" disabled selected>Pilih Unit</option>
-                                    <option value="umum">Umum</option>
                                     <option value="loket">Loket</option>
                                     <option value="bukutanah">Buku Tanah</option>
                                     <option value="pengukuran">Pengukuran</option>
-                                    <option value="LOKET_PENYERAHAN">Loket Penyerahan</option>
+                                    <option value="loket_penyerahan">Loket Penyerahan</option>
                                 </select>
                             </div>
 

@@ -37,7 +37,7 @@ const unitList = [
     "loket", "verifikator", "pengukuran", "bensus", "pelaksana",
     "pelaksana_bn", "pelaksana_ph", "pelaksana_roya", "pelaksana_ph_ruko",
     "pelaksana_sk", "bukutanah", "sps", "QC", "pengesahan", "paraf",
-    "TTE_PRODUK_LAYANAN", "loket_penyerahan",
+    "TTE_PRODUK_LAYANAN", "loket_penyerahan","LOKET PENYERAHAN"
 ];
 
 const unitListNoLoket = unitList.filter((u) => u !== "loket");
