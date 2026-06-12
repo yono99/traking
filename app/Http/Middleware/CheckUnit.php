@@ -37,8 +37,8 @@ class CheckUnit
             'TTE_PRODUK_LAYANAN',
             'loket_penyerahan',
             'LOKET_PENYERAHAN',
-            'loket penyerahan',
-            'loket_penyerahan',
+            'Loket Penyerahan',
+            'LOKET PENYERAHAN',
 
              
         ];
